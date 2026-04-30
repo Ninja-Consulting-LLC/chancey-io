@@ -185,6 +185,10 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders(allowedOrigin) });
     }
 
+    if (new URL(request.url).pathname === '/health' && request.method === 'GET') {
+      return jsonResponse(200, { ok: true, service: 'chancey-contact' }, allowedOrigin);
+    }
+
     if (request.method !== 'POST') {
       return jsonResponse(405, { error: 'method_not_allowed' }, allowedOrigin);
     }
@@ -242,8 +246,9 @@ export default {
       message,
     ].join('\n');
 
+    let mailer: WorkerMailer | undefined;
     try {
-      const mailer = await WorkerMailer.connect({
+      mailer = await WorkerMailer.connect({
         host: env.SMTP_HOST,
         port: Number(env.SMTP_PORT) || 587,
         secure: false,
@@ -266,6 +271,14 @@ export default {
     } catch (err) {
       console.error('SMTP send failed', err);
       return jsonResponse(502, { error: 'send_failed' }, allowedOrigin);
+    } finally {
+      if (mailer) {
+        try {
+          await mailer.close();
+        } catch (err) {
+          console.error('SMTP close failed', err);
+        }
+      }
     }
   },
 };

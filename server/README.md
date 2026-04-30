@@ -166,6 +166,10 @@ unset (it logs `skipped` but still sends the email).
 
 ## API
 
+### `GET /health`
+
+Returns `200 { ok: true, service: "chancey-contact" }` for uptime checks.
+
 ### `POST /` (any path on the worker)
 
 Request body (JSON):
