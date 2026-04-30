@@ -6,8 +6,6 @@ on:
     paths:
       - 'server/**'
       - '.github/workflows/contact-worker.yml'
-    tags:
-      - 'contact-v*'
   pull_request:
     paths:
       - 'server/**'
@@ -87,12 +85,9 @@ jobs:
 
   deploy-prod:
     name: Deploy production
-    needs: [typecheck, wrangler-check]
-    if: startsWith(github.ref, 'refs/tags/contact-v')
+    needs: [deploy-dev]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    # `environment: chancey-contact-prod` should be configured in the GitHub
-    # repo settings (Settings → Environments) with a required reviewer so
-    # production deploys require manual approval.
     environment: chancey-contact-prod
     defaults:
       run:
@@ -116,7 +111,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     needs: [typecheck, wrangler-check]
     runs-on: ubuntu-latest
-    environment: chancey-contact-${{ inputs.env }}
+    environment: ${{ inputs.env == 'production' && 'chancey-contact-prod' || 'chancey-contact-dev' }}
     defaults:
       run:
         working-directory: server

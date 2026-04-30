@@ -105,16 +105,15 @@ the GitHub repo has these set:
   - `CLOUDFLARE_ACCOUNT_ID` — same value as `chancey-api`.
 - **Environments** (Settings → Environments):
   - `chancey-contact-dev` — no reviewer needed.
-  - `chancey-contact-prod` — add yourself as a required reviewer so prod
-    deploys gate behind a one-click approval (matches `chancey-api-prod`).
+  - `chancey-contact-prod` — no reviewer needed if production should deploy
+    automatically when changes merge to `main`.
 
 Then:
 
 | Trigger | Action |
 | --- | --- |
 | Pull request that touches `server/**` | typecheck + `wrangler deploy --dry-run` for both envs |
-| Push to `main` (touching `server/**`) | auto-deploy to **dev** |
-| Push tag `contact-v<x.y.z>` | auto-deploy to **production** (after env approval) |
+| Push to `main` (touching `server/**`) | auto-deploy to **dev**, then **production** |
 | Actions UI → "Run workflow" | manual deploy to `dev` or `production` |
 
 Worker *runtime* secrets (`SMTP_USER`, `SMTP_PASSWORD`, `MAIL_FROM`,
