@@ -1,0 +1,9 @@
+name = "chancey-contact"
+main = "src/index.js"
+compatibility_date = "2025-04-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://chancey.io,https://www.chancey.io,https://ninja-consulting-llc.github.io,http://localhost:4321"
+CONTACT_TO_EMAIL = "support@chancey.io"
+CONTACT_FROM_EMAIL = "Chancey Support <support@chancey.io>"
