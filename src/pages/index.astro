@@ -1,64 +1,219 @@
 ---
 import AppPreview from '../components/AppPreview.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/icons/Icon.astro';
+import Screenshot from '../components/Screenshot.astro';
+import FeatureBlock from '../components/sections/FeatureBlock.astro';
+import FaqSection from '../components/sections/FaqSection.astro';
+import CtaSection from '../components/sections/CtaSection.astro';
 import { createLocalPaths } from '../paths';
-import { features, site } from '../site';
+import { features, featureBlocks, faqs, site } from '../site';
 
 const paths = createLocalPaths(Astro.url.pathname);
+const homepageFaqs = faqs.slice(0, 8);
 ---
 
 <BaseLayout
-  title="Chancey | Scan tickets, track draws, build picks"
-  description="Chancey is a lottery companion app for scanning tickets, checking published results, and building number picks faster."
+  title="Chancey — Pick lottery numbers and track every ticket"
+  description="Chancey is a lottery toolkit for adults 18+. Pick numbers in the builder, save the sets you love, and track every ticket through the next draw. Free, no ads, no predictions."
+  includeApplication={true}
+  faqs={homepageFaqs}
 >
-  <section class="hero">
-    <div>
-      <p class="eyebrow">Lottery companion app for adults 18+</p>
-      <h1>Chancey</h1>
-      <p class="lead">
-        Scan tickets you already bought, track saved numbers, check published draw results, and build picks without turning your camera roll into a shoebox of slips.
-      </p>
-      <div class="actions">
-        <a class="button primary" href={site.appUrl}>Open web app</a>
-        <a class="button" href={paths.route('/support')}>Get support</a>
+  <section class="container">
+    <div class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Lottery toolkit · Adults 18+</p>
+        <h1 class="h-display">
+          Pick your lottery numbers. Track every ticket.
+        </h1>
+        <p class="lead lead-lg" style="margin-top: 24px;">
+          Mix favorite numbers with quick picks. Save the sets you love. Then scan each ticket and
+          let Chancey check the draw for you.
+        </p>
+        <div class="actions">
+          <a class="button primary lg" href={site.appUrl}>
+            Build your picks
+            <Icon name="arrow-right" size={18} />
+          </a>
+          <a class="button lg" href={paths.route('/how-it-works/')}>
+            Track tickets
+          </a>
+        </div>
+        <ul class="hero-meta" role="list">
+          <li class="hero-meta-item"><Icon name="check" size={18} /> Free core features</li>
+          <li class="hero-meta-item"><Icon name="lock" size={18} /> No ads, no ad trackers</li>
+          <li class="hero-meta-item"><Icon name="globe" size={18} /> Works in any browser</li>
+        </ul>
       </div>
-      <p class="disclaimer">
-        Chancey does not sell lottery tickets, cash prizes, predict winning numbers, or guarantee results. Always verify winning status with the official lottery operator.
-      </p>
-    </div>
-    <AppPreview />
-  </section>
-
-  <section class="band">
-    <div class="section-head">
-      <p class="eyebrow">Built for repeat play checks</p>
-      <h2>A quieter way to manage lottery slips.</h2>
-      <p>
-        Chancey is designed for the routine parts of lottery play: capturing numbers, checking results, and keeping your own history tidy.
-      </p>
-    </div>
-    <div class="grid">
-      {features.map((feature, index) => (
-        <article class="card">
-          <div class="icon">{index + 1}</div>
-          <h3>{feature.title}</h3>
-          <p>{feature.body}</p>
-        </article>
-      ))}
+      <AppPreview variant="home" />
     </div>
   </section>
 
-  <section class="band alt">
-    <div class="section-head">
-      <p class="eyebrow">Responsible by design</p>
-      <h2>Information and convenience, not a promise.</h2>
-      <p>
-        Lottery play involves real money and long odds. Chancey is for adults who want a cleaner way to manage information about tickets they already choose to buy.
-      </p>
-      <div class="actions">
-        <a class="button" href={paths.route('/responsible-play')}>Responsible play</a>
-        <a class="button" href={paths.route('/terms')}>Read terms</a>
+  <section class="container">
+    <div class="trust-strip">
+      <div class="trust-item">
+        <span class="label">Built for</span>
+        <span class="value">Repeat players</span>
+      </div>
+      <div class="trust-item">
+        <span class="label">Predictions</span>
+        <span class="value">None — ever</span>
+      </div>
+      <div class="trust-item">
+        <span class="label">In-app ads</span>
+        <span class="value">Zero</span>
+      </div>
+      <div class="trust-item">
+        <span class="label">Source of truth</span>
+        <span class="value">Official lottery</span>
       </div>
     </div>
   </section>
+
+  <div id="features"></div>
+
+  {/* ============ FEATURE BLOCK 1 — BUILD (PRIMARY) ============ */}
+  <FeatureBlock
+    eyebrow={featureBlocks[0].eyebrow}
+    title={featureBlocks[0].title}
+    description={featureBlocks[0].description}
+    bullets={featureBlocks[0].bullets}
+    background="cream"
+    id={`feature-${featureBlocks[0].id}`}
+  >
+    <Screenshot
+      alt={featureBlocks[0].screenshotAlt}
+      label={featureBlocks[0].screenshotLabel}
+      variant={featureBlocks[0].previewVariant as any}
+      frame="phone"
+    />
+  </FeatureBlock>
+
+  {/* ============ FEATURE BLOCK 2 — SCAN ============ */}
+  <FeatureBlock
+    eyebrow={featureBlocks[1].eyebrow}
+    title={featureBlocks[1].title}
+    description={featureBlocks[1].description}
+    bullets={featureBlocks[1].bullets}
+    reverse={true}
+    id={`feature-${featureBlocks[1].id}`}
+  >
+    <Screenshot
+      alt={featureBlocks[1].screenshotAlt}
+      label={featureBlocks[1].screenshotLabel}
+      variant={featureBlocks[1].previewVariant as any}
+      frame="phone"
+    />
+  </FeatureBlock>
+
+  {/* ============ FEATURE BLOCK 3 — CHECK ============ */}
+  <FeatureBlock
+    eyebrow={featureBlocks[2].eyebrow}
+    title={featureBlocks[2].title}
+    description={featureBlocks[2].description}
+    bullets={featureBlocks[2].bullets}
+    background="cream"
+    id={`feature-${featureBlocks[2].id}`}
+  >
+    <Screenshot
+      alt={featureBlocks[2].screenshotAlt}
+      label={featureBlocks[2].screenshotLabel}
+      variant={featureBlocks[2].previewVariant as any}
+      frame="phone"
+    />
+  </FeatureBlock>
+
+  {/* ============ ALSO INCLUDED ============ */}
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Also included</p>
+        <h2 class="h-section">Everything else you'd expect. Nothing you wouldn't.</h2>
+      </div>
+      <div class="feature-grid">
+        {
+          features.map((feature) => (
+            <article class="feature-card">
+              <span class="feature-icon">
+                <Icon name={feature.icon as any} size={24} />
+              </span>
+              <h3>{feature.title}</h3>
+              <p>{feature.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <FaqSection
+    eyebrow="Common questions"
+    heading="Quick answers."
+    faqs={homepageFaqs}
+  />
+
+  {/* ============ RESPONSIBLE PLAY CALLOUT (compressed) ============ */}
+  <section class="section-tight">
+    <div class="container">
+      <div class="responsible-callout">
+        <div>
+          <p class="eyebrow">Responsible by design</p>
+          <h2 class="h-section">Lottery is real money and long odds.</h2>
+          <p>
+            Chancey does not predict numbers, run ads, or push you to play more. The Responsible
+            play page has tips for setting limits and the U.S. helpline (1‑800‑GAMBLER).
+          </p>
+          <div class="actions">
+            <a class="button" href={paths.route('/responsible-play/')}>Read responsible play</a>
+          </div>
+        </div>
+        <div class="responsible-callout-disclaimer">
+          <p>
+            Chancey does not sell lottery tickets, pay prizes, predict winning numbers, or
+            guarantee results. Always check winning status with the official lottery.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaSection />
 </BaseLayout>
+
+<style>
+  .responsible-callout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+    padding: clamp(36px, 5vw, 56px);
+    border-radius: var(--radius-2xl);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .responsible-callout h2 {
+    margin: 12px 0 16px;
+  }
+
+  .responsible-callout-disclaimer {
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+  }
+
+  .responsible-callout-disclaimer p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    line-height: var(--leading-relaxed);
+  }
+
+  @media (max-width: 980px) {
+    .responsible-callout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

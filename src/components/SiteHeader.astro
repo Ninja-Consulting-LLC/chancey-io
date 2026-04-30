@@ -1,0 +1,41 @@
+---
+import { navItems, site } from '../site';
+import { createLocalPaths } from '../paths';
+import BrandMark from './BrandMark.astro';
+
+const paths = createLocalPaths(Astro.url.pathname);
+const currentPath = Astro.url.pathname;
+
+function isCurrent(href: string): boolean {
+  if (href === '/') return currentPath === '/' || currentPath === '';
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href={paths.route('/')} aria-label={`${site.name} home`}>
+      <BrandMark size={36} />
+      <span>{site.name}</span>
+    </a>
+    <nav class="primary-nav" aria-label="Primary">
+      <ul class="nav-list">
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={paths.route(item.href)}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="button primary" href={site.appUrl}>
+        Open web app
+      </a>
+    </nav>
+  </div>
+</header>

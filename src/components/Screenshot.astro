@@ -1,0 +1,528 @@
+---
+/**
+ * Screenshot component — drops in a real product image inside a frame.
+ *
+ * USAGE:
+ *   <Screenshot src="/screens/scanner.png" alt="..." caption="..." frame="phone" />
+ *
+ * If `src` is omitted, a styled product mock renders. Replace by setting `src`.
+ */
+
+interface Props {
+  src?: string;
+  alt: string;
+  caption?: string;
+  frame?: 'phone' | 'browser' | 'plain';
+  width?: number;
+  height?: number;
+  variant?: 'scan' | 'history' | 'builder' | 'home' | 'generic';
+  label?: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  src,
+  alt,
+  caption,
+  frame = 'phone',
+  width = 720,
+  height = 1280,
+  variant = 'generic',
+  label,
+  class: className = '',
+  loading = 'lazy',
+} = Astro.props;
+
+const mockLabel = label ?? alt;
+const builderBalls = ['03', '12', '19', '27', '44', '58'];
+const scanBalls = ['08', '17', '28', '42', '61', '14'];
+const historyRows = [
+  { game: 'Powerball', date: 'Tonight', status: 'Pending', balls: ['08', '17', '28', '42', '61', '14'] },
+  { game: 'Mega Millions', date: 'Apr 25', status: '3 match', balls: ['04', '22', '31', '47', '58', '09'] },
+  { game: 'Pick 6', date: 'Apr 22', status: 'No match', balls: ['02', '17', '23', '31', '42', '49'] },
+];
+---
+
+<figure class={`shot shot-${frame} shot-variant-${variant} ${className}`}>
+  <div class="shot-frame">
+    {
+      frame === 'browser' && (
+        <div class="shot-chrome" aria-hidden="true">
+          <span class="shot-dot" />
+          <span class="shot-dot" />
+          <span class="shot-dot" />
+          <span class="shot-url">app.chancey.io</span>
+        </div>
+      )
+    }
+    <div class="shot-screen">
+      {
+        src ? (
+          <img src={src} alt={alt} width={width} height={height} loading={loading} />
+        ) : (
+          <div class={`shot-mock shot-mock-${variant}`} role="img" aria-label={alt}>
+            {
+              variant === 'builder' && (
+                <>
+                  <div class="mock-top">
+                    <span>Powerball</span>
+                    <strong>Number builder</strong>
+                  </div>
+                  <div class="mock-ball-grid">
+                    {builderBalls.map((ball, index) => (
+                      <span class={`mock-ball ${index < 2 ? 'favorite' : ''}`}>{ball}</span>
+                    ))}
+                  </div>
+                  <div class="mock-control">
+                    <span>Favorites pinned</span>
+                    <strong>2</strong>
+                  </div>
+                  <div class="mock-action">Save set</div>
+                </>
+              )
+            }
+            {
+              variant === 'scan' && (
+                <>
+                  <div class="mock-camera">
+                    <div class="mock-ticket">
+                      <span class="ticket-title">POWERBALL</span>
+                      <div class="ticket-lines">
+                        <span />
+                        <span />
+                        <span />
+                      </div>
+                      <div class="ticket-numbers">
+                        {scanBalls.map((ball) => (
+                          <span>{ball}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <span class="scan-line" />
+                  </div>
+                  <div class="mock-confirm">6 numbers found</div>
+                </>
+              )
+            }
+            {
+              variant === 'history' && (
+                <>
+                  <div class="mock-top">
+                    <span>Tickets</span>
+                    <strong>History</strong>
+                  </div>
+                  <div class="mock-history-list">
+                    {historyRows.map((row) => (
+                      <article class="mock-history-card">
+                        <div>
+                          <strong>{row.game}</strong>
+                          <span>{row.date}</span>
+                        </div>
+                        <div class="mock-mini-balls">
+                          {row.balls.map((ball, index) => (
+                            <span class={index === row.balls.length - 1 ? 'red' : ''}>{ball}</span>
+                          ))}
+                        </div>
+                        <em>{row.status}</em>
+                      </article>
+                    ))}
+                  </div>
+                </>
+              )
+            }
+            {
+              !['builder', 'scan', 'history'].includes(variant) && (
+                <>
+                  <div class="mock-photo">
+                    <div class="mock-hand" />
+                    <div class="mock-slip">
+                      <strong>LOTTERY</strong>
+                      <span />
+                      <span />
+                      <span />
+                      <small>Keep this ticket</small>
+                    </div>
+                  </div>
+                  <div class="mock-caption">{mockLabel}</div>
+                </>
+              )
+            }
+          </div>
+        )
+      }
+    </div>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .shot {
+    position: relative;
+    margin: 0;
+    isolation: isolate;
+  }
+
+  .shot::before {
+    content: '';
+    position: absolute;
+    inset: -8% -8% -16% -8%;
+    background: radial-gradient(
+      closest-side,
+      rgba(255, 107, 61, 0.16),
+      rgba(255, 107, 61, 0.04) 60%,
+      transparent 80%
+    );
+    z-index: -1;
+  }
+
+  /* Phone frame */
+  .shot-phone .shot-frame {
+    margin-inline: auto;
+    width: min(100%, 360px);
+    border: 12px solid #1b1410;
+    border-radius: 44px;
+    background: #1b1410;
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .shot-phone .shot-frame::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92px;
+    height: 26px;
+    border-radius: 999px;
+    background: #1b1410;
+    z-index: 3;
+  }
+
+  .shot-phone .shot-screen {
+    aspect-ratio: 9 / 19.5;
+    background: var(--gradient-cream);
+    overflow: hidden;
+  }
+
+  /* Browser frame */
+  .shot-browser .shot-frame {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  .shot-chrome {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .shot-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: rgba(27, 20, 16, 0.18);
+  }
+
+  .shot-url {
+    flex: 1;
+    margin-left: 12px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .shot-browser .shot-screen {
+    aspect-ratio: 16 / 10;
+    background: var(--gradient-cream);
+    overflow: hidden;
+  }
+
+  /* Plain frame */
+  .shot-plain .shot-frame {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Image styling */
+  .shot-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  /* Mock app previews */
+  .shot-mock {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 54px 24px 28px;
+    background:
+      linear-gradient(135deg, rgba(255, 107, 61, 0.08), rgba(245, 184, 46, 0.08)),
+      var(--gradient-cream);
+    color: var(--ink);
+    position: relative;
+  }
+
+  .shot-browser .shot-mock,
+  .shot-plain .shot-mock {
+    padding: 30px;
+  }
+
+  .mock-top {
+    display: grid;
+    gap: 4px;
+  }
+
+  .mock-top span,
+  .mock-control span,
+  .mock-history-card span,
+  .mock-caption {
+    color: var(--ink-faint);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .mock-top strong {
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    font-weight: 500;
+  }
+
+  .mock-ball-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .mock-ball,
+  .mock-mini-balls span {
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid rgba(27, 20, 16, 0.1);
+    box-shadow: var(--shadow-sm);
+    font-weight: 900;
+  }
+
+  .mock-ball {
+    aspect-ratio: 1;
+    font-size: 1rem;
+  }
+
+  .mock-ball.favorite,
+  .mock-mini-balls span.red {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .mock-control,
+  .mock-action,
+  .mock-confirm,
+  .mock-history-card {
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(27, 20, 16, 0.1);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .mock-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+  }
+
+  .mock-action,
+  .mock-confirm {
+    margin-top: auto;
+    padding: 14px 16px;
+    text-align: center;
+    font-weight: 900;
+    background: var(--accent);
+  }
+
+  .mock-camera {
+    position: relative;
+    min-height: 360px;
+    display: grid;
+    place-items: center;
+    border-radius: 28px;
+    background:
+      linear-gradient(rgba(27, 20, 16, 0.08), rgba(27, 20, 16, 0.08)),
+      repeating-linear-gradient(135deg, rgba(27, 20, 16, 0.08) 0 1px, transparent 1px 16px);
+    overflow: hidden;
+  }
+
+  .mock-ticket {
+    width: 72%;
+    min-height: 250px;
+    padding: 24px 18px;
+    display: grid;
+    gap: 16px;
+    background: #fffdf8;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    transform: rotate(-4deg);
+  }
+
+  .ticket-title {
+    font-family: var(--font-mono);
+    font-weight: 900;
+    letter-spacing: 0.14em;
+  }
+
+  .ticket-lines {
+    display: grid;
+    gap: 8px;
+  }
+
+  .ticket-lines span,
+  .mock-slip span {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(27, 20, 16, 0.12);
+  }
+
+  .ticket-numbers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-weight: 900;
+  }
+
+  .scan-line {
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    top: 46%;
+    height: 3px;
+    background: var(--red);
+    box-shadow: 0 0 22px rgba(232, 55, 92, 0.8);
+  }
+
+  .mock-history-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .mock-history-card {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .mock-history-card div:first-child {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .mock-history-card em {
+    width: max-content;
+    padding: 5px 9px;
+    border-radius: var(--radius-pill);
+    background: var(--green-soft);
+    color: #0d5a35;
+    font-size: 0.74rem;
+    font-style: normal;
+    font-weight: 900;
+  }
+
+  .mock-mini-balls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .mock-mini-balls span {
+    width: 27px;
+    height: 27px;
+    font-size: 0.68rem;
+  }
+
+  .mock-photo {
+    position: relative;
+    min-height: 320px;
+    display: grid;
+    place-items: center;
+    border-radius: 24px;
+    background:
+      linear-gradient(135deg, rgba(31, 157, 95, 0.12), rgba(255, 107, 61, 0.12)),
+      var(--surface-alt);
+    overflow: hidden;
+  }
+
+  .mock-hand {
+    position: absolute;
+    width: 210px;
+    height: 92px;
+    right: -42px;
+    bottom: 44px;
+    border-radius: 999px 0 0 999px;
+    background: #e7b68f;
+    transform: rotate(-16deg);
+  }
+
+  .mock-slip {
+    position: relative;
+    width: min(70%, 300px);
+    min-height: 220px;
+    padding: 24px;
+    display: grid;
+    gap: 14px;
+    background: #fffdf8;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    transform: rotate(5deg);
+  }
+
+  .mock-slip small {
+    margin-top: auto;
+    color: var(--ink-faint);
+    font-weight: 800;
+  }
+
+  .mock-caption {
+    text-align: center;
+  }
+
+  @media (max-width: 520px) {
+    .shot-mock {
+      padding-inline: 18px;
+    }
+
+    .mock-camera,
+    .mock-photo {
+      min-height: 280px;
+    }
+  }
+
+  figcaption {
+    margin-top: 14px;
+    font-size: var(--text-sm);
+    color: var(--ink-faint);
+    text-align: center;
+  }
+</style>

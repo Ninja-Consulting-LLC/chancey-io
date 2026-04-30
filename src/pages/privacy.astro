@@ -1,46 +1,175 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../site';
+import Icon from '../components/icons/Icon.astro';
+
+const lastUpdated = 'April 30, 2026';
 ---
 
 <BaseLayout
-  title="Privacy Policy | Chancey"
-  description="Chancey's privacy policy for account data, ticket scans, preferences, operational logs, and support requests."
+  title="Privacy Policy"
+  description="How Chancey collects, uses, and protects your account data, picks, ticket scans, preferences, logs, and support messages."
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Privacy Policy', href: '/privacy/' },
+  ]}
 >
-  <article class="legal">
-    <p class="eyebrow">Privacy Policy</p>
-    <h1>Privacy Policy</h1>
-    <p class="notice">
-      Draft for launch preparation. This policy should be reviewed by counsel before public release.
-    </p>
-    <p>Last updated: April 30, 2026</p>
+  <section class="container">
+    <div class="article">
+      <header>
+        <p class="eyebrow">Privacy</p>
+        <h1>Privacy Policy</h1>
+        <p class="muted">Last updated: {lastUpdated}</p>
+        <div class="notice">
+          <span class="notice-icon" aria-hidden="true"><Icon name="lightning" size={22} /></span>
+          <div>
+            <strong>Working draft</strong>
+            This policy is in final legal review for launch. Big changes will show up in the app
+            and at the top of this page.
+          </div>
+        </div>
+      </header>
 
-    <section>
-      <h2>Information we collect</h2>
-      <p>
-        Chancey collects account information, eligibility information such as birthday, saved ticket details, app preferences, operational logs, and support details you choose to send us.
-      </p>
-    </section>
+      <section>
+        <h2>The short version</h2>
+        <p>
+          Chancey is for adults 18+ who want to pick and track lottery tickets. To do that, we
+          store your account info, the picks and tickets you save, your settings, and the logs we
+          need to run the app. We do not sell your data. We do not show ads inside the app. We do
+          not use ticket photos for advertising.
+        </p>
+      </section>
 
-    <section>
-      <h2>Ticket scans</h2>
-      <p>
-        Ticket images are processed to read numbers and draw details. When on-device recognition is inconclusive, Chancey may use a third-party provider to assist with recognition. Chancey does not use ticket images to sell advertising.
-      </p>
-    </section>
+      <section>
+        <h2>Information we collect</h2>
+        <h3>Account information</h3>
+        <p>
+          When you sign up, we store an email (or an ID from a sign-in service you choose), an
+          attestation that you are 18 or older, and any settings you pick. We may store hashed
+          tokens to keep you signed in.
+        </p>
+        <h3>Picks, ticket scans, and saved data</h3>
+        <p>
+          When you pick numbers or scan a ticket, we save the numbers, the game, the draw date,
+          and any notes you add. Ticket photos are processed to read the numbers and details. If
+          your device cannot read a number on its own, we may use a cloud step to help. We never
+          use ticket photos for advertising or sell them to third parties.
+        </p>
+        <h3>Preferences and app state</h3>
+        <p>
+          We store your settings — favorites, saved sets, reminder choices — so the app works the
+          same way across your devices.
+        </p>
+        <h3>Operational logs</h3>
+        <p>
+          We collect the logs we need to run, debug, and protect the service: timestamps, IP
+          addresses, device and browser type, error reports, and request data. We keep these for a
+          limited time. They are used for operations and security, not for ads.
+        </p>
+        <h3>Support messages</h3>
+        <p>
+          When you write to support, we keep the message and any attachments so we can reply,
+          follow up, and improve the product. Don't send government IDs, payment cards, or
+          passwords.
+        </p>
+        <h3>Analytics on this marketing site</h3>
+        <p>
+          The marketing site at chancey.io uses Google Analytics 4 (GA4) to count visits, see
+          which pages people read, and measure clicks on the call-to-action buttons. We have GA4
+          set up with privacy-respecting defaults: IP addresses are anonymized, advertising
+          features are off, and no cross-site advertising signals are sent. GA4 sets a first-party
+          <code>_ga</code> cookie. The Chancey web app at app.chancey.io does not load advertising
+          trackers.
+        </p>
+      </section>
 
-    <section>
-      <h2>How we use information</h2>
-      <p>
-        We use information to provide the service, authenticate users, check ticket status, sync preferences, prevent abuse, debug issues, respond to support requests, and comply with legal obligations.
-      </p>
-    </section>
+      <section>
+        <h2>How we use information</h2>
+        <ul>
+          <li>To run the core service: picks, scanning, history, draw matching, and sync.</li>
+          <li>To sign you in and keep accounts safe.</li>
+          <li>To debug issues and keep the service reliable and secure.</li>
+          <li>To reply to your support and privacy requests.</li>
+          <li>To meet the law where it applies.</li>
+        </ul>
+        <p>
+          We do not use your information to sell ads, build ad profiles, or share with data
+          brokers. We only use ticket photos to read the numbers and draw details.
+        </p>
+      </section>
 
-    <section>
-      <h2>Choices and requests</h2>
-      <p>
-        To request access, correction, deletion, or other privacy help, email <a href={`mailto:${site.privacyEmail}`}>{site.privacyEmail}</a>.
-      </p>
-    </section>
-  </article>
+      <section>
+        <h2>Sharing</h2>
+        <p>We share information only with:</p>
+        <ul>
+          <li>
+            <strong>Service providers</strong> who run our infrastructure (hosting, sign-in, error
+            tracking, optional ticket-recognition help, email delivery, web analytics). These
+            providers are bound by contract to protect data and use it only for what we ask.
+          </li>
+          <li>
+            <strong>Legal recipients</strong> when the law, a valid legal process, or the safety
+            of users requires it.
+          </li>
+          <li>
+            <strong>Successors</strong> if Chancey is sold or merged. We will require continued
+            protection of your data and tell you about meaningful changes.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Your choices</h2>
+        <p>
+          You can ask for access to your data, a correction, a deletion, or an export. Send a
+          message through our <a href="/contact/">contact form</a> and pick the "Privacy or data
+          request" topic. Use the email tied to your account. We reply within the windows the law
+          requires (usually 30 days).
+        </p>
+        <h3>Cookies and similar tools</h3>
+        <p>
+          The marketing site uses essential cookies and a privacy-respecting Google Analytics
+          cookie (see above). The Chancey web app uses essential cookies and similar storage for
+          sign-in and settings. We do not run cross-site advertising trackers. To opt out of GA4,
+          you can use your browser's tracking-prevention setting, install the
+          <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">Google Analytics
+            opt-out add-on</a>, or block analytics cookies in your browser.
+        </p>
+      </section>
+
+      <section>
+        <h2>Children</h2>
+        <p>
+          Chancey is not for anyone under 18, or under the local age of majority, whichever is
+          greater. We do not knowingly collect data from children. If you think a child gave us
+          data, send a message through the <a href="/contact/">contact form</a> and we will delete
+          it.
+        </p>
+      </section>
+
+      <section>
+        <h2>Security</h2>
+        <p>
+          We use reasonable safeguards — administrative, technical, and physical — to protect your
+          data. No system is perfect. If we learn of an incident that affects your data, we will
+          tell you and the right regulators in line with the law.
+        </p>
+      </section>
+
+      <section>
+        <h2>Changes</h2>
+        <p>
+          We will update this policy as the product changes. Big changes will show up in the app
+          and at the top of this page, with a new "last updated" date.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>
+          For privacy questions or to use the rights above, send a message through the <a
+            href="/contact/">contact form</a> and pick the "Privacy or data request" topic.
+        </p>
+      </section>
+    </div>
+  </section>
 </BaseLayout>

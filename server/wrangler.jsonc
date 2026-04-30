@@ -1,0 +1,49 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "chancey-contact",
+	"main": "src/worker.ts",
+	"compatibility_date": "2025-10-01",
+	"compatibility_flags": [
+		"nodejs_compat_v2"
+	],
+	"observability": {
+		"enabled": true
+	},
+	"vars": {
+		"STAGE": "local",
+		"ALLOWED_ORIGIN": "http://localhost:4321",
+		"SMTP_HOST": "email-smtp.us-east-1.amazonaws.com",
+		"SMTP_PORT": "587",
+		"RECAPTCHA_ALLOWED_HOSTNAMES": "localhost,127.0.0.1"
+	},
+	"env": {
+		"dev": {
+			"name": "chancey-contact-dev",
+			"vars": {
+				"STAGE": "dev",
+				// Dev allows local hosts plus the workers.dev subdomain.
+				// `*.trycloudflare.com` covers `wrangler dev --remote` tunnels.
+				"ALLOWED_ORIGIN": "http://localhost:4321,http://localhost:3000,https://*.trycloudflare.com",
+				"SMTP_HOST": "email-smtp.us-east-1.amazonaws.com",
+				"SMTP_PORT": "587",
+				"RECAPTCHA_ALLOWED_HOSTNAMES": "localhost,127.0.0.1"
+			},
+			"observability": { "enabled": true }
+		},
+		"production": {
+			"name": "chancey-contact",
+			"vars": {
+				"STAGE": "production",
+				"ALLOWED_ORIGIN": "https://chancey.io,https://www.chancey.io",
+				"SMTP_HOST": "email-smtp.us-east-1.amazonaws.com",
+				"SMTP_PORT": "587",
+				"RECAPTCHA_ALLOWED_HOSTNAMES": "chancey.io,www.chancey.io"
+			},
+			"observability": { "enabled": true }
+			// Optional custom-domain route — uncomment after the DNS record exists:
+			// "routes": [
+			// 	{ "pattern": "contact-api.chancey.io", "custom_domain": true }
+			// ]
+		}
+	}
+}

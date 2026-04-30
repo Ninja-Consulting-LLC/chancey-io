@@ -1,0 +1,46 @@
+---
+import Icon from '../icons/Icon.astro';
+import { site } from '../../site';
+import { createLocalPaths } from '../../paths';
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  description?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+
+const paths = createLocalPaths(Astro.url.pathname);
+
+const {
+  eyebrow = 'Ready when you are',
+  heading = 'Pick a set. Track a ticket.',
+  description = 'Open Chancey on the web. Free core features, no install, no upsell.',
+  primaryLabel = 'Build your picks',
+  primaryHref = site.appUrl,
+  secondaryLabel = 'How tracking works',
+  secondaryHref = paths.route('/how-it-works/'),
+} = Astro.props;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="cta-card">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="h-section">{heading}</h2>
+      <p>{description}</p>
+      <div class="actions">
+        <a class="button primary lg" href={primaryHref}>
+          {primaryLabel}
+          <Icon name="arrow-right" size={18} />
+        </a>
+        <a class="button lg" href={secondaryHref}>
+          {secondaryLabel}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

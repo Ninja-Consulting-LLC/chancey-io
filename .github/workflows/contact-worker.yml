@@ -1,62 +1,130 @@
-name: contact-worker
+name: chancey-contact
 
 on:
-  pull_request:
-    paths:
-      - contact-worker/**
-      - .github/workflows/contact-worker.yml
   push:
     branches: [main]
     paths:
-      - contact-worker/**
-      - .github/workflows/contact-worker.yml
+      - 'server/**'
+      - '.github/workflows/contact-worker.yml'
+  pull_request:
+    paths:
+      - 'server/**'
+      - '.github/workflows/contact-worker.yml'
   workflow_dispatch:
+    inputs:
+      env:
+        description: 'Worker environment to deploy'
+        required: true
+        default: dev
+        type: choice
+        options: [dev, production]
 
 permissions:
   contents: read
 
 concurrency:
-  group: contact-worker-${{ github.ref }}
+  group: chancey-contact-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
-  check:
-    name: check
+  typecheck:
+    name: typecheck
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: server/package-lock.json
       - run: npm ci
-      - name: Validate worker bundle
-        run: npx --yes wrangler@4 deploy --dry-run --config contact-worker/wrangler.toml
+      - run: npm run typecheck
 
-  deploy:
-    name: deploy contact worker
-    if: github.event_name != 'pull_request'
-    needs: check
+  wrangler-check:
+    name: wrangler-check
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: server/package-lock.json
       - run: npm ci
-      - name: Validate Cloudflare deployment secrets
+      - run: npx wrangler deploy --dry-run --env dev
+      - run: npx wrangler deploy --dry-run --env production
+
+  deploy-dev:
+    name: Deploy dev
+    needs: [typecheck, wrangler-check]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: chancey-contact-dev
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci
+      - name: Deploy to Cloudflare (dev)
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: |
-          test -n "$CLOUDFLARE_ACCOUNT_ID"
-          test -n "$CLOUDFLARE_API_TOKEN"
-      - name: Deploy contact worker
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy --env dev
+
+  deploy-prod:
+    name: Deploy production
+    needs: [deploy-dev]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: chancey-contact-prod
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci
+      - name: Deploy to Cloudflare (production)
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: npx --yes wrangler@4 deploy --config contact-worker/wrangler.toml
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy --env production
+
+  manual-deploy:
+    name: Manual deploy
+    if: github.event_name == 'workflow_dispatch'
+    needs: [typecheck, wrangler-check]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env == 'production' && 'chancey-contact-prod' || 'chancey-contact-dev' }}
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci
+      - name: Deploy to Cloudflare (${{ inputs.env }})
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy --env ${{ inputs.env }}

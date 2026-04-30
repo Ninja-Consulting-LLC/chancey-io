@@ -1,0 +1,121 @@
+---
+import Icon from '../icons/Icon.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  bullets?: ReadonlyArray<string>;
+  reverse?: boolean;
+  background?: 'default' | 'cream' | 'deep';
+  id?: string;
+}
+
+const { eyebrow, title, description, bullets, reverse = false, background = 'default', id } =
+  Astro.props;
+
+const sectionClass = [
+  'section',
+  background === 'cream' ? 'section-bg-cream' : '',
+  background === 'deep' ? 'section-bg-deep' : '',
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<section class={sectionClass} id={id}>
+  <div class="container">
+    <div class={`feature-block ${reverse ? 'reverse' : ''}`}>
+      <div class="feature-block-copy">
+        <p class="eyebrow">{eyebrow}</p>
+        <h2 class="h-section">{title}</h2>
+        <p class="lead">{description}</p>
+        {
+          bullets && bullets.length > 0 && (
+            <ul class="feature-bullets">
+              {bullets.map((bullet) => (
+                <li>
+                  <span class="feature-bullets-icon" aria-hidden="true">
+                    <Icon name="check-mark" size={12} />
+                  </span>
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+      <div class="feature-block-visual">
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .feature-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(40px, 6vw, 80px);
+  }
+
+  .feature-block.reverse .feature-block-copy {
+    order: 2;
+  }
+
+  .feature-block.reverse .feature-block-visual {
+    order: 1;
+  }
+
+  .feature-block-copy h2 {
+    margin-bottom: 18px;
+  }
+
+  .feature-block-copy .lead {
+    margin-bottom: 28px;
+    max-width: 540px;
+  }
+
+  .feature-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .feature-bullets li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    color: var(--ink-soft);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+  }
+
+  .feature-bullets-icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    border-radius: var(--radius-pill);
+    background: var(--green-soft);
+    color: var(--green);
+    display: grid;
+    place-items: center;
+  }
+
+  @media (max-width: 980px) {
+    .feature-block {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .feature-block.reverse .feature-block-copy,
+    .feature-block.reverse .feature-block-visual {
+      order: initial;
+    }
+  }
+</style>

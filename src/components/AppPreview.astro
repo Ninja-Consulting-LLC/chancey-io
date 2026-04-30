@@ -1,40 +1,146 @@
 ---
-import { createLocalPaths } from '../paths';
+import Icon from './icons/Icon.astro';
 
-const paths = createLocalPaths(Astro.url.pathname);
+interface Props {
+  variant?: 'home' | 'history';
+}
+
+const { variant = 'home' } = Astro.props;
 ---
 
-<div class="phone-wrap" aria-label="Chancey app preview">
-  <div class="phone">
-    <div class="phone-screen">
-      <img src={paths.asset('/logo.png')} alt="Chancey app icon" width="64" height="64" />
-      <p class="eyebrow">Ticket saved</p>
-      <h2>Powerball</h2>
-      <div class="ticket-card">
-        <strong>Tonight's draw</strong>
-        <div class="balls" aria-label="Example saved numbers">
-          <span class="ball">08</span>
-          <span class="ball">17</span>
-          <span class="ball">28</span>
-          <span class="ball">42</span>
-          <span class="ball">61</span>
-          <span class="ball red">14</span>
-        </div>
-        <div class="status-row">
-          <div class="stat">
-            <span>Status</span>
-            <b>Pending</b>
-          </div>
-          <div class="stat">
-            <span>Saved</span>
-            <b>12</b>
+<div class="device-stage" aria-label="Chancey app preview">
+  <div class="device" role="img" aria-label="Phone showing the Chancey app with a saved Powerball ticket">
+    <div class="device-screen">
+      <div class="screen-head">
+        <div class="screen-greeting">
+          <span class="screen-avatar">M</span>
+          <div>
+            <span>Hi, Mira</span>
+            <small>3 saved tickets</small>
           </div>
         </div>
+        <div class="screen-bell" aria-hidden="true">
+          <Icon name="bell" size={14} />
+        </div>
       </div>
-      <div class="ticket-card">
-        <strong>Quick builder</strong>
-        <p>Mix favorite numbers with simple stats and save combinations for later.</p>
-      </div>
+
+      {
+        variant === 'home' && (
+          <>
+            <article class="ticket-card">
+              <div class="ticket-card-head">
+                <span class="ticket-card-game">Powerball</span>
+                <span class="ticket-card-date">Wed · Tonight</span>
+              </div>
+              <div class="balls" aria-label="Saved numbers: 8, 17, 28, 42, 61, Powerball 14">
+                <span class="ball">08</span>
+                <span class="ball">17</span>
+                <span class="ball">28</span>
+                <span class="ball">42</span>
+                <span class="ball">61</span>
+                <span class="ball red">14</span>
+              </div>
+              <span class="status-pill">Pending draw</span>
+            </article>
+
+            <article class="ticket-card">
+              <div class="ticket-card-head">
+                <span class="ticket-card-game">Mega Millions</span>
+                <span class="ticket-card-date">Tue · Match</span>
+              </div>
+              <div
+                class="balls"
+                aria-label="Saved numbers: 4, 22, 31, 47, 58, Mega Ball 9, three matches"
+              >
+                <span class="ball">04</span>
+                <span class="ball gold">22</span>
+                <span class="ball">31</span>
+                <span class="ball gold">47</span>
+                <span class="ball">58</span>
+                <span class="ball gold">09</span>
+              </div>
+              <span class="status-pill win">3 of 6 match</span>
+            </article>
+
+            <article class="ticket-card builder-card">
+              <div>
+                <strong>Quick builder</strong>
+                <span>Mix favorites and stats</span>
+              </div>
+              <span class="builder-card-icon" aria-hidden="true">
+                <Icon name="wand" size={16} />
+              </span>
+            </article>
+
+            <nav class="tab-bar" aria-label="App navigation preview">
+              <span class="tab-bar-item active" aria-hidden="true">
+                <Icon name="home" size={18} />
+              </span>
+              <span class="tab-bar-item" aria-hidden="true">
+                <Icon name="list" size={18} />
+              </span>
+              <span class="tab-bar-item" aria-hidden="true">
+                <Icon name="wand" size={18} />
+              </span>
+              <span class="tab-bar-item" aria-hidden="true">
+                <Icon name="profile" size={18} />
+              </span>
+            </nav>
+          </>
+        )
+      }
+
+      {
+        variant === 'history' && (
+          <>
+            <article class="ticket-card">
+              <div class="ticket-card-head">
+                <span class="ticket-card-game">Powerball · Mon</span>
+                <span class="ticket-card-date">Apr 28</span>
+              </div>
+              <div class="balls" aria-hidden="true">
+                <span class="ball">11</span>
+                <span class="ball">19</span>
+                <span class="ball">35</span>
+                <span class="ball">52</span>
+                <span class="ball">63</span>
+                <span class="ball red">07</span>
+              </div>
+              <span class="status-pill miss">No match</span>
+            </article>
+            <article class="ticket-card">
+              <div class="ticket-card-head">
+                <span class="ticket-card-game">Mega Millions · Fri</span>
+                <span class="ticket-card-date">Apr 25</span>
+              </div>
+              <div class="balls" aria-hidden="true">
+                <span class="ball gold">04</span>
+                <span class="ball">14</span>
+                <span class="ball gold">22</span>
+                <span class="ball">36</span>
+                <span class="ball">48</span>
+                <span class="ball gold">09</span>
+              </div>
+              <span class="status-pill win">3 of 6 match</span>
+            </article>
+            <article class="ticket-card">
+              <div class="ticket-card-head">
+                <span class="ticket-card-game">Pick 6 · Tue</span>
+                <span class="ticket-card-date">Apr 22</span>
+              </div>
+              <div class="balls" aria-hidden="true">
+                <span class="ball">02</span>
+                <span class="ball">17</span>
+                <span class="ball">23</span>
+                <span class="ball">31</span>
+                <span class="ball">42</span>
+                <span class="ball">49</span>
+              </div>
+              <span class="status-pill miss">No match</span>
+            </article>
+          </>
+        )
+      }
     </div>
   </div>
 </div>
