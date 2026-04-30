@@ -1,5 +1,6 @@
 ---
 import { navItems, site } from '../site';
+import { createLocalPaths } from '../paths';
 
 interface Props {
   title: string;
@@ -8,6 +9,9 @@ interface Props {
 
 const { title, description } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).toString();
+const paths = createLocalPaths(Astro.url.pathname);
+const logoSrc = paths.asset('/logo.png');
+const socialImage = new URL('/logo.png', site.url).toString();
 ---
 
 <!doctype html>
@@ -18,24 +22,24 @@ const canonical = new URL(Astro.url.pathname, site.url).toString();
     <meta name="description" content={description} />
     <meta name="theme-color" content="#fff6ec" />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="icon" type="image/png" href={logoSrc} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content="/logo.png" />
+    <meta property="og:image" content={socialImage} />
     <meta name="twitter:card" content="summary" />
     <title>{title}</title>
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="/" aria-label="Chancey home">
-        <img src="/logo.png" alt="" width="40" height="40" />
+      <a class="brand" href={paths.route('/')} aria-label="Chancey home">
+        <img src={logoSrc} alt="" width="40" height="40" />
         <span>Chancey</span>
       </a>
       <nav aria-label="Primary">
-        {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+        {navItems.map((item) => <a href={paths.route(item.href)}>{item.label}</a>)}
       </nav>
     </header>
     <main>
@@ -43,17 +47,17 @@ const canonical = new URL(Astro.url.pathname, site.url).toString();
     </main>
     <footer class="site-footer">
       <div>
-        <a class="brand compact" href="/" aria-label="Chancey home">
-          <img src="/logo.png" alt="" width="32" height="32" />
+        <a class="brand compact" href={paths.route('/')} aria-label="Chancey home">
+          <img src={logoSrc} alt="" width="32" height="32" />
           <span>Chancey</span>
         </a>
         <p>For adults 18+. Chancey is not a lottery retailer and does not sell tickets or pay prizes.</p>
       </div>
       <div class="footer-links">
         <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
-        <a href="/responsible-play">Responsible play</a>
+        <a href={paths.route('/privacy')}>Privacy</a>
+        <a href={paths.route('/terms')}>Terms</a>
+        <a href={paths.route('/responsible-play')}>Responsible play</a>
       </div>
     </footer>
   </body>

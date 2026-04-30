@@ -1,7 +1,13 @@
+---
+import { createLocalPaths } from '../paths';
+
+const paths = createLocalPaths(Astro.url.pathname);
+---
+
 <div class="phone-wrap" aria-label="Chancey app preview">
   <div class="phone">
     <div class="phone-screen">
-      <img src="/logo.png" alt="Chancey app icon" width="64" height="64" />
+      <img src={paths.asset('/logo.png')} alt="Chancey app icon" width="64" height="64" />
       <p class="eyebrow">Ticket saved</p>
       <h2>Powerball</h2>
       <div class="ticket-card">

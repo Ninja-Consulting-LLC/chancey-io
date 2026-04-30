@@ -1,7 +1,10 @@
 ---
 import AppPreview from '../components/AppPreview.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { createLocalPaths } from '../paths';
 import { features, site } from '../site';
+
+const paths = createLocalPaths(Astro.url.pathname);
 ---
 
 <BaseLayout
@@ -17,7 +20,7 @@ import { features, site } from '../site';
       </p>
       <div class="actions">
         <a class="button primary" href={site.appUrl}>Open web app</a>
-        <a class="button" href="/support">Get support</a>
+        <a class="button" href={paths.route('/support')}>Get support</a>
       </div>
       <p class="disclaimer">
         Chancey does not sell lottery tickets, cash prizes, predict winning numbers, or guarantee results. Always verify winning status with the official lottery operator.
@@ -53,8 +56,8 @@ import { features, site } from '../site';
         Lottery play involves real money and long odds. Chancey is for adults who want a cleaner way to manage information about tickets they already choose to buy.
       </p>
       <div class="actions">
-        <a class="button" href="/responsible-play">Responsible play</a>
-        <a class="button" href="/terms">Read terms</a>
+        <a class="button" href={paths.route('/responsible-play')}>Responsible play</a>
+        <a class="button" href={paths.route('/terms')}>Read terms</a>
       </div>
     </div>
   </section>
