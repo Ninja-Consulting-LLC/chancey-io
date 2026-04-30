@@ -61,7 +61,7 @@ export const featureBlocks = [
     ],
     screenshotAlt: 'Chancey number builder mixing favorite numbers with quick picks',
     screenshotLabel: 'Number builder',
-    placeholderVariant: 'builder',
+    previewVariant: 'builder',
   },
   {
     id: 'scan',
@@ -76,7 +76,7 @@ export const featureBlocks = [
     ],
     screenshotAlt: 'Chancey scanner reading a printed Powerball ticket',
     screenshotLabel: 'Scanner',
-    placeholderVariant: 'scan',
+    previewVariant: 'scan',
   },
   {
     id: 'check',
@@ -91,7 +91,7 @@ export const featureBlocks = [
     ],
     screenshotAlt: 'Chancey ticket history showing match, partial, and no-match results',
     screenshotLabel: 'History · Results',
-    placeholderVariant: 'history',
+    previewVariant: 'history',
   },
 ] as const;
 
