@@ -12,7 +12,6 @@
  *   - SMTP_PASSWORD       SES SMTP password
  *   - MAIL_FROM           Verified SES sender, e.g. lucky@chancey.io
  *   - MAIL_TO             Where messages should be delivered, e.g. lucky@chancey.io
- *   - MAIL_HOSTNAME       e.g. chancey.io (used as SMTP HELO/EHLO name)
  *   - RECAPTCHA_SECRET    Google reCAPTCHA v3 secret key
  *   - ALLOWED_ORIGIN      e.g. https://chancey.io
  */
@@ -27,7 +26,6 @@ interface Env {
   SMTP_PASSWORD: string;
   MAIL_FROM: string;
   MAIL_TO: string;
-  MAIL_HOSTNAME: string;
   RECAPTCHA_SECRET?: string;
   RECAPTCHA_ALLOWED_HOSTNAMES?: string;
   ALLOWED_ORIGIN?: string;
@@ -63,22 +61,40 @@ const TOPIC_LABELS: Record<string, string> = {
   bug: 'Bug report',
   security: 'Security issue',
 };
+const DEFAULT_ALLOWED_ORIGIN = 'https://chancey.io';
+
+function originPatterns(envValue: string | undefined): string[] {
+  return String(envValue || DEFAULT_ALLOWED_ORIGIN)
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
+
+function wildcardPattern(pattern: string): RegExp {
+  return new RegExp(
+    '^' + pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$'
+  );
+}
+
+function isAllowedOrigin(envValue: string | undefined, requestOrigin: string | null): boolean {
+  if (!requestOrigin) return false;
+  for (const pattern of originPatterns(envValue)) {
+    if (pattern === requestOrigin) return true;
+    if (pattern.includes('*') && wildcardPattern(pattern).test(requestOrigin)) return true;
+  }
+  return false;
+}
 
 function pickAllowedOrigin(envValue: string | undefined, requestOrigin: string | null): string {
-  if (!envValue) return 'https://chancey.io';
-  const allowed = envValue.split(',').map((o) => o.trim()).filter(Boolean);
-  if (!requestOrigin) return allowed[0] ?? 'https://chancey.io';
+  const allowed = originPatterns(envValue);
+  if (!requestOrigin) return allowed[0] ?? DEFAULT_ALLOWED_ORIGIN;
   for (const pattern of allowed) {
     if (pattern === requestOrigin) return requestOrigin;
     if (pattern.includes('*')) {
-      // Wildcard match (e.g. https://*.trycloudflare.com)
-      const re: RegExp = new RegExp(
-        '^' + pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$'
-      );
-      if (re.test(requestOrigin)) return requestOrigin;
+      if (wildcardPattern(pattern).test(requestOrigin)) return requestOrigin;
     }
   }
-  return allowed[0] ?? 'https://chancey.io';
+  return originPatterns(envValue)[0] ?? DEFAULT_ALLOWED_ORIGIN;
 }
 
 function corsHeaders(allowedOrigin: string): Record<string, string> {
@@ -94,13 +110,15 @@ function corsHeaders(allowedOrigin: string): Record<string, string> {
 function jsonResponse(
   status: number,
   body: unknown,
-  allowedOrigin: string
+  allowedOrigin: string,
+  extraHeaders: Record<string, string> = {}
 ): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       'Content-Type': 'application/json',
       ...corsHeaders(allowedOrigin),
+      ...extraHeaders,
     },
   });
 }
@@ -141,11 +159,12 @@ async function verifyRecaptcha(
   token: string | undefined,
   secret: string | undefined,
   remoteIp: string | undefined,
-  allowedHostnames: string[]
+  allowedHostnames: string[],
+  stage: Env['STAGE']
 ): Promise<{ ok: boolean; score: number | null; codes: string[] }> {
   if (!secret) {
-    // No secret configured — skip but flag.
-    return { ok: true, score: null, codes: ['skipped'] };
+    const isProduction = stage === 'production';
+    return { ok: !isProduction, score: null, codes: [isProduction ? 'missing-secret' : 'skipped'] };
   }
   if (!token) {
     return { ok: false, score: null, codes: ['missing-input-response'] };
@@ -190,7 +209,13 @@ export default {
     }
 
     if (request.method !== 'POST') {
-      return jsonResponse(405, { error: 'method_not_allowed' }, allowedOrigin);
+      return jsonResponse(405, { error: 'method_not_allowed' }, allowedOrigin, {
+        Allow: 'POST, OPTIONS',
+      });
+    }
+
+    if (!isAllowedOrigin(env.ALLOWED_ORIGIN, requestOrigin)) {
+      return jsonResponse(403, { error: 'forbidden_origin' }, allowedOrigin);
     }
 
     let payload: ContactPayload;
@@ -221,12 +246,19 @@ export default {
       request.headers.get('cf-connecting-ip') ??
       request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
 
-    const recaptcha = await verifyRecaptcha(
-      payload.recaptcha_token,
-      env.RECAPTCHA_SECRET,
-      remoteIp ?? undefined,
-      csvValues(env.RECAPTCHA_ALLOWED_HOSTNAMES)
-    );
+    let recaptcha: Awaited<ReturnType<typeof verifyRecaptcha>>;
+    try {
+      recaptcha = await verifyRecaptcha(
+        payload.recaptcha_token,
+        env.RECAPTCHA_SECRET,
+        remoteIp ?? undefined,
+        csvValues(env.RECAPTCHA_ALLOWED_HOSTNAMES),
+        env.STAGE
+      );
+    } catch (err) {
+      console.error('reCAPTCHA verification failed', err);
+      return jsonResponse(503, { error: 'recaptcha_unavailable' }, allowedOrigin);
+    }
     if (!recaptcha.ok) {
       return jsonResponse(
         403,
@@ -255,8 +287,6 @@ export default {
         startTls: true,
         credentials: { username: env.SMTP_USER, password: env.SMTP_PASSWORD },
         authType: 'plain',
-        // Some SMTP servers accept either; SES is fine with plain.
-        ...(env.MAIL_HOSTNAME ? { name: env.MAIL_HOSTNAME } : {}),
       });
 
       await mailer.send({

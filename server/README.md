@@ -159,8 +159,9 @@ npm run dev
 
 reCAPTCHA v3 only works on registered domains. If you didn't add `localhost`
 to your reCAPTCHA registration, leave `PUBLIC_RECAPTCHA_SITE_KEY` empty for
-local development — the Worker is permissive when `RECAPTCHA_SECRET` is
-unset (it logs `skipped` but still sends the email).
+local development — non-production Worker envs are permissive when
+`RECAPTCHA_SECRET` is unset (they log `skipped` but still send the email).
+Production fails closed if `RECAPTCHA_SECRET` is missing.
 
 ---
 
@@ -200,8 +201,10 @@ Responses:
 | --- | --- |
 | `200 { ok: true }` | Sent (or honeypot hit — silent) |
 | `400` | Invalid JSON / missing fields / bad email |
-| `403 { error: "recaptcha_failed" }` | reCAPTCHA score too low or token invalid |
+| `403 { error: "forbidden_origin" }` | Origin is not in `ALLOWED_ORIGIN` |
+| `403 { error: "recaptcha_failed" }` | reCAPTCHA score too low, token invalid, or production secret missing |
 | `405` | Method other than POST/OPTIONS |
+| `503 { error: "recaptcha_unavailable" }` | Google reCAPTCHA verification could not be reached |
 | `502 { error: "send_failed" }` | SMTP send threw |
 
 ### `OPTIONS *`
@@ -220,7 +223,6 @@ CORS preflight. `ALLOWED_ORIGIN` accepts a comma-separated list and supports
 | `STAGE` | `dev` or `production` — used for routing & logging. |
 | `SMTP_HOST` | `email-smtp.us-east-1.amazonaws.com`. |
 | `SMTP_PORT` | `587` (STARTTLS submission). |
-| `MAIL_HOSTNAME` | SMTP HELO/EHLO hostname (`chancey.io`). |
 | `ALLOWED_ORIGIN` | Comma-separated CORS allowlist. Supports `*` wildcards. |
 | `RECAPTCHA_ALLOWED_HOSTNAMES` | Comma-separated hostnames accepted from Google reCAPTCHA verification. |
 
