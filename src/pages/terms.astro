@@ -1,46 +1,161 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../site';
+import Icon from '../components/icons/Icon.astro';
+
+const lastUpdated = 'April 30, 2026';
 ---
 
 <BaseLayout
-  title="Terms of Service | Chancey"
-  description="Chancey's terms of service covering eligibility, acceptable use, subscriptions, disclaimers, and support."
+  title="Terms of Service"
+  description="The terms that cover your use of Chancey: who can use it, acceptable use, payments, disclaimers, and how to reach us."
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Terms of Service', href: '/terms/' },
+  ]}
 >
-  <article class="legal">
-    <p class="eyebrow">Terms of Service</p>
-    <h1>Terms of Service</h1>
-    <p class="notice">
-      Draft for launch preparation. These terms should be reviewed by counsel before public release.
-    </p>
-    <p>Last updated: April 30, 2026</p>
+  <section class="container">
+    <div class="article">
+      <header>
+        <p class="eyebrow">Terms</p>
+        <h1>Terms of Service</h1>
+        <p class="muted">Last updated: {lastUpdated}</p>
+        <div class="notice">
+          <span class="notice-icon" aria-hidden="true"><Icon name="lightning" size={22} /></span>
+          <div>
+            <strong>Working draft</strong>
+            These terms are in final legal review for launch. Big changes will show up in the app
+            and at the top of this page.
+          </div>
+        </div>
+      </header>
 
-    <section>
-      <h2>Eligibility</h2>
-      <p>
-        You must be at least 18 years old, or the age of majority where you live, whichever is greater, to use Chancey.
-      </p>
-    </section>
+      <section>
+        <h2>Agreement</h2>
+        <p>
+          By using Chancey, you agree to these Terms of Service and the <a href="/privacy/"
+            >Privacy Policy</a>. If you don't agree, please don't use Chancey. If you use Chancey
+          for an organization, you confirm you have the right to bind that organization.
+        </p>
+      </section>
 
-    <section>
-      <h2>What Chancey is</h2>
-      <p>
-        Chancey is an informational and convenience tool for lottery players. It is not a lottery retailer, is not affiliated with state or national lottery operators, and cannot sell tickets or pay prizes.
-      </p>
-    </section>
+      <section>
+        <h2>Eligibility</h2>
+        <p>
+          You must be at least 18 years old, or the age of majority where you live, whichever is
+          greater. You also confirm that lottery play is legal where you live.
+        </p>
+      </section>
 
-    <section>
-      <h2>Your responsibility</h2>
-      <p>
-        Always verify important ticket information and winning status with the official lottery operator. Number-building tools are for entertainment and organization only.
-      </p>
-    </section>
+      <section>
+        <h2>What Chancey is</h2>
+        <p>
+          Chancey is an information and convenience tool for lottery players. It helps you pick
+          numbers, save sets, scan tickets, and check published draw results.
+        </p>
+        <h3>What Chancey is not</h3>
+        <ul>
+          <li>Not a lottery retailer. We cannot sell tickets or pay prizes.</li>
+          <li>Not part of any state, provincial, or national lottery.</li>
+          <li>
+            Not a predictor. Lottery draws are random and Chancey cannot improve the odds of
+            winning.
+          </li>
+          <li>Not a substitute for the lottery's results or claims process.</li>
+        </ul>
+      </section>
 
-    <section>
-      <h2>Contact</h2>
-      <p>
-        Questions about these terms can be sent to <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>.
-      </p>
-    </section>
-  </article>
+      <section>
+        <h2>Your account and acceptable use</h2>
+        <p>
+          You are responsible for keeping your account secure and for what happens through it.
+          Don't:
+        </p>
+        <ul>
+          <li>Use Chancey if you are under 18 or the local age of majority.</li>
+          <li>Try to break, scrape, or reverse engineer the service.</li>
+          <li>Upload images of other people's documents, IDs, or sensitive personal data.</li>
+          <li>Use Chancey to run, advertise, or recruit for any unlawful gambling activity.</li>
+          <li>Use Chancey to harass, abuse, defraud, or impersonate anyone.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Subscriptions and payments</h2>
+        <p>
+          The core experience is free today. If we offer paid features, we will show the price,
+          billing schedule, and how to cancel before you buy. Payments run through the platform or
+          checkout you used to subscribe (web checkout, App Store, or Google Play). To cancel, use
+          the same channel.
+        </p>
+        <p>
+          Refunds follow the policy of the platform that processed your payment, plus any consumer
+          rights you have where you live that we can't waive.
+        </p>
+      </section>
+
+      <section>
+        <h2>Your responsibility</h2>
+        <p>
+          Always check important ticket info and winning status with the official lottery. The
+          number tools are for fun and organization. They do not predict or improve odds. Keep the
+          original ticket safe — Chancey is a checking tool, not a payout service.
+        </p>
+      </section>
+
+      <section>
+        <h2>Disclaimers</h2>
+        <p>
+          Chancey is provided "as is" with no warranties, to the maximum extent the law allows.
+          We do not guarantee the service will run without breaks or errors. Draw matching is
+          based on what the lottery posts. The lottery is the source of truth.
+        </p>
+      </section>
+
+      <section>
+        <h2>Limit of liability</h2>
+        <p>
+          To the maximum extent the law allows, Chancey is not liable for indirect, incidental,
+          consequential, special, or example damages. We are not liable for lost prizes, lost
+          profits, or lost data from your use of the service. Some places don't allow these
+          limits. In those places, our liability is limited to the smallest amount the law
+          allows.
+        </p>
+      </section>
+
+      <section>
+        <h2>Termination</h2>
+        <p>
+          You can stop using Chancey any time. We may suspend or close accounts that break these
+          terms, that we have to remove by law, or that pose a security risk. If your account is
+          closed, your data is handled per the Privacy policy.
+        </p>
+      </section>
+
+      <section>
+        <h2>Changes</h2>
+        <p>
+          We may update these terms over time. Big changes will show up in the app and at the top
+          of this page, with a new "last updated" date. Continued use after the changes means you
+          accept the new terms.
+        </p>
+      </section>
+
+      <section>
+        <h2>Governing law and disputes</h2>
+        <p>
+          The governing law and dispute resolution will be set at launch. For now, please reach
+          us through the <a href="/contact/">contact form</a> with any concerns. We will work with
+          you in good faith.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>
+          Questions about these terms? Send a message through the <a href="/contact/">contact
+            form</a>.
+        </p>
+      </section>
+    </div>
+  </section>
 </BaseLayout>

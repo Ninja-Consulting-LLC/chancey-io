@@ -1,0 +1,183 @@
+---
+import { site } from '../site';
+
+interface Breadcrumb {
+  name: string;
+  href: string;
+}
+
+interface FaqEntry {
+  q: string;
+  a: string;
+}
+
+interface HowToStep {
+  name: string;
+  text: string;
+}
+
+interface HowToConfig {
+  name: string;
+  description: string;
+  steps: ReadonlyArray<HowToStep>;
+}
+
+interface Props {
+  pageType?: 'WebPage' | 'AboutPage' | 'ContactPage' | 'FAQPage' | 'CollectionPage';
+  pageTitle: string;
+  pageDescription: string;
+  breadcrumbs?: Breadcrumb[];
+  faqs?: ReadonlyArray<FaqEntry>;
+  howTo?: HowToConfig;
+  includeOrganization?: boolean;
+  includeWebsite?: boolean;
+  includeApplication?: boolean;
+}
+
+const {
+  pageType = 'WebPage',
+  pageTitle,
+  pageDescription,
+  breadcrumbs,
+  faqs,
+  howTo,
+  includeOrganization = true,
+  includeWebsite = true,
+  includeApplication = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const logo = new URL('/logo.png', site.url).toString();
+
+const graph: Record<string, unknown>[] = [];
+
+if (includeOrganization) {
+  graph.push({
+    '@type': 'Organization',
+    '@id': `${site.url}/#organization`,
+    name: site.legalName,
+    url: site.url,
+    logo: {
+      '@type': 'ImageObject',
+      url: logo,
+      width: 512,
+      height: 512,
+    },
+    description: site.shortDescription,
+    foundingDate: site.founded,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      url: `${site.url}${site.contactPath}`,
+      availableLanguage: ['en'],
+    },
+    sameAs: [],
+  });
+}
+
+if (includeWebsite) {
+  graph.push({
+    '@type': 'WebSite',
+    '@id': `${site.url}/#website`,
+    url: site.url,
+    name: site.name,
+    description: site.shortDescription,
+    publisher: { '@id': `${site.url}/#organization` },
+    inLanguage: 'en-US',
+  });
+}
+
+if (includeApplication) {
+  graph.push({
+    '@type': 'SoftwareApplication',
+    '@id': `${site.url}/#application`,
+    name: site.name,
+    applicationCategory: 'LifestyleApplication',
+    operatingSystem: 'Web Browser',
+    url: site.appUrl,
+    description: site.longDescription,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    publisher: { '@id': `${site.url}/#organization` },
+    audience: {
+      '@type': 'Audience',
+      audienceType: site.audience,
+      suggestedMinAge: 18,
+    },
+  });
+}
+
+graph.push({
+  '@type': pageType,
+  '@id': `${canonical}#webpage`,
+  url: canonical,
+  name: pageTitle,
+  description: pageDescription,
+  isPartOf: { '@id': `${site.url}/#website` },
+  inLanguage: 'en-US',
+});
+
+if (breadcrumbs && breadcrumbs.length > 0) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    '@id': `${canonical}#breadcrumbs`,
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: new URL(crumb.href, site.url).toString(),
+    })),
+  });
+}
+
+if (faqs && faqs.length > 0) {
+  graph.push({
+    '@type': 'FAQPage',
+    '@id': `${canonical}#faq`,
+    mainEntity: faqs.map((entry) => ({
+      '@type': 'Question',
+      name: entry.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: entry.a,
+      },
+    })),
+  });
+}
+
+if (howTo) {
+  graph.push({
+    '@type': 'HowTo',
+    '@id': `${canonical}#howto`,
+    name: howTo.name,
+    description: howTo.description,
+    totalTime: 'PT2M',
+    supply: [],
+    tool: [
+      { '@type': 'HowToTool', name: 'Chancey app (web)' },
+      { '@type': 'HowToTool', name: 'A printed lottery ticket' },
+    ],
+    step: howTo.steps.map((entry, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: entry.name,
+      text: entry.text,
+      url: `${canonical}#step-${index + 1}`,
+    })),
+  });
+}
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': graph,
+};
+---
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(ld, null, 2)}
+></script>

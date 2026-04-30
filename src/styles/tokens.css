@@ -1,0 +1,121 @@
+:root {
+  color-scheme: light;
+
+  /* Surface palette */
+  --bg: #fff6ec;
+  --bg-deep: #fbe6cf;
+  --bg-grain: #fff1e0;
+  --surface: #ffffff;
+  --surface-alt: #fff0dd;
+  --surface-warm: #ffe6cd;
+  --surface-ink: #1b1410;
+  --surface-ink-soft: #271d18;
+
+  /* Ink palette */
+  --ink: #1b1410;
+  --ink-soft: #5a4a3f;
+  --ink-faint: #8a7a6e;
+  --ink-on-dark: #fff6ec;
+  --ink-on-dark-soft: #c6b9af;
+
+  /* Lines */
+  --line: rgba(27, 20, 16, 0.1);
+  --line-strong: rgba(27, 20, 16, 0.18);
+  --line-on-dark: rgba(255, 246, 236, 0.14);
+
+  /* Brand colors */
+  --accent: #ff6b3d;
+  --accent-soft: #ffe0d2;
+  --accent-deep: #e44a1a;
+  --gold: #f5b82e;
+  --gold-soft: #fce6b3;
+  --blue: #4f8db8;
+  --blue-soft: #d9e7f1;
+  --green: #1f9d5f;
+  --green-soft: #c8ecda;
+  --red: #e8375c;
+  --red-soft: #fad7df;
+  --plum: #6e3a8a;
+  --plum-soft: #ead7f5;
+
+  /* Gradients */
+  --gradient-warm: linear-gradient(135deg, #ff6b3d 0%, #f5b82e 100%);
+  --gradient-warm-soft: linear-gradient(135deg, #ffe0d2 0%, #fce6b3 100%);
+  --gradient-cream: linear-gradient(180deg, #fff6ec 0%, #ffe6cd 100%);
+  --gradient-ink: linear-gradient(180deg, #1b1410 0%, #2c1f17 100%);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(27, 20, 16, 0.05);
+  --shadow-sm: 0 4px 12px rgba(79, 57, 39, 0.06);
+  --shadow-md: 0 10px 30px rgba(79, 57, 39, 0.1);
+  --shadow-lg: 0 22px 60px rgba(79, 57, 39, 0.14);
+  --shadow-xl: 0 32px 80px rgba(79, 57, 39, 0.2);
+  --shadow-accent: 0 14px 32px rgba(255, 107, 61, 0.28);
+  --shadow-accent-lg: 0 24px 56px rgba(255, 107, 61, 0.3);
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 999px;
+
+  /* Spacing scale (rem) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Layout */
+  --container-max: 1200px;
+  --container-narrow: 760px;
+  --container-prose: 680px;
+
+  /* Typography */
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --text-xs: 0.78rem;
+  --text-sm: 0.88rem;
+  --text-base: 1rem;
+  --text-md: 1.08rem;
+  --text-lg: 1.18rem;
+  --text-xl: 1.32rem;
+  --text-2xl: 1.6rem;
+  --text-3xl: 2.1rem;
+  --text-4xl: 2.6rem;
+  --text-5xl: 3.4rem;
+  --text-6xl: 4.4rem;
+  --text-7xl: clamp(3.2rem, 8vw, 6.4rem);
+  --text-8xl: clamp(3.8rem, 9vw, 7.6rem);
+
+  --leading-tight: 1.05;
+  --leading-snug: 1.18;
+  --leading-normal: 1.45;
+  --leading-relaxed: 1.65;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 160ms;
+  --duration-base: 260ms;
+  --duration-slow: 480ms;
+
+  /* z-index */
+  --z-sticky: 50;
+  --z-overlay: 80;
+  --z-modal: 100;
+}

@@ -2,8 +2,14 @@ name: website
 
 on:
   pull_request:
+    paths-ignore:
+      - 'server/**'
+      - '.github/workflows/contact-worker.yml'
   push:
     branches: [main]
+    paths-ignore:
+      - 'server/**'
+      - '.github/workflows/contact-worker.yml'
 
 permissions:
   contents: read
@@ -28,7 +34,14 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - name: Build static site
+        env:
+          # Public, safe to embed — Google enforces the per-domain allow-list on this key.
+          PUBLIC_RECAPTCHA_SITE_KEY: 6LfKYdIsAAAAAG2exCOEtxpj5PSOfAnEOUw-xJ2F
+          # Set this in the repo's Variables (Settings → Secrets and variables → Actions → Variables)
+          # once the Worker is deployed. Falls back to the production workers.dev URL.
+          PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.workers.dev' }}
+        run: npm run build
       - uses: actions/configure-pages@v5
         if: github.event_name == 'push'
       - uses: actions/upload-pages-artifact@v3

@@ -1,0 +1,12 @@
+/* TEAM */
+Site: chancey.io
+Contact: https://chancey.io/contact/
+
+/* THANKS */
+The lottery players who actually want their slips to make sense.
+
+/* SITE */
+Last update: 2026-04-30
+Standards: HTML5, CSS3, JSON-LD, Schema.org
+Components: Astro
+Hosting: GitHub Pages (marketing) + Cloudflare Workers (contact form)

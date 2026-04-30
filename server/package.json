@@ -1,0 +1,27 @@
+{
+  "name": "chancey-contact",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloudflare Worker that receives the chancey.io contact form, verifies reCAPTCHA v3, and forwards via Amazon SES SMTP.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --env dev",
+    "dev:prod": "wrangler dev --env production",
+    "deploy:dev": "wrangler deploy --env dev",
+    "deploy:prod": "wrangler deploy --env production",
+    "tail:dev": "wrangler tail --env dev",
+    "tail:prod": "wrangler tail --env production",
+    "types": "wrangler types",
+    "check": "wrangler deploy --dry-run --env dev",
+    "check:prod": "wrangler deploy --dry-run --env production",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "worker-mailer": "^1.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "typescript": "^5.7.3",
+    "wrangler": "^4.0.0"
+  }
+}

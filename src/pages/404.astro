@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/icons/Icon.astro';
+import { createLocalPaths } from '../paths';
+import { site } from '../site';
+
+const paths = createLocalPaths(Astro.url.pathname);
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you were looking for isn't here. Find your way back to Chancey."
+  noindex={true}
+>
+  <section class="container">
+    <div class="not-found">
+      <p class="eyebrow">404 · Not found</p>
+      <h1>That page didn't match a draw.</h1>
+      <p>
+        That address doesn't exist on {site.domain}. Try one of the links below or head back to
+        the home page.
+      </p>
+      <div class="actions centered">
+        <a class="button primary lg" href={paths.route('/')}>
+          Back to home
+          <Icon name="arrow-right" size={18} />
+        </a>
+        <a class="button lg" href={paths.route('/support/')}>
+          Get support
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

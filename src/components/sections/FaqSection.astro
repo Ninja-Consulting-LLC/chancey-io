@@ -1,0 +1,62 @@
+---
+interface FaqEntry {
+  q: string;
+  a: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  description?: string;
+  faqs: ReadonlyArray<FaqEntry>;
+  background?: 'default' | 'cream' | 'deep';
+}
+
+const {
+  eyebrow = 'Frequently asked questions',
+  heading = 'Quick answers.',
+  description,
+  faqs,
+  background = 'default',
+} = Astro.props;
+
+const sectionClass = [
+  'section',
+  background === 'cream' ? 'section-bg-cream' : '',
+  background === 'deep' ? 'section-bg-deep' : '',
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<section class={sectionClass}>
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="h-section">{heading}</h2>
+      {description && <p class="lead">{description}</p>}
+    </div>
+    <div class="faq" itemscope itemtype="https://schema.org/FAQPage">
+      {
+        faqs.map((entry, i) => (
+          <details
+            open={i === 0}
+            itemscope
+            itemprop="mainEntity"
+            itemtype="https://schema.org/Question"
+          >
+            <summary itemprop="name">{entry.q}</summary>
+            <div
+              class="faq-body"
+              itemscope
+              itemprop="acceptedAnswer"
+              itemtype="https://schema.org/Answer"
+            >
+              <p itemprop="text">{entry.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

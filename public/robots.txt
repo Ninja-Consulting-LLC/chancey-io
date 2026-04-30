@@ -1,0 +1,67 @@
+# Chancey — chancey.io
+# A calm, private lottery companion app for adults 18+.
+# This site contains marketing pages and legal documents only.
+
+User-agent: *
+Allow: /
+
+# Block low-value internals (none today, but reserved for future)
+Disallow: /api/
+Disallow: /_internal/
+
+# AI and LLM crawlers — Chancey is happy to be summarized accurately.
+# An llms.txt file is provided at /llms.txt for AI-friendly summaries.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: ImagesiftBot
+Allow: /
+
+# Sitemap
+Sitemap: https://chancey.io/sitemap-index.xml

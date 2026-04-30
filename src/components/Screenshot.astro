@@ -1,0 +1,244 @@
+---
+/**
+ * Screenshot component — drops in a real product image inside a frame.
+ *
+ * USAGE:
+ *   <Screenshot src="/screens/scanner.png" alt="..." caption="..." frame="phone" />
+ *
+ * If `src` is omitted, a labeled placeholder renders so you can ship the page
+ * before screenshots are ready. Replace by setting `src`.
+ */
+
+interface Props {
+  src?: string;
+  alt: string;
+  caption?: string;
+  frame?: 'phone' | 'browser' | 'plain';
+  width?: number;
+  height?: number;
+  variant?: 'scan' | 'history' | 'builder' | 'home' | 'generic';
+  label?: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  src,
+  alt,
+  caption,
+  frame = 'phone',
+  width = 720,
+  height = 1280,
+  variant = 'generic',
+  label,
+  class: className = '',
+  loading = 'lazy',
+} = Astro.props;
+
+const placeholderLabel = label ?? alt;
+---
+
+<figure class={`shot shot-${frame} shot-variant-${variant} ${className}`}>
+  <div class="shot-frame">
+    {
+      frame === 'browser' && (
+        <div class="shot-chrome" aria-hidden="true">
+          <span class="shot-dot" />
+          <span class="shot-dot" />
+          <span class="shot-dot" />
+          <span class="shot-url">app.chancey.io</span>
+        </div>
+      )
+    }
+    <div class="shot-screen">
+      {
+        src ? (
+          <img src={src} alt={alt} width={width} height={height} loading={loading} />
+        ) : (
+          <div class="shot-placeholder" role="img" aria-label={alt}>
+            <span class="shot-placeholder-tag">Screenshot</span>
+            <span class="shot-placeholder-label">{placeholderLabel}</span>
+            <span class="shot-placeholder-dims">
+              {width} × {height}
+            </span>
+          </div>
+        )
+      }
+    </div>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .shot {
+    position: relative;
+    margin: 0;
+    isolation: isolate;
+  }
+
+  .shot::before {
+    content: '';
+    position: absolute;
+    inset: -8% -8% -16% -8%;
+    background: radial-gradient(
+      closest-side,
+      rgba(255, 107, 61, 0.16),
+      rgba(255, 107, 61, 0.04) 60%,
+      transparent 80%
+    );
+    z-index: -1;
+  }
+
+  /* Phone frame */
+  .shot-phone .shot-frame {
+    margin-inline: auto;
+    width: min(100%, 360px);
+    border: 12px solid #1b1410;
+    border-radius: 44px;
+    background: #1b1410;
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .shot-phone .shot-frame::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92px;
+    height: 26px;
+    border-radius: 999px;
+    background: #1b1410;
+    z-index: 3;
+  }
+
+  .shot-phone .shot-screen {
+    aspect-ratio: 9 / 19.5;
+    background: var(--gradient-cream);
+    overflow: hidden;
+  }
+
+  /* Browser frame */
+  .shot-browser .shot-frame {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  .shot-chrome {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .shot-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: rgba(27, 20, 16, 0.18);
+  }
+
+  .shot-url {
+    flex: 1;
+    margin-left: 12px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .shot-browser .shot-screen {
+    aspect-ratio: 16 / 10;
+    background: var(--gradient-cream);
+    overflow: hidden;
+  }
+
+  /* Plain frame */
+  .shot-plain .shot-frame {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Image styling */
+  .shot-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  /* Placeholder */
+  .shot-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    display: grid;
+    place-content: center;
+    align-content: center;
+    gap: 10px;
+    text-align: center;
+    padding: 32px 24px;
+    background:
+      linear-gradient(135deg, rgba(255, 107, 61, 0.08), rgba(245, 184, 46, 0.08)),
+      var(--gradient-cream);
+    color: var(--ink-soft);
+    position: relative;
+  }
+
+  .shot-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 16px;
+    border: 2px dashed rgba(27, 20, 16, 0.18);
+    border-radius: var(--radius-lg);
+    pointer-events: none;
+  }
+
+  .shot-phone .shot-placeholder::before {
+    inset: 24px 16px;
+    border-radius: 24px;
+  }
+
+  .shot-placeholder-tag {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    opacity: 0.85;
+  }
+
+  .shot-placeholder-label {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.2;
+    max-width: 220px;
+  }
+
+  .shot-placeholder-dims {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+  }
+
+  figcaption {
+    margin-top: 14px;
+    font-size: var(--text-sm);
+    color: var(--ink-faint);
+    text-align: center;
+  }
+</style>
