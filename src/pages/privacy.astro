@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site';
+---
+
+<BaseLayout
+  title="Privacy Policy | Chancey"
+  description="Chancey's privacy policy for account data, ticket scans, preferences, operational logs, and support requests."
+>
+  <article class="legal">
+    <p class="eyebrow">Privacy Policy</p>
+    <h1>Privacy Policy</h1>
+    <p class="notice">
+      Draft for launch preparation. This policy should be reviewed by counsel before public release.
+    </p>
+    <p>Last updated: April 30, 2026</p>
+
+    <section>
+      <h2>Information we collect</h2>
+      <p>
+        Chancey collects account information, eligibility information such as birthday, saved ticket details, app preferences, operational logs, and support details you choose to send us.
+      </p>
+    </section>
+
+    <section>
+      <h2>Ticket scans</h2>
+      <p>
+        Ticket images are processed to read numbers and draw details. When on-device recognition is inconclusive, Chancey may use a third-party provider to assist with recognition. Chancey does not use ticket images to sell advertising.
+      </p>
+    </section>
+
+    <section>
+      <h2>How we use information</h2>
+      <p>
+        We use information to provide the service, authenticate users, check ticket status, sync preferences, prevent abuse, debug issues, respond to support requests, and comply with legal obligations.
+      </p>
+    </section>
+
+    <section>
+      <h2>Choices and requests</h2>
+      <p>
+        To request access, correction, deletion, or other privacy help, email <a href={`mailto:${site.privacyEmail}`}>{site.privacyEmail}</a>.
+      </p>
+    </section>
+  </article>
+</BaseLayout>

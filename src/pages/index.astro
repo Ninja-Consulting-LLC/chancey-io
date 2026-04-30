@@ -1,0 +1,61 @@
+---
+import AppPreview from '../components/AppPreview.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { features, site } from '../site';
+---
+
+<BaseLayout
+  title="Chancey | Scan tickets, track draws, build picks"
+  description="Chancey is a lottery companion app for scanning tickets, checking published results, and building number picks faster."
+>
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Lottery companion app for adults 18+</p>
+      <h1>Chancey</h1>
+      <p class="lead">
+        Scan tickets you already bought, track saved numbers, check published draw results, and build picks without turning your camera roll into a shoebox of slips.
+      </p>
+      <div class="actions">
+        <a class="button primary" href={site.appUrl}>Open web app</a>
+        <a class="button" href="/support">Get support</a>
+      </div>
+      <p class="disclaimer">
+        Chancey does not sell lottery tickets, cash prizes, predict winning numbers, or guarantee results. Always verify winning status with the official lottery operator.
+      </p>
+    </div>
+    <AppPreview />
+  </section>
+
+  <section class="band">
+    <div class="section-head">
+      <p class="eyebrow">Built for repeat play checks</p>
+      <h2>A quieter way to manage lottery slips.</h2>
+      <p>
+        Chancey is designed for the routine parts of lottery play: capturing numbers, checking results, and keeping your own history tidy.
+      </p>
+    </div>
+    <div class="grid">
+      {features.map((feature, index) => (
+        <article class="card">
+          <div class="icon">{index + 1}</div>
+          <h3>{feature.title}</h3>
+          <p>{feature.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="section-head">
+      <p class="eyebrow">Responsible by design</p>
+      <h2>Information and convenience, not a promise.</h2>
+      <p>
+        Lottery play involves real money and long odds. Chancey is for adults who want a cleaner way to manage information about tickets they already choose to buy.
+      </p>
+      <div class="actions">
+        <a class="button" href="/responsible-play">Responsible play</a>
+        <a class="button" href="/terms">Read terms</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

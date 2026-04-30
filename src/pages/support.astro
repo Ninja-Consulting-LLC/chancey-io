@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site';
+---
+
+<BaseLayout
+  title="Support | Chancey"
+  description="Get help with Chancey ticket scanning, saved numbers, accounts, subscriptions, and responsible play."
+>
+  <article class="legal">
+    <p class="eyebrow">Support</p>
+    <h1>How can we help?</h1>
+    <p class="lead">
+      Email <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a> for account, scanning, subscription, or data questions.
+    </p>
+
+    <section>
+      <h2>Scanning tickets</h2>
+      <p>
+        Use steady light, hold the ticket flat, and avoid glare. If scanning misses a number, enter the numbers manually and verify the final saved ticket before relying on it.
+      </p>
+    </section>
+
+    <section>
+      <h2>Results and claims</h2>
+      <p>
+        Chancey helps compare saved numbers to published draw results, but official lottery operators remain the source of truth. Winning tickets must be claimed through the lottery that issued the ticket.
+      </p>
+    </section>
+
+    <section>
+      <h2>Accounts and subscriptions</h2>
+      <p>
+        Sign in to sync preferences and saved tickets. Paid features, where available, are managed through the platform or checkout provider used for purchase.
+      </p>
+    </section>
+
+    <section>
+      <h2>Feedback</h2>
+      <p>
+        Product suggestions can go to <a href={`mailto:${site.feedbackEmail}`}>{site.feedbackEmail}</a>. Please do not send photos of IDs, payment cards, or full account credentials.
+      </p>
+    </section>
+  </article>
+</BaseLayout>

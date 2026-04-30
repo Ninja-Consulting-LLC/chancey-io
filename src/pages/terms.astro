@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site';
+---
+
+<BaseLayout
+  title="Terms of Service | Chancey"
+  description="Chancey's terms of service covering eligibility, acceptable use, subscriptions, disclaimers, and support."
+>
+  <article class="legal">
+    <p class="eyebrow">Terms of Service</p>
+    <h1>Terms of Service</h1>
+    <p class="notice">
+      Draft for launch preparation. These terms should be reviewed by counsel before public release.
+    </p>
+    <p>Last updated: April 30, 2026</p>
+
+    <section>
+      <h2>Eligibility</h2>
+      <p>
+        You must be at least 18 years old, or the age of majority where you live, whichever is greater, to use Chancey.
+      </p>
+    </section>
+
+    <section>
+      <h2>What Chancey is</h2>
+      <p>
+        Chancey is an informational and convenience tool for lottery players. It is not a lottery retailer, is not affiliated with state or national lottery operators, and cannot sell tickets or pay prizes.
+      </p>
+    </section>
+
+    <section>
+      <h2>Your responsibility</h2>
+      <p>
+        Always verify important ticket information and winning status with the official lottery operator. Number-building tools are for entertainment and organization only.
+      </p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>
+        Questions about these terms can be sent to <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
