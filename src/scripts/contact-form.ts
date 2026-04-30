@@ -109,6 +109,14 @@ declare global {
       // Pretend it worked and fire no events. Don't tip off the bot.
       setStatus('success', 'Thanks! Your message is on its way.');
       form.reset();
+      delete form.dataset.submitted;
+      return;
+    }
+
+    form.dataset.submitted = 'true';
+    if (!form.reportValidity()) {
+      setStatus('error', 'Please fill out the required fields before sending.');
+      gtagSafe('contact_form_submit_error', { error: 'invalid_fields' });
       return;
     }
 
@@ -159,6 +167,7 @@ declare global {
         "Thanks! Your message is on its way. We'll reply within two business days."
       );
       form.reset();
+      delete form.dataset.submitted;
       // Allow the success state to dismiss when the user starts editing again
       const dismissOnEdit = () => {
         setStatus('idle');
@@ -173,10 +182,13 @@ declare global {
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error';
-      const friendly =
-        message === 'recaptcha_failed'
-          ? "We couldn't confirm you're human. Please reload the page and try again."
-          : "Something went wrong sending your message. Please try again, or come back in a few minutes.";
+      let friendly =
+        'Something went wrong sending your message. Please try again, or come back in a few minutes.';
+      if (message === 'recaptcha_failed') {
+        friendly = "We couldn't confirm you're human. Please reload the page and try again.";
+      } else if (message === 'recaptcha_unavailable') {
+        friendly = "We couldn't reach the verification service. Please try again in a few minutes.";
+      }
       setStatus('error', friendly);
 
       gtagSafe('contact_form_submit_error', {

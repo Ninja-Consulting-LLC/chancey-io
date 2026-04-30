@@ -187,8 +187,8 @@ const contactEndpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? '';
     box-shadow: 0 0 0 3px rgba(255, 107, 61, 0.18);
   }
 
-  .form-field input:invalid:not(:placeholder-shown),
-  .form-field textarea:invalid:not(:placeholder-shown) {
+  .contact-form[data-submitted='true'] .form-field input:invalid,
+  .contact-form[data-submitted='true'] .form-field textarea:invalid {
     border-color: var(--red);
   }
 
