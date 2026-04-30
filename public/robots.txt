@@ -64,4 +64,4 @@ User-agent: ImagesiftBot
 Allow: /
 
 # Sitemap
-Sitemap: https://chancey.io/sitemap-index.xml
+Sitemap: https://chancey.io/sitemap.xml

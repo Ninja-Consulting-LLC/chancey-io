@@ -28,12 +28,12 @@
   <text x="170" y="125" font-family="Georgia, serif" font-size="34" font-weight="600" fill="#1b1410" letter-spacing="-0.5">Chancey</text>
 
   <!-- Headline -->
-  <text x="80" y="280" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">A calmer way</text>
-  <text x="80" y="380" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">to manage the</text>
-  <text x="80" y="480" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">lottery you play.</text>
+  <text x="80" y="280" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">Pick your lottery</text>
+  <text x="80" y="380" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">numbers. Track</text>
+  <text x="80" y="480" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">every ticket.</text>
 
   <!-- Subhead -->
-  <text x="80" y="560" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="22" fill="#5a4a3f">Scan tickets · Track draws · Build picks</text>
+  <text x="80" y="560" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="22" fill="#5a4a3f">Build picks · Scan tickets · Track draws</text>
 
   <!-- Lottery balls cluster -->
   <g transform="translate(820, 200)" filter="url(#ballShadow)">
@@ -52,8 +52,8 @@
     <circle cx="240" cy="220" r="58" fill="white"/>
     <text x="240" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">61</text>
 
-    <circle cx="370" cy="190" r="58" fill="#e8375c"/>
-    <text x="370" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="white">14</text>
+    <circle cx="315" cy="190" r="58" fill="#e8375c"/>
+    <text x="315" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="white">14</text>
   </g>
 
   <!-- Tagline pill -->
