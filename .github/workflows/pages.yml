@@ -40,7 +40,7 @@ jobs:
           PUBLIC_RECAPTCHA_SITE_KEY: 6LfKYdIsAAAAAG2exCOEtxpj5PSOfAnEOUw-xJ2F
           # Set this in the repo's Variables (Settings → Secrets and variables → Actions → Variables)
           # once the Worker is deployed. Falls back to the production workers.dev URL.
-          PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.workers.dev' }}
+          PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.ninjaconsultingllc.workers.dev' }}
         run: npm run build
       - uses: actions/configure-pages@v5
         if: github.event_name == 'push'

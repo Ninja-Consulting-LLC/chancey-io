@@ -48,7 +48,7 @@ In your build environment (or in your shell before `npm run build`):
 
 ```bash
 export PUBLIC_RECAPTCHA_SITE_KEY="..."
-export PUBLIC_CONTACT_ENDPOINT="https://chancey-contact.<your>.workers.dev"
+export PUBLIC_CONTACT_ENDPOINT="https://chancey-contact.ninjaconsultingllc.workers.dev"
 # (or your custom-domain URL once you set one)
 ```
 
@@ -218,6 +218,7 @@ CORS preflight. `ALLOWED_ORIGIN` accepts a comma-separated list and supports
 | `SMTP_PORT` | `587` (STARTTLS submission). |
 | `MAIL_HOSTNAME` | SMTP HELO/EHLO hostname (`chancey.io`). |
 | `ALLOWED_ORIGIN` | Comma-separated CORS allowlist. Supports `*` wildcards. |
+| `RECAPTCHA_ALLOWED_HOSTNAMES` | Comma-separated hostnames accepted from Google reCAPTCHA verification. |
 
 ### Worker secrets (set with `wrangler secret put`)
 

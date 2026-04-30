@@ -14,7 +14,8 @@
 		"ALLOWED_ORIGIN": "http://localhost:4321",
 		"SMTP_HOST": "email-smtp.us-east-1.amazonaws.com",
 		"SMTP_PORT": "587",
-		"MAIL_HOSTNAME": "chancey.io"
+		"MAIL_HOSTNAME": "chancey.io",
+		"RECAPTCHA_ALLOWED_HOSTNAMES": "localhost,127.0.0.1"
 	},
 	"env": {
 		"dev": {
@@ -26,7 +27,8 @@
 				"ALLOWED_ORIGIN": "http://localhost:4321,http://localhost:3000,https://*.trycloudflare.com",
 				"SMTP_HOST": "email-smtp.us-east-1.amazonaws.com",
 				"SMTP_PORT": "587",
-				"MAIL_HOSTNAME": "chancey.io"
+				"MAIL_HOSTNAME": "chancey.io",
+				"RECAPTCHA_ALLOWED_HOSTNAMES": "localhost,127.0.0.1"
 			},
 			"observability": { "enabled": true }
 		},
@@ -37,7 +39,8 @@
 				"ALLOWED_ORIGIN": "https://chancey.io",
 				"SMTP_HOST": "email-smtp.us-east-1.amazonaws.com",
 				"SMTP_PORT": "587",
-				"MAIL_HOSTNAME": "chancey.io"
+				"MAIL_HOSTNAME": "chancey.io",
+				"RECAPTCHA_ALLOWED_HOSTNAMES": "chancey.io,www.chancey.io"
 			},
 			"observability": { "enabled": true }
 			// Optional custom-domain route — uncomment after the DNS record exists:

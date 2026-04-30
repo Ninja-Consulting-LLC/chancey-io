@@ -29,6 +29,7 @@ interface Env {
   MAIL_TO: string;
   MAIL_HOSTNAME: string;
   RECAPTCHA_SECRET?: string;
+  RECAPTCHA_ALLOWED_HOSTNAMES?: string;
   ALLOWED_ORIGIN?: string;
 }
 
@@ -51,8 +52,17 @@ interface RecaptchaVerifyResponse {
 }
 
 const RECAPTCHA_SCORE_THRESHOLD = 0.5;
+const RECAPTCHA_ACTION = 'contact';
 const MESSAGE_MAX = 5000;
 const FIELD_MAX = 200;
+const TOPIC_LABELS: Record<string, string> = {
+  general: 'General question',
+  support: 'Help with the app',
+  privacy: 'Privacy or data request',
+  feedback: 'Product feedback',
+  bug: 'Bug report',
+  security: 'Security issue',
+};
 
 function pickAllowedOrigin(envValue: string | undefined, requestOrigin: string | null): string {
   if (!envValue) return 'https://chancey.io';
@@ -104,10 +114,34 @@ function trimAndCap(value: unknown, max: number): string {
   return value.trim().slice(0, max);
 }
 
+function trimSingleLine(value: unknown, max: number): string {
+  return trimAndCap(value, max)
+    .replace(/[\r\n]+/g, ' ')
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function normalizeTopic(value: unknown): { key: string; label: string } {
+  const key = trimSingleLine(value, 50).toLowerCase();
+  if (key in TOPIC_LABELS) {
+    return { key, label: TOPIC_LABELS[key] };
+  }
+  return { key: 'general', label: TOPIC_LABELS.general };
+}
+
+function csvValues(value: string | undefined): string[] {
+  return String(value || '')
+    .split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+}
+
 async function verifyRecaptcha(
   token: string | undefined,
   secret: string | undefined,
-  remoteIp: string | undefined
+  remoteIp: string | undefined,
+  allowedHostnames: string[]
 ): Promise<{ ok: boolean; score: number | null; codes: string[] }> {
   if (!secret) {
     // No secret configured — skip but flag.
@@ -131,7 +165,14 @@ async function verifyRecaptcha(
   const data = (await r.json()) as RecaptchaVerifyResponse;
   const codes = data['error-codes'] ?? [];
   const score = typeof data.score === 'number' ? data.score : null;
-  const ok = Boolean(data.success) && (score === null || score >= RECAPTCHA_SCORE_THRESHOLD);
+  const hostname = data.hostname?.toLowerCase();
+  const hostnameOk = Boolean(hostname && allowedHostnames.includes(hostname));
+  const actionOk = data.action === RECAPTCHA_ACTION;
+  const scoreOk = score !== null && score >= RECAPTCHA_SCORE_THRESHOLD;
+  const ok = Boolean(data.success) && scoreOk && actionOk && hostnameOk;
+  if (data.success && !actionOk) codes.push('unexpected-action');
+  if (data.success && !hostnameOk) codes.push('unexpected-hostname');
+  if (data.success && !scoreOk) codes.push('low-score');
   return { ok, score, codes };
 }
 
@@ -160,9 +201,9 @@ export default {
       return jsonResponse(200, { ok: true }, allowedOrigin);
     }
 
-    const name = trimAndCap(payload.name, FIELD_MAX);
+    const name = trimSingleLine(payload.name, FIELD_MAX);
     const email = trimAndCap(payload.email, FIELD_MAX);
-    const topic = trimAndCap(payload.topic, 50) || 'general';
+    const topic = normalizeTopic(payload.topic);
     const message = trimAndCap(payload.message, MESSAGE_MAX);
 
     if (!name || !email || !message) {
@@ -179,7 +220,8 @@ export default {
     const recaptcha = await verifyRecaptcha(
       payload.recaptcha_token,
       env.RECAPTCHA_SECRET,
-      remoteIp ?? undefined
+      remoteIp ?? undefined,
+      csvValues(env.RECAPTCHA_ALLOWED_HOSTNAMES)
     );
     if (!recaptcha.ok) {
       return jsonResponse(
@@ -190,10 +232,10 @@ export default {
     }
 
     // Build the email
-    const subject = `[Chancey contact · ${topic}] ${name}`;
+    const subject = `[Chancey contact - ${topic.label}] ${name}`;
     const text = [
       `From: ${name} <${email}>`,
-      `Topic: ${topic}`,
+      `Topic: ${topic.label} (${topic.key})`,
       `reCAPTCHA score: ${recaptcha.score ?? 'n/a'}`,
       `Source IP: ${remoteIp ?? 'unknown'}`,
       '',
