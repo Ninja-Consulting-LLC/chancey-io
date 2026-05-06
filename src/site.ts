@@ -9,7 +9,7 @@ export const site = {
   shortDescription:
     'Chancey is a lottery toolkit for adults 18+. Pick numbers in the builder, save the sets you love, and track every ticket through the next draw.',
   longDescription:
-    'Chancey is a lottery toolkit for adults 18+. The number builder helps you mix favorite numbers with quick picks and save sets you can reuse. The tracker scans any printed ticket and checks the official draw results for you. Chancey does not sell tickets, predict numbers, or improve your odds.',
+    'Chancey is a lottery toolkit for adults 18+. The number builder helps you mix favorite numbers with quick picks and save sets you can reuse. The tracker scans supported printed tickets and checks saved tickets when official results are available for supported draws. Chancey does not sell tickets, predict numbers, or improve your odds.',
   founded: '2026',
   category: 'Lottery toolkit app',
   audience: 'Adults 18+ who play state, provincial, and national lotteries',
@@ -96,11 +96,11 @@ export const featureBlocks = [
   {
     id: 'scan',
     eyebrow: 'Ticket scanning',
-    title: 'Scan any printed ticket in seconds.',
+    title: 'Scan supported printed tickets in seconds.',
     description:
-      'Once you buy a ticket, scan it. Chancey reads the numbers, the game, and the draw date. You confirm what it caught before it saves to your history.',
+      'Once you buy a supported ticket, scan it. Chancey reads the numbers, the game, and the draw date when it can. You confirm what it caught before it saves to your history.',
     bullets: [
-      'Powerball, Mega Millions, state daily games, and more',
+      'Built for common U.S. lottery games, with more formats added over time',
       'Edit any number before saving — you stay in control',
       'On-device first, with cloud help for unclear scans',
     ],
@@ -114,13 +114,13 @@ export const featureBlocks = [
   {
     id: 'check',
     eyebrow: 'Auto-checking draws',
-    title: 'Know what your tickets did, right after the draw.',
+    title: 'Know what your tickets did after results post.',
     description:
-      'When the lottery posts a draw, Chancey checks every saved ticket against the official numbers. Each one gets a clear label: match, partial, or no match.',
+      'When official results are available for a supported draw, Chancey checks saved tickets against the posted numbers. Each one gets a clear label: match, partial, or no match.',
     bullets: [
-      'Match status the moment results go live',
+      'Match status after official results are available',
       'Matched numbers light up on each ticket',
-      'Stop squinting at screenshots at red lights',
+      'Stop squinting at camera-roll screenshots',
     ],
     screenshotAlt: appScreenshots.home.alt,
     screenshotSrc: appScreenshots.home.src,
@@ -163,14 +163,14 @@ export const howItWorks = [
   {
     step: '03',
     title: 'Scan and check after the draw',
-    body: 'Scan the slip into Chancey. After the draw, every saved ticket is checked against the official results.',
+    body: 'Scan a supported slip into Chancey. After official results are available for a supported draw, saved tickets can be checked against the posted numbers.',
   },
 ] as const;
 
 export const faqs = [
   {
     q: 'What is Chancey?',
-    a: 'Chancey is a lottery app for adults 18+. The builder helps you pick numbers and save your favorite sets. The tracker scans printed tickets and checks each one against the official draw results. Chancey does not sell tickets, pay prizes, or predict winning numbers.',
+    a: 'Chancey is a lottery app for adults 18+. The builder helps you pick numbers and save your favorite sets. The tracker scans supported printed tickets and checks saved tickets when official results are available for supported draws. Chancey does not sell tickets, pay prizes, or predict winning numbers.',
   },
   {
     q: 'Does Chancey sell lottery tickets?',
@@ -186,7 +186,7 @@ export const faqs = [
   },
   {
     q: 'How does ticket scanning work?',
-    a: 'You take a photo of the ticket. Chancey reads the numbers, the game, and the draw date. You confirm what it caught before it saves. If it can\'t read a number on your device, it may use a cloud step to help. Ticket photos are never used for ads.',
+    a: 'You take a photo of a supported ticket. Chancey reads the numbers, the game, and the draw date when it can. You confirm what it caught before it saves. If it can\'t read a number on your device, it may use a cloud step to help. Ticket photos are never used for ads.',
   },
   {
     q: 'Where does Chancey work?',

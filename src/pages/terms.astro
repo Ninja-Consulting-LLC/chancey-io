@@ -1,8 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Icon from '../components/icons/Icon.astro';
 
-const lastUpdated = 'April 30, 2026';
+const lastUpdated = 'May 6, 2026';
 ---
 
 <BaseLayout
@@ -19,14 +18,6 @@ const lastUpdated = 'April 30, 2026';
         <p class="eyebrow">Terms</p>
         <h1>Terms of Service</h1>
         <p class="muted">Last updated: {lastUpdated}</p>
-        <div class="notice">
-          <span class="notice-icon" aria-hidden="true"><Icon name="lightning" size={22} /></span>
-          <div>
-            <strong>Working draft</strong>
-            These terms are in final legal review for launch. Big changes will show up in the app
-            and at the top of this page.
-          </div>
-        </div>
       </header>
 
       <section>
@@ -83,9 +74,8 @@ const lastUpdated = 'April 30, 2026';
         <h2>Subscriptions and payments</h2>
         <p>
           The core experience is free today. If we offer paid features, we will show the price,
-          billing schedule, and how to cancel before you buy. Payments run through the platform or
-          checkout you used to subscribe (web checkout, App Store, or Google Play). To cancel, use
-          the same channel.
+          billing schedule, and how to cancel before you buy. Payments and cancellation
+          instructions will be shown through the checkout or platform used for purchase.
         </p>
         <p>
           Refunds follow the policy of the platform that processed your payment, plus any consumer
@@ -143,9 +133,11 @@ const lastUpdated = 'April 30, 2026';
       <section>
         <h2>Governing law and disputes</h2>
         <p>
-          The governing law and dispute resolution will be set at launch. For now, please reach
-          us through the <a href="/contact/">contact form</a> with any concerns. We will work with
-          you in good faith.
+          If you have a concern, please reach us through the
+          <a href="/contact/">contact form</a> first so we can try to resolve it informally. These
+          terms are governed by Oregon law, without regard to conflict-of-law rules. Unless
+          applicable law gives you another right, disputes will be handled in the state or federal
+          courts located in Oregon.
         </p>
       </section>
 
