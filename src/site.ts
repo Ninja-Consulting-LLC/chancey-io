@@ -47,20 +47,50 @@ export const footerLinks = {
   ],
 } as const;
 
+export const appScreenshots = {
+  home: {
+    src: '/app-screenshots/home.png',
+    width: 1290,
+    height: 2796,
+    alt: 'Chancey simple home screen with saved Powerball tickets and draw status',
+  },
+  rules: {
+    src: '/app-screenshots/rules.png',
+    width: 1290,
+    height: 2796,
+    alt: 'Chancey simple mode number builder with guided pick controls',
+  },
+  scan: {
+    src: '/app-screenshots/scan.png',
+    width: 1290,
+    height: 2796,
+    alt: 'Chancey scanner screen ready to capture a lottery ticket',
+  },
+  stats: {
+    src: '/app-screenshots/stats.png',
+    width: 1290,
+    height: 2796,
+    alt: 'Chancey ticket and draw statistics screen with simple mode summaries',
+  },
+} as const;
+
 export const featureBlocks = [
   {
     id: 'build',
-    eyebrow: 'Number builder',
-    title: 'Pick your numbers in seconds.',
+    eyebrow: 'Simple mode',
+    title: 'Pick your numbers without tuning every dial.',
     description:
-      'Mix your favorite numbers with quick picks. Save the sets you love and reuse them on the next ticket. No math. No spreadsheet. Just a faster way to pick.',
+      'Simple mode turns the builder into a guided flow. Choose a vibe, keep the numbers you like, and save a set without turning the app into a spreadsheet.',
     bullets: [
-      'Mix favorites and quick picks across any supported game',
+      'Guided pick styles for quick, balanced, or favorite-heavy sets',
       'Save sets so you stop typing the same numbers',
-      'See real draw history — never sold as predictions',
+      'Draw stats are context, never predictions',
     ],
-    screenshotAlt: 'Chancey number builder mixing favorite numbers with quick picks',
-    screenshotLabel: 'Number builder',
+    screenshotAlt: appScreenshots.rules.alt,
+    screenshotSrc: appScreenshots.rules.src,
+    screenshotWidth: appScreenshots.rules.width,
+    screenshotHeight: appScreenshots.rules.height,
+    screenshotLabel: 'Simple builder',
     previewVariant: 'builder',
   },
   {
@@ -74,7 +104,10 @@ export const featureBlocks = [
       'Edit any number before saving — you stay in control',
       'On-device first, with cloud help for unclear scans',
     ],
-    screenshotAlt: 'Chancey scanner reading a printed Powerball ticket',
+    screenshotAlt: appScreenshots.scan.alt,
+    screenshotSrc: appScreenshots.scan.src,
+    screenshotWidth: appScreenshots.scan.width,
+    screenshotHeight: appScreenshots.scan.height,
     screenshotLabel: 'Scanner',
     previewVariant: 'scan',
   },
@@ -89,7 +122,10 @@ export const featureBlocks = [
       'Matched numbers light up on each ticket',
       'Stop squinting at screenshots at red lights',
     ],
-    screenshotAlt: 'Chancey ticket history showing match, partial, and no-match results',
+    screenshotAlt: appScreenshots.home.alt,
+    screenshotSrc: appScreenshots.home.src,
+    screenshotWidth: appScreenshots.home.width,
+    screenshotHeight: appScreenshots.home.height,
     screenshotLabel: 'History · Results',
     previewVariant: 'history',
   },

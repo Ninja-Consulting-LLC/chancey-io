@@ -1,5 +1,4 @@
 ---
-import AppPreview from '../components/AppPreview.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/icons/Icon.astro';
 import Screenshot from '../components/Screenshot.astro';
@@ -7,7 +6,7 @@ import FeatureBlock from '../components/sections/FeatureBlock.astro';
 import FaqSection from '../components/sections/FaqSection.astro';
 import CtaSection from '../components/sections/CtaSection.astro';
 import { createLocalPaths } from '../paths';
-import { features, featureBlocks, faqs, site } from '../site';
+import { appScreenshots, features, featureBlocks, faqs, site } from '../site';
 
 const paths = createLocalPaths(Astro.url.pathname);
 const homepageFaqs = faqs.slice(0, 8);
@@ -45,7 +44,14 @@ const homepageFaqs = faqs.slice(0, 8);
           <li class="hero-meta-item"><Icon name="globe" size={18} /> Works in any browser</li>
         </ul>
       </div>
-      <AppPreview variant="home" />
+      <Screenshot
+        src={appScreenshots.home.src}
+        alt={appScreenshots.home.alt}
+        width={appScreenshots.home.width}
+        height={appScreenshots.home.height}
+        frame="phone"
+        loading="eager"
+      />
     </div>
   </section>
 
@@ -82,7 +88,10 @@ const homepageFaqs = faqs.slice(0, 8);
     id={`feature-${featureBlocks[0].id}`}
   >
     <Screenshot
+      src={featureBlocks[0].screenshotSrc}
       alt={featureBlocks[0].screenshotAlt}
+      width={featureBlocks[0].screenshotWidth}
+      height={featureBlocks[0].screenshotHeight}
       label={featureBlocks[0].screenshotLabel}
       variant={featureBlocks[0].previewVariant as any}
       frame="phone"
@@ -99,7 +108,10 @@ const homepageFaqs = faqs.slice(0, 8);
     id={`feature-${featureBlocks[1].id}`}
   >
     <Screenshot
+      src={featureBlocks[1].screenshotSrc}
       alt={featureBlocks[1].screenshotAlt}
+      width={featureBlocks[1].screenshotWidth}
+      height={featureBlocks[1].screenshotHeight}
       label={featureBlocks[1].screenshotLabel}
       variant={featureBlocks[1].previewVariant as any}
       frame="phone"
@@ -116,7 +128,10 @@ const homepageFaqs = faqs.slice(0, 8);
     id={`feature-${featureBlocks[2].id}`}
   >
     <Screenshot
+      src={featureBlocks[2].screenshotSrc}
       alt={featureBlocks[2].screenshotAlt}
+      width={featureBlocks[2].screenshotWidth}
+      height={featureBlocks[2].screenshotHeight}
       label={featureBlocks[2].screenshotLabel}
       variant={featureBlocks[2].previewVariant as any}
       frame="phone"
