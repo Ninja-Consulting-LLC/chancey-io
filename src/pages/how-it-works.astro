@@ -28,11 +28,11 @@ const howToSchema = {
     },
     {
       name: 'Scan the ticket',
-      text: 'Open Chancey and scan the slip. The app reads the numbers, game, and draw date. You confirm before saving.',
+      text: 'Open Chancey and scan the slip. For supported ticket formats, the app reads the numbers, game, and draw date when it can. You confirm before saving.',
     },
     {
       name: 'See what matched after the draw',
-      text: 'When the lottery publishes results, Chancey checks every saved ticket against the official numbers and labels each one match, partial, or no match.',
+      text: 'When official results are available for a supported draw, Chancey checks saved tickets against the posted numbers and labels each one match, partial, or no match.',
     },
   ],
 };
@@ -75,7 +75,7 @@ const howToSchema = {
   <FeatureBlock
     eyebrow="Step 01"
     title="Pick your lottery numbers."
-    description="Open the builder. Mix favorite numbers — birthdays, lucky digits — with quick picks across any supported game. Save the sets you love so they're ready next time."
+    description="Open the builder. Mix favorite numbers — birthdays, lucky digits — with quick picks across supported games. Save the sets you love so they're ready next time."
     bullets={[
       'Tap "Build" in the bottom nav and choose a game',
       'Pin favorite numbers, then auto-fill the rest with a quick pick',
@@ -117,7 +117,7 @@ const howToSchema = {
   <FeatureBlock
     eyebrow="Step 03"
     title="Scan the ticket. Confirm. Save."
-    description="Open Chancey and point your camera at the slip. The app reads the numbers, the game, and the draw date. You confirm what it caught before it saves."
+    description="Open Chancey and point your camera at the slip. For supported ticket formats, the app reads the numbers, the game, and the draw date when it can. You confirm what it caught before it saves."
     bullets={[
       'Tap "Scan" and center the slip in the frame',
       'Check the captured numbers and draw date — fix any that look off',
@@ -137,9 +137,9 @@ const howToSchema = {
   <FeatureBlock
     eyebrow="Step 04"
     title="See what matched after the draw."
-    description="When the lottery posts results, Chancey checks every saved ticket against the official numbers. Each ticket gets a clear label: match, partial, or no match."
+    description="When official results are available for a supported draw, Chancey checks saved tickets against the posted numbers. Each ticket gets a clear label: match, partial, or no match."
     bullets={[
-      'Open the History tab — your tickets show their status as soon as results post',
+      'Open the History tab to see status after official results are available',
       'Tap any ticket to see which numbers matched, highlighted on the slip',
       'If you won, claim the prize through the lottery, not through Chancey',
     ]}
