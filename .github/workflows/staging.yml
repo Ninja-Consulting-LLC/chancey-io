@@ -1,27 +1,29 @@
 name: staging
 
+# Push-triggered, not pull_request: a staging/preview deploy must work even
+# when the PR has merge conflicts with main (GitHub can't build the
+# pull_request merge-ref then and skips pull_request workflows entirely).
+# main is excluded (that's production, via pages.yml).
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    # Site-only PRs get a staging deploy. The contact worker has its own
-    # workflow; pure worker PRs don't need a site staging build.
+  push:
+    branches-ignore:
+      - main
     paths-ignore:
       - 'server/**'
       - '.github/workflows/contact-worker.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
   pull-requests: write
 
 concurrency:
-  group: staging-${{ github.event.pull_request.number }}
+  group: staging-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   deploy-staging:
     name: Deploy staging.chancey.io
-    # Skip PRs from forks: they can't (and shouldn't) use deploy secrets.
-    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     environment:
       name: staging
@@ -72,10 +74,21 @@ jobs:
           url=$(echo "$out" | grep -oE 'https://[a-z0-9-]+\.chancey-staging\.pages\.dev' | head -1)
           echo "preview_url=$url" >> "$GITHUB_OUTPUT"
 
-      - name: Comment staging URL on the PR
+      - name: Comment staging URL on the PR (if one is open)
         uses: actions/github-script@v7
         with:
           script: |
+            const branch = context.ref.replace('refs/heads/', '');
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${branch}`,
+              state: 'open',
+            });
+            if (prs.length === 0) {
+              core.info(`No open PR for ${branch}; skipping comment.`);
+              return;
+            }
             const preview = '${{ steps.deploy.outputs.preview_url }}';
             const body = [
               '### Staging deploy ✅',
@@ -83,27 +96,29 @@ jobs:
               '- **Staging site:** https://staging.chancey.io',
               preview ? `- **This build:** ${preview}` : '',
               '',
-              '_Noindexed. staging.chancey.io reflects the most recently deployed PR._',
+              '_Noindexed. staging.chancey.io reflects the most recently deployed branch._',
             ].filter(Boolean).join('\n');
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
             const marker = '### Staging deploy';
-            const existing = comments.find((c) => c.body && c.body.startsWith(marker));
-            if (existing) {
-              await github.rest.issues.updateComment({
+            for (const pr of prs) {
+              const { data: comments } = await github.rest.issues.listComments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
+                issue_number: pr.number,
               });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body,
-              });
+              const existing = comments.find((c) => c.body && c.body.startsWith(marker));
+              if (existing) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existing.id,
+                  body,
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  body,
+                });
+              }
             }
