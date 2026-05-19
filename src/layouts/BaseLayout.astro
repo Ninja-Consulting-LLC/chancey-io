@@ -67,6 +67,11 @@ const socialImage = ogImage
   ? new URL(ogImage, site.url).toString()
   : new URL('/og-image.png', site.url).toString();
 const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+// Staging/preview builds set PUBLIC_NOINDEX=1 so the whole environment is
+// kept out of search engines (avoids duplicating production).
+const forceNoindex =
+  import.meta.env.PUBLIC_NOINDEX === '1' || import.meta.env.PUBLIC_NOINDEX === 'true';
+const isNoindex = noindex || forceNoindex;
 ---
 
 <!doctype html>
@@ -80,8 +85,8 @@ const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
-    {!noindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+    {isNoindex && <meta name="robots" content="noindex, nofollow" />}
+    {!isNoindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
 
     <meta name="author" content={site.legalName} />
     <meta name="theme-color" content={site.themeColor} />
