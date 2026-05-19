@@ -144,8 +144,10 @@ const isNoindex = noindex || forceNoindex;
       includeApplication={includeApplication}
     />
 
-    {/* Google Analytics 4, privacy-respecting defaults */}
-    {site.ga4Id && (
+    {/* Google Analytics 4, privacy-respecting defaults.
+        Skipped entirely when noindex (staging/preview) so staging traffic
+        never reaches the production GA4 property. */}
+    {site.ga4Id && !isNoindex && (
       <>
         <script
           is:inline
