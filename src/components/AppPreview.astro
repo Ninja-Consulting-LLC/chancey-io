@@ -27,6 +27,25 @@ const { variant = 'home' } = Astro.props;
       {
         variant === 'home' && (
           <>
+            <article class="ticket-card ticket-card-win">
+              <div class="ticket-card-head">
+                <span class="ticket-card-game">Mega Millions</span>
+                <span class="ticket-card-date">Fri · Result</span>
+              </div>
+              <div
+                class="balls"
+                aria-label="Your numbers 4, 22, 31, 47, 58, Mega Ball 9, four matched"
+              >
+                <span class="ball gold">04</span>
+                <span class="ball gold">22</span>
+                <span class="ball">31</span>
+                <span class="ball gold">47</span>
+                <span class="ball">58</span>
+                <span class="ball gold">09</span>
+              </div>
+              <span class="status-pill win">You matched 4, claim by Jun 12</span>
+            </article>
+
             <article class="ticket-card">
               <div class="ticket-card-head">
                 <span class="ticket-card-game">Powerball</span>
@@ -43,29 +62,10 @@ const { variant = 'home' } = Astro.props;
               <span class="status-pill">Pending draw</span>
             </article>
 
-            <article class="ticket-card">
-              <div class="ticket-card-head">
-                <span class="ticket-card-game">Mega Millions</span>
-                <span class="ticket-card-date">Tue · Match</span>
-              </div>
-              <div
-                class="balls"
-                aria-label="Saved numbers: 4, 22, 31, 47, 58, Mega Ball 9, three matches"
-              >
-                <span class="ball">04</span>
-                <span class="ball gold">22</span>
-                <span class="ball">31</span>
-                <span class="ball gold">47</span>
-                <span class="ball">58</span>
-                <span class="ball gold">09</span>
-              </div>
-              <span class="status-pill win">3 of 6 match</span>
-            </article>
-
             <article class="ticket-card builder-card">
               <div>
-                <strong>Quick builder</strong>
-                <span>Mix favorites and stats</span>
+                <strong>Number builder</strong>
+                <span>Need a set? Build one</span>
               </div>
               <span class="builder-card-icon" aria-hidden="true">
                 <Icon name="wand" size={16} />

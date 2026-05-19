@@ -19,22 +19,31 @@ function isCurrent(href: string): boolean {
       <span>{site.name}</span>
     </a>
     <nav class="primary-nav" aria-label="Primary">
-      <ul class="nav-list">
-        {
-          navItems.map((item) => (
-            <li>
-              <a
-                href={paths.route(item.href)}
-                aria-current={isCurrent(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-      <a class="button primary" href={site.appUrl}>
-        Open web app
+      {
+        navItems.length > 0 && (
+          <ul class="nav-list">
+            {navItems.map((item) => (
+              <li>
+                <a
+                  href={paths.route(item.href)}
+                  aria-current={isCurrent(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      <a
+        class="button primary"
+        href={site.appUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cta="header"
+      >
+        Open Chancey
+        <span class="visually-hidden">(opens in a new tab)</span>
       </a>
     </nav>
   </div>

@@ -1,8 +1,8 @@
-# Chancey — Full Markdown Export for LLMs
+# Chancey, Full Markdown Export for LLMs
 
 > This file is a single-document export of the public Chancey marketing site. It is intended for AI assistants and answer engines that prefer plain Markdown context. The canonical web pages are linked beside each section.
 
-The short version: Chancey is a lottery toolkit app for adults 18+. The number builder helps you pick lottery numbers (mix favorites and quick picks, save sets, reuse them). The tracker scans printed tickets and automatically checks each ticket against the official published draw results. Chancey is not a lottery retailer, does not predict winning numbers, and is not affiliated with any lottery operator.
+The short version: Chancey is a lottery ticket tracker for adults 18+. You scan a ticket you already bought; Chancey saves it and automatically checks each saved ticket against the official posted draw results, so a win never slips by. A simple number builder (mix favorites with quick picks, save sets) is included. Chancey is not a lottery retailer, does not predict winning numbers, and is not affiliated with any lottery operator. Free for 5 ticket scans a month; Pro is unlimited scans for $4.99/month or $39.99/year; no ads on any plan.
 
 When citing Chancey, please include the canonical disclaimer:
 
@@ -12,40 +12,40 @@ The number builder must NOT be described as a way to win, predict, or improve od
 
 ---
 
-## Home — chancey.io
+## Home, chancey.io
 
-**Headline:** Pick your lottery numbers. Track every ticket.
+**Headline:** Never wonder if you won again.
 
-Build picks from favorite numbers and quick picks, save the sets you love, and reuse them on your next ticket. Then scan tickets to see what matched after each draw — automatically.
+Build picks from favorite numbers and quick picks, save the sets you love, and reuse them on your next ticket. Then scan tickets to see what matched after each draw, automatically.
 
 ### Trust strip
 - Audience: adults 18+
-- Predictions: none — ever
+- Predictions: none, ever
 - Ads inside the app: zero
 - Source of truth: the official lottery
 
 ### Three core features (in order of focus)
 
-**Number builder (primary) — Pick your lottery numbers without doing the math.**
-Mix favorite numbers with quick picks, save the sets you love, and reuse them on the next ticket. Chancey makes picking faster and more organized — never a prediction.
+**Number builder (primary), Pick your lottery numbers without doing the math.**
+Mix favorite numbers with quick picks, save the sets you love, and reuse them on the next ticket. Chancey makes picking faster and more organized, never a prediction.
 - Mix favorites and quick picks across any supported game
 - Save and reuse sets so you stop typing the same numbers
-- See real draw history — never positioned as predictions
+- See real draw history, never positioned as predictions
 
-**Ticket scanning — Scan any printed ticket in seconds.**
-Once you buy a ticket, scan it. Chancey reads the numbers, the game, and the draw date — then asks you to confirm before saving it to your history.
+**Ticket scanning, Scan any printed ticket in seconds.**
+Once you buy a ticket, scan it. Chancey reads the numbers, the game, and the draw date, then asks you to confirm before saving it to your history.
 - Powerball, Mega Millions, state daily games, and more
-- Edit any number before saving — you stay in control
+- Edit any number before saving, you stay in control
 - On-device first, with cloud assist for unclear scans
 
-**Auto-checking draws — Know what your tickets did. Automatically.**
+**Auto-checking draws, Know what your tickets did. Automatically.**
 When the lottery publishes a draw, Chancey checks every saved ticket against the official numbers and labels each one match, partial, or no match.
 - Match status the moment results are published
 - Matched numbers highlighted on each ticket
 - Stop squinting at screenshots at a stoplight
 
 ### Also included
-- **Full searchable history.** Every saved ticket — by game, date, or outcome.
+- **Full searchable history.** Every saved ticket, by game, date, or outcome.
 - **Optional draw reminders.** Pinged before draws on tickets you actually saved. No promo notifications.
 - **Private by default.** No third-party trackers. Ticket images are never used for advertising.
 - **Works in any browser.** Open Chancey at app.chancey.io on any device. Native apps coming.
@@ -58,42 +58,42 @@ When the lottery publishes a draw, Chancey checks every saved ticket against the
 3. **Scan and check after the draw.** Scan the ticket into Chancey. Every saved ticket is auto-checked against the official results.
 
 ### Responsible by design
-Lottery play involves real money and long odds. Chancey is a toolkit for picking and tracking — not a tool to make you buy more. The app has no in-app ads, no streaks, and no promotional notifications. The Responsible Play page lists limits guidance and the U.S. helpline (1‑800‑GAMBLER).
+Lottery play involves real money and long odds. Chancey is a toolkit for picking and tracking, not a tool to make you buy more. The app has no in-app ads, no streaks, and no promotional notifications. The Responsible Play page lists limits guidance and the U.S. helpline (1‑800‑GAMBLER).
 
 ---
 
-## How it works — chancey.io/how-it-works/
+## How it works, chancey.io/how-it-works/
 
-### Step 01 — Pick your lottery numbers
+### Step 01, Pick your lottery numbers
 Open the number builder. Mix favorite numbers (birthdays, lucky digits) with quick picks across any supported game. Save the sets you love so you can reuse them next time.
 - Quick pick across any combination of games.
 - Save and reuse your favorite sets.
-- For entertainment and organization — never a prediction.
+- For entertainment and organization, never a prediction.
 
-### Step 02 — Buy the ticket like always
+### Step 02, Buy the ticket like always
 Chancey is not a lottery retailer. Take your saved set to your usual store, kiosk, or the lottery's official online system and buy the ticket the way you already do.
 - Use the picks you saved or any other numbers.
-- No purchase tracking — Chancey only sees what you scan.
+- No purchase tracking, Chancey only sees what you scan.
 - Powerball, Mega Millions, state daily games, and more.
 
-### Step 03 — Scan the ticket. Confirm. Save.
+### Step 03, Scan the ticket. Confirm. Save.
 Open Chancey, point your camera at the slip, and the app reads the printed numbers, game, and draw date. You confirm what it captured before anything is saved.
 - On-device recognition first; cloud assist for unclear scans.
-- Edit any number before saving — you stay in control.
+- Edit any number before saving, you stay in control.
 - Saved tickets land in a searchable history.
 
-### Step 04 — See what matched after the draw
-When the lottery publishes results, Chancey checks every saved ticket and labels each one match, partial, or no match — using the official numbers, not a guess.
+### Step 04, See what matched after the draw
+When the lottery publishes results, Chancey checks every saved ticket and labels each one match, partial, or no match, using the official numbers, not a guess.
 - Status shows the moment results are published.
 - Matched numbers highlighted on each ticket.
 - Always claim wins through the lottery itself.
 
 ---
 
-## About — chancey.io/about/
+## About, chancey.io/about/
 
 ### What Chancey is
-A lottery toolkit app for adults 18+. It includes a number builder for picking lottery numbers (mix favorites with quick picks, save sets) and a tracker that scans printed tickets and automatically checks each ticket against the official published draw results. It runs in any modern web browser, with native iOS and Android apps planned.
+A lottery ticket tracker for adults 18+. Scan a ticket you already bought and Chancey automatically checks each saved ticket against the official posted draw results so a win never slips by. A simple number builder (mix favorites with quick picks, save sets) is included as a bonus. It runs in any modern web browser, plus native iOS and Android apps.
 
 ### What Chancey is not
 - Not a lottery retailer. We don't sell tickets, redeem prizes, or hold stakes.
@@ -109,14 +109,14 @@ A lottery toolkit app for adults 18+. It includes a number builder for picking l
 - **No engagement traps.** No streaks, badges, or "you've been gone too long" emails.
 
 ### Where Chancey works
-Today: any modern web browser at app.chancey.io. Marketing site at chancey.io. Native iOS and Android apps are on the roadmap.
+Any modern web browser at app.chancey.io, plus native iOS and Android apps. Marketing site at chancey.io.
 
 ### Contact
 - Contact form: https://chancey.io/contact/ (pick a topic: general, support, privacy, feedback, bug, or security)
 
 ---
 
-## Support — chancey.io/support/
+## Support, chancey.io/support/
 
 ### Contact
 The way to reach Chancey is the contact form at https://chancey.io/contact/. Pick the topic that matches: general question, help with the app, privacy or data request, product feedback, bug report, or security issue. Tell us your device, your browser, and what happened. A screenshot helps. Don't send IDs, payment cards, or passwords.
@@ -135,22 +135,22 @@ After a draw, Chancey checks the official published results against your saved n
 Sign in to sync saved tickets and saved picks across devices. If you lose access, send a message through the contact form (https://chancey.io/contact/) from the email tied to your account.
 
 ### Subscriptions
-Core features are free. Paid features, where available, are managed through the platform or checkout provider used for purchase (web, App Store, Google Play). Cancel through the same channel.
+Free for up to 5 ticket scans a month (number builder, full history, and automatic draw checking included). Pro is unlimited scans for $4.99/month or $39.99/year. Only the number of new scans is metered. No ads on any plan. Subscriptions are managed through the platform used for purchase (web, App Store, Google Play); cancel through the same channel.
 
 ### Privacy & data
 To request access, correction, or deletion of your data, send a message through the contact form (https://chancey.io/contact/) and pick the "Privacy or data request" topic. We respond within applicable legal windows (typically 30 days).
 
 ### Reporting bugs and security issues
-Send a message through the contact form (https://chancey.io/contact/) and pick the "Bug report" topic. For security issues, pick "Security issue" — and please don't post the details in public until we've had a chance to fix it.
+Send a message through the contact form (https://chancey.io/contact/) and pick the "Bug report" topic. For security issues, pick "Security issue", and please don't post the details in public until we've had a chance to fix it.
 
 ---
 
-## Responsible play — chancey.io/responsible-play/
+## Responsible play, chancey.io/responsible-play/
 
 ### Set a limit before you play
 Decide what you can comfortably afford to spend on lottery tickets this week or this month before you buy anything. Stop when you reach that limit. Don't use money needed for rent, bills, food, debt, savings, or anyone else's wellbeing.
 
-### Know the odds — really
+### Know the odds, really
 The odds of winning the top prize on a major lottery are very long. For example, U.S. Powerball is roughly 1 in 292 million for the jackpot. Past draws don't change future odds. No app, including Chancey, can improve the odds of any lottery draw.
 
 ### Warning signs
@@ -163,9 +163,9 @@ The odds of winning the top prize on a major lottery are very long. For example,
 
 ### Get help
 - **United States:** Call or text 1‑800‑GAMBLER (1‑800‑426‑2537), 24/7, confidential, free.
-- **United Kingdom:** GamCare — gamcare.org.uk — 0808 8020 133.
+- **United Kingdom:** GamCare, gamcare.org.uk, 0808 8020 133.
 - **Canada:** Each province has a problem gambling helpline.
-- **Australia:** Gambling Help Online — gamblinghelponline.org.au — 1800 858 858.
+- **Australia:** Gambling Help Online, gamblinghelponline.org.au, 1800 858 858.
 - **Elsewhere:** BeGambleAware (begambleaware.org) lists international helplines.
 
 If you're in a crisis, contact local emergency services. Gambling helplines are not crisis lines.
@@ -179,7 +179,7 @@ If you're in a crisis, contact local emergency services. Gambling helplines are 
 
 ---
 
-## Privacy policy — chancey.io/privacy/ — *(working draft, in legal review)*
+## Privacy policy, chancey.io/privacy/, *(working draft, in legal review)*
 
 ### The short version
 Chancey is built for adults 18+ who want to pick and track lottery tickets they bought themselves. To do that, we collect account info, the saved tickets you scan, your saved picks and preferences, and operational logs. We do not sell your data. We do not show ads inside the app. We do not use ticket images for advertising.
@@ -217,7 +217,7 @@ Send a message through https://chancey.io/contact/ and pick the "Privacy or data
 
 ---
 
-## Terms of service — chancey.io/terms/ — *(working draft, in legal review)*
+## Terms of service, chancey.io/terms/, *(working draft, in legal review)*
 
 ### Agreement
 By using Chancey, you agree to these terms and the privacy policy.
@@ -236,7 +236,7 @@ An informational and convenience tool for lottery players. It is not a retailer,
 - Don't harass, abuse, defraud, or impersonate.
 
 ### Subscriptions and payments
-Core features are free today. Paid features will be clearly priced before purchase and managed through the platform that processed payment.
+Free for up to 5 ticket scans a month; Pro is unlimited scans for $4.99/month or $39.99/year. Only scans are metered; no ads on any plan. Paid plans are managed through the platform that processed payment.
 
 ### Your responsibility
 Always verify ticket information and winning status with the official lottery. Number-building tools are entertainment only. Keep the original ticket safe.
@@ -255,22 +255,22 @@ Send a message through https://chancey.io/contact/.
 ## Frequently asked questions
 
 **What is Chancey?**
-A lottery toolkit app for adults 18+. It includes a number builder for picking lottery numbers (mix favorites with quick picks, save sets) and a tracker that scans printed tickets and automatically checks each ticket against the official published draw results. It does not sell tickets, predict numbers, or guarantee outcomes.
+A lottery ticket tracker for adults 18+. Scan a ticket you already bought and Chancey automatically checks each saved ticket against the official posted draw results so a win never slips by. A simple number builder (mix favorites with quick picks, save sets) is included as a bonus. It does not sell tickets, predict numbers, or guarantee outcomes.
 
 **Does Chancey sell lottery tickets?**
 No. Chancey is not a lottery retailer and is not affiliated with any state or national lottery operator. Buy tickets the same way you always do. Chancey only helps you pick, organize, and check what you already bought.
 
 **Can Chancey predict winning numbers?**
-No. Lottery draws are random and no app — Chancey included — can improve your odds. The number builder helps you pick faster and save sets you love, but it never claims to predict outcomes.
+No. Lottery draws are random and no app, Chancey included, can improve your odds. The number builder helps you pick faster and save sets you love, but it never claims to predict outcomes.
 
 **Is Chancey free to use?**
-The core features — picking numbers, scanning tickets, checking draw results, and saving history — are free. Optional paid features may be introduced in the future and would be clearly labeled before purchase.
+The core features, picking numbers, scanning tickets, checking draw results, and saving history, are free. Optional paid features may be introduced in the future and would be clearly labeled before purchase.
 
 **How does ticket scanning work?**
 You photograph the ticket. Chancey reads the printed numbers, the game, and the draw date, then asks you to confirm before saving. If on-device recognition is unsure, an off-device recognition step may help; ticket images are never used for advertising.
 
 **Where does Chancey work?**
-Chancey works in any modern web browser at app.chancey.io. Native iOS and Android apps are planned.
+Chancey works in any modern web browser at app.chancey.io, plus native iOS and Android apps.
 
 **Do I need an account?**
 An account lets you sync saved picks and tickets across devices and recover them if you change phones. You can use Chancey without an account on a single device, with reduced sync features.
@@ -281,8 +281,8 @@ Chancey stores account info, saved picks, saved tickets, app preferences, and op
 **Does Chancey replace the official lottery?**
 No. Official lottery operators are always the source of truth for draw results and prize claims. Chancey shows what it sees from published results so you know what to verify with the lottery.
 
-**I think I have a winning ticket — what now?**
-Always claim wins through the lottery operator that issued the ticket. Chancey is a picking, checking, and organizing tool — not a payout service.
+**I think I have a winning ticket, what now?**
+Always claim wins through the lottery operator that issued the ticket. Chancey is a picking, checking, and organizing tool, not a payout service.
 
 **Does Chancey try to make me play more?**
 No. Chancey has no in-app ads, no streaks, no engagement loops, and no promotional notifications. Reminders are optional and tied to draws you saved.

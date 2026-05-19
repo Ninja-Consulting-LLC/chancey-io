@@ -1,7 +1,7 @@
 {
   "name": "Chancey",
   "short_name": "Chancey",
-  "description": "A calm, private lottery companion app for adults 18+. Scan tickets, track draws, build picks.",
+  "description": "Lottery ticket tracker for adults 18+. Scan the tickets you already bought and Chancey checks every draw, so a win never slips by. No ads.",
   "start_url": "https://app.chancey.io/",
   "display": "standalone",
   "background_color": "#fff6ec",

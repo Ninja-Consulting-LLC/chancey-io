@@ -105,7 +105,7 @@ const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${site.name} — ${site.tagline}`} />
+    <meta property="og:image:alt" content={`${site.name}: ${site.tagline}`} />
     <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -114,7 +114,14 @@ const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
-    <meta name="twitter:image:alt" content={`${site.name} — ${site.tagline}`} />
+    <meta name="twitter:image:alt" content={`${site.name}: ${site.tagline}`} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+    />
 
     <link rel="preconnect" href={site.appUrl} crossorigin />
     <link rel="dns-prefetch" href={site.appUrl} />
@@ -132,7 +139,7 @@ const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
       includeApplication={includeApplication}
     />
 
-    {/* Google Analytics 4 — privacy-respecting defaults */}
+    {/* Google Analytics 4, privacy-respecting defaults */}
     {site.ga4Id && (
       <>
         <script

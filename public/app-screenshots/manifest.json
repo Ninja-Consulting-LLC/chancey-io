@@ -1,0 +1,50 @@
+{
+  "source": "chancey-app/scripts/generate-store-screenshots.mjs",
+  "viewport": "ios-6.9",
+  "screenshots": [
+    {
+      "id": "home",
+      "src": "/app-screenshots/home.png",
+      "width": 1290,
+      "height": 2796
+    },
+    {
+      "id": "scan",
+      "src": "/app-screenshots/scan.png",
+      "width": 1290,
+      "height": 2796
+    },
+    {
+      "id": "stats",
+      "src": "/app-screenshots/stats.png",
+      "width": 1290,
+      "height": 2796
+    },
+    {
+      "id": "rules",
+      "src": "/app-screenshots/rules.png",
+      "width": 1290,
+      "height": 2796
+    },
+    {
+      "id": "settings",
+      "src": "/app-screenshots/settings.png",
+      "width": 1290,
+      "height": 2796
+    }
+  ],
+  "assets": [
+    {
+      "id": "feature-graphic",
+      "src": "/app-screenshots/feature-graphic.png",
+      "width": 1024,
+      "height": 500
+    },
+    {
+      "id": "icon",
+      "src": "/app-screenshots/icon.png",
+      "width": 512,
+      "height": 512
+    }
+  ]
+}

@@ -1,9 +1,11 @@
 /**
- * Chancey marketing site analytics — wires GA4 events with no PII.
+ * Chancey marketing site analytics, wires GA4 events with no PII.
  *
  * Tracked events (in addition to GA4 auto-tracked page_view + outbound):
- *   - cta_click               { cta_label, cta_destination, cta_location, cta_variant }
- *   - app_link_click          { source, destination, cta_variant }
+ *   - cta_click               { cta_label, cta_destination, cta_location, cta_variant, cta_id, hero_variant }
+ *   - app_link_click          { source, destination, cta_variant, cta_id, hero_variant }
+ *   - store_badge_click       { platform: 'ios'|'android', source, hero_variant }
+ *   - hero_view               { hero_variant, page }
  *   - external_link_click     { url, page }
  *   - nav_click               { label, destination }
  *   - footer_click            { label, destination }
@@ -40,7 +42,14 @@ declare global {
     }
   }
 
+  // Active hero H1 variant, recorded so swaps stay comparable in GA4.
+  const heroVariant =
+    document.querySelector<HTMLElement>('.hero[data-hero-variant]')?.dataset.heroVariant ?? null;
+
   function getEventLocation(target: Element): string {
+    const ctaId = (target.closest('[data-cta]') as HTMLElement | null)?.dataset.cta ?? '';
+    if (ctaId.startsWith('pricing-page')) return 'pricing_page';
+    if (ctaId.startsWith('pricing-')) return 'pricing_section';
     if (target.closest('.site-header')) return 'header';
     if (target.closest('.hero')) return 'hero';
     if (target.closest('.cta-card')) return 'cta_section';
@@ -85,17 +94,31 @@ declare global {
       const isCtaButton = link.classList.contains('button');
       const location = getEventLocation(link);
 
-      // 1. App link (most important — conversion proxy)
+      const ctaId = (link as HTMLElement).dataset.cta ?? null;
+      const storeBadge = (link.closest('[data-store-badge]') as HTMLElement | null)?.dataset;
+
+      // 0. Store badge click (iOS / Android)
+      if (storeBadge?.storeBadge) {
+        gtagSafe('store_badge_click', {
+          platform: storeBadge.storeBadge,
+          source: storeBadge.storeSource ?? 'hero',
+          hero_variant: heroVariant,
+        });
+      }
+
+      // 1. App link (most important, conversion proxy)
       if (rawHref && isAppLink(rawHref)) {
         gtagSafe('app_link_click', {
           source: location,
           destination: rawHref,
           cta_variant: isPrimary ? 'primary' : 'secondary',
           cta_label: label,
+          cta_id: ctaId,
+          hero_variant: location === 'hero' ? heroVariant : null,
         });
       }
 
-      // 2. External link (helplines, etc.) — but not app.chancey.io
+      // 2. External link (helplines, etc.), but not app.chancey.io
       if (rawHref && isExternalLink(rawHref) && !isAppLink(rawHref)) {
         gtagSafe('external_link_click', {
           url: rawHref,
@@ -111,6 +134,8 @@ declare global {
           cta_destination: rawHref,
           cta_location: location,
           cta_variant: isPrimary ? 'primary' : 'secondary',
+          cta_id: ctaId,
+          hero_variant: location === 'hero' ? heroVariant : null,
         });
       }
 
@@ -174,4 +199,10 @@ declare global {
     },
     { passive: true }
   );
+
+  // One hero_view ping per page that has a hero, records which H1 variant
+  // was shown so conversion rate per variant is computable later.
+  if (heroVariant) {
+    gtagSafe('hero_view', { hero_variant: heroVariant, page: window.location.pathname });
+  }
 })();
