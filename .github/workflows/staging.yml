@@ -49,6 +49,31 @@ jobs:
           PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.ninjaconsultingllc.workers.dev' }}
         run: npm run build
 
+      - name: Diagnose Cloudflare auth
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # No secret is printed. We only print HTTP status + safe JSON so we
+          # can tell apart: invalid token vs wrong account id vs missing Pages.
+          api=https://api.cloudflare.com/client/v4
+          auth="Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+          echo "ACCOUNT_ID set: $([ -n "$CLOUDFLARE_ACCOUNT_ID" ] && echo yes || echo NO)"
+          echo "TOKEN length: ${#CLOUDFLARE_API_TOKEN}"
+
+          echo "--- token verify (/user/tokens/verify) ---"
+          curl -s -H "$auth" "$api/user/tokens/verify" \
+            -w '\nHTTP %{http_code}\n' | sed -E 's/("id":")[^"]+/\1***/'
+
+          echo "--- account read (/accounts/<id>) ---"
+          curl -s -H "$auth" "$api/accounts/${CLOUDFLARE_ACCOUNT_ID}" \
+            -w '\nHTTP %{http_code}\n' | head -c 600; echo
+
+          echo "--- pages projects (the failing call) ---"
+          curl -s -H "$auth" \
+            "$api/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects?per_page=1" \
+            -w '\nHTTP %{http_code}\n' | head -c 800; echo
+
       - name: Ensure Cloudflare Pages project exists
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
