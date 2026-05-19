@@ -7,10 +7,12 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "screenshots:pull": "node scripts/pull-app-screenshots.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.7.2",
     "astro": "^5.12.9",
     "sharp": "^0.34.5",
     "typescript": "^5.9.2"

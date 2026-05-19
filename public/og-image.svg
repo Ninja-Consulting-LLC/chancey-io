@@ -27,38 +27,38 @@
   </g>
   <text x="170" y="125" font-family="Georgia, serif" font-size="34" font-weight="600" fill="#1b1410" letter-spacing="-0.5">Chancey</text>
 
-  <!-- Headline -->
-  <text x="80" y="280" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">Pick your lottery</text>
-  <text x="80" y="380" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">numbers. Track</text>
-  <text x="80" y="480" font-family="Georgia, serif" font-size="86" font-weight="600" fill="#1b1410" letter-spacing="-2.5">every ticket.</text>
+  <!-- Headline (loss-fear) -->
+  <text x="80" y="285" font-family="Georgia, serif" font-size="88" font-weight="600" fill="#1b1410" letter-spacing="-2.5">Never wonder</text>
+  <text x="80" y="385" font-family="Georgia, serif" font-size="88" font-weight="600" fill="#1b1410" letter-spacing="-2.5">if you won.</text>
+  <text x="80" y="470" font-family="Georgia, serif" font-size="40" font-weight="600" fill="#5a4a3f" letter-spacing="-1">Scan it. Chancey checks every draw.</text>
 
-  <!-- Subhead -->
-  <text x="80" y="560" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="22" fill="#5a4a3f">Build picks · Scan tickets · Track draws</text>
+  <!-- Subline -->
+  <text x="80" y="558" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="22" fill="#5a4a3f">Scan tickets · Auto-check every draw · No ads</text>
 
   <!-- Lottery balls cluster -->
   <g transform="translate(820, 200)" filter="url(#ballShadow)">
-    <circle cx="60" cy="60" r="58" fill="white"/>
-    <text x="60" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">08</text>
+    <circle cx="60" cy="60" r="58" fill="#f5b82e"/>
+    <text x="60" y="74" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">04</text>
 
-    <circle cx="190" cy="40" r="58" fill="white"/>
-    <text x="190" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">17</text>
+    <circle cx="190" cy="40" r="58" fill="#f5b82e"/>
+    <text x="190" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">22</text>
 
     <circle cx="320" cy="80" r="58" fill="white"/>
-    <text x="320" y="94" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">28</text>
+    <text x="320" y="94" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">31</text>
 
     <circle cx="100" cy="190" r="58" fill="#f5b82e"/>
-    <text x="100" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">42</text>
+    <text x="100" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">47</text>
 
     <circle cx="240" cy="220" r="58" fill="white"/>
-    <text x="240" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">61</text>
+    <text x="240" y="234" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="#1b1410">58</text>
 
-    <circle cx="315" cy="190" r="58" fill="#e8375c"/>
-    <text x="315" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="800" fill="white">14</text>
+    <circle cx="370" cy="190" r="58" fill="#1f9d5f"/>
+    <text x="370" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="34" font-weight="800" fill="white">WIN</text>
   </g>
 
   <!-- Tagline pill -->
   <g transform="translate(80, 50)">
-    <rect x="0" y="0" width="320" height="36" rx="18" fill="#1b1410"/>
-    <text x="160" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#fff6ec" letter-spacing="2">LOTTERY COMPANION · 18+</text>
+    <rect x="0" y="0" width="360" height="36" rx="18" fill="#1b1410"/>
+    <text x="180" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#fff6ec" letter-spacing="2">LOTTERY TICKET TRACKER · 18+</text>
   </g>
 </svg>

@@ -18,9 +18,9 @@
   --ink-on-dark: #fff6ec;
   --ink-on-dark-soft: #c6b9af;
 
-  /* Lines */
-  --line: rgba(27, 20, 16, 0.1);
-  --line-strong: rgba(27, 20, 16, 0.18);
+  /* Lines (softer; the system leans on elevation, not borders) */
+  --line: rgba(27, 20, 16, 0.07);
+  --line-strong: rgba(27, 20, 16, 0.14);
   --line-on-dark: rgba(255, 246, 236, 0.14);
 
   /* Brand colors */
@@ -44,22 +44,22 @@
   --gradient-cream: linear-gradient(180deg, #fff6ec 0%, #ffe6cd 100%);
   --gradient-ink: linear-gradient(180deg, #1b1410 0%, #2c1f17 100%);
 
-  /* Shadows */
-  --shadow-xs: 0 1px 2px rgba(27, 20, 16, 0.05);
-  --shadow-sm: 0 4px 12px rgba(79, 57, 39, 0.06);
-  --shadow-md: 0 10px 30px rgba(79, 57, 39, 0.1);
-  --shadow-lg: 0 22px 60px rgba(79, 57, 39, 0.14);
-  --shadow-xl: 0 32px 80px rgba(79, 57, 39, 0.2);
-  --shadow-accent: 0 14px 32px rgba(255, 107, 61, 0.28);
-  --shadow-accent-lg: 0 24px 56px rgba(255, 107, 61, 0.3);
+  /* Shadows: one calm elevation scale, layered + low-spread so nothing blooms */
+  --shadow-xs: 0 1px 2px rgba(27, 20, 16, 0.04);
+  --shadow-sm: 0 1px 2px rgba(27, 20, 16, 0.04), 0 4px 10px rgba(79, 57, 39, 0.05);
+  --shadow-md: 0 2px 4px rgba(27, 20, 16, 0.04), 0 12px 24px rgba(79, 57, 39, 0.08);
+  --shadow-lg: 0 4px 8px rgba(27, 20, 16, 0.05), 0 24px 48px rgba(79, 57, 39, 0.1);
+  --shadow-xl: 0 8px 16px rgba(27, 20, 16, 0.06), 0 36px 64px rgba(79, 57, 39, 0.13);
+  --shadow-accent: 0 6px 16px rgba(255, 107, 61, 0.22);
+  --shadow-accent-lg: 0 10px 24px rgba(255, 107, 61, 0.26);
 
-  /* Radii */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
-  --radius-2xl: 32px;
+  /* Radii: rounder, to sit with Nunito */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
+  --radius-2xl: 34px;
   --radius-pill: 999px;
 
   /* Spacing scale (rem) */
@@ -79,13 +79,14 @@
 
   /* Layout */
   --container-max: 1200px;
-  --container-narrow: 760px;
-  --container-prose: 680px;
+  --container-narrow: 960px;
+  --container-prose: 820px;
 
   /* Typography */
   --font-sans:
     'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-display:
+    'Nunito', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --text-xs: 0.78rem;

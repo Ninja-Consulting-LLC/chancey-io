@@ -1,5 +1,5 @@
 ---
-import { site } from '../site';
+import { site, pricing } from '../site';
 
 interface Breadcrumb {
   name: string;
@@ -93,13 +93,15 @@ if (includeApplication) {
     '@id': `${site.url}/#application`,
     name: site.name,
     applicationCategory: 'LifestyleApplication',
-    operatingSystem: 'Web Browser',
+    operatingSystem: 'Web, iOS, Android',
     url: site.appUrl,
     description: site.longDescription,
     offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
+      '@type': 'AggregateOffer',
+      priceCurrency: pricing.currency,
+      lowPrice: '0',
+      highPrice: String(pricing.annualUsd),
+      offerCount: 3,
     },
     publisher: { '@id': `${site.url}/#organization` },
     audience: {

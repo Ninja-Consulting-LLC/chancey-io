@@ -9,7 +9,7 @@ const contactEndpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? '';
 ---
 
 <BaseLayout
-  title="Contact us — Send a message to the Chancey team"
+  title="Contact us, Send a message to the Chancey team"
   description="Send a message to the Chancey team. We reply within two business days."
   pageType="ContactPage"
   breadcrumbs={[
@@ -24,7 +24,7 @@ const contactEndpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? '';
         <h1>Send us a message.</h1>
         <p class="lead">
           A real person reads every message and replies within two business days. For sensitive
-          things — IDs, payment cards, passwords — please don't paste them here.
+          things, IDs, payment cards, passwords, please don't paste them here.
         </p>
       </header>
 
@@ -82,10 +82,12 @@ const contactEndpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? '';
             maxlength="5000"
             required
           ></textarea>
-          <span class="form-hint">Up to 5,000 characters.</span>
+          <span class="form-hint" id="contact-message-counter" aria-live="polite">
+            0 / 5,000
+          </span>
         </div>
 
-        {/* Honeypot — hidden from humans, visible to dumb bots */}
+        {/* Honeypot, hidden from humans, visible to dumb bots */}
         <div class="form-honeypot" aria-hidden="true">
           <label for="contact-website">Website (leave empty)</label>
           <input
@@ -195,9 +197,15 @@ const contactEndpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? '';
   .form-hint {
     font-size: var(--text-xs);
     color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
   }
 
-  /* Honeypot — visually hidden but in the DOM */
+  .form-hint.warn {
+    color: var(--accent-deep);
+    font-weight: 700;
+  }
+
+  /* Honeypot, visually hidden but in the DOM */
   .form-honeypot {
     position: absolute;
     left: -10000px;

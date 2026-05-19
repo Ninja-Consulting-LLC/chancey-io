@@ -67,6 +67,11 @@ const socialImage = ogImage
   ? new URL(ogImage, site.url).toString()
   : new URL('/og-image.png', site.url).toString();
 const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+// Staging/preview builds set PUBLIC_NOINDEX=1 so the whole environment is
+// kept out of search engines (avoids duplicating production).
+const forceNoindex =
+  import.meta.env.PUBLIC_NOINDEX === '1' || import.meta.env.PUBLIC_NOINDEX === 'true';
+const isNoindex = noindex || forceNoindex;
 ---
 
 <!doctype html>
@@ -80,8 +85,8 @@ const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
-    {!noindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+    {isNoindex && <meta name="robots" content="noindex, nofollow" />}
+    {!isNoindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
 
     <meta name="author" content={site.legalName} />
     <meta name="theme-color" content={site.themeColor} />
@@ -105,7 +110,7 @@ const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${site.name} — ${site.tagline}`} />
+    <meta property="og:image:alt" content={`${site.name}: ${site.tagline}`} />
     <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -114,7 +119,14 @@ const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
-    <meta name="twitter:image:alt" content={`${site.name} — ${site.tagline}`} />
+    <meta name="twitter:image:alt" content={`${site.name}: ${site.tagline}`} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+    />
 
     <link rel="preconnect" href={site.appUrl} crossorigin />
     <link rel="dns-prefetch" href={site.appUrl} />
@@ -132,7 +144,7 @@ const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
       includeApplication={includeApplication}
     />
 
-    {/* Google Analytics 4 — privacy-respecting defaults */}
+    {/* Google Analytics 4, privacy-respecting defaults */}
     {site.ga4Id && (
       <>
         <script

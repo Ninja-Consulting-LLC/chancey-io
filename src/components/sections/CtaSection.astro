@@ -16,14 +16,16 @@ interface Props {
 const paths = createLocalPaths(Astro.url.pathname);
 
 const {
-  eyebrow = 'Ready when you are',
-  heading = 'Pick a set. Track a ticket.',
-  description = 'Open Chancey on the web. Free core features, no install, no upsell.',
-  primaryLabel = 'Build your picks',
+  eyebrow = 'One scan from now',
+  heading = 'Free to start. Scan one ticket. See what you missed.',
+  description = '5 free scans a month, no card, runs in your browser.',
+  primaryLabel = 'Scan your first ticket',
   primaryHref = site.appUrl,
-  secondaryLabel = 'How tracking works',
-  secondaryHref = paths.route('/how-it-works/'),
+  secondaryLabel = 'See pricing',
+  secondaryHref = paths.route('/pricing/'),
 } = Astro.props;
+
+const primaryIsApp = primaryHref.startsWith(site.appUrl);
 ---
 
 <section class="section">
@@ -33,9 +35,16 @@ const {
       <h2 class="h-section">{heading}</h2>
       <p>{description}</p>
       <div class="actions">
-        <a class="button primary lg" href={primaryHref}>
+        <a
+          class="button primary lg"
+          href={primaryHref}
+          target={primaryIsApp ? '_blank' : undefined}
+          rel={primaryIsApp ? 'noopener noreferrer' : undefined}
+          data-cta="cta-section-primary"
+        >
           {primaryLabel}
           <Icon name="arrow-right" size={18} />
+          {primaryIsApp && <span class="visually-hidden">(opens in a new tab)</span>}
         </a>
         <a class="button lg" href={secondaryHref}>
           {secondaryLabel}

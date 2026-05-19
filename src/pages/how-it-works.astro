@@ -1,167 +1,105 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import AppPreview from '../components/AppPreview.astro';
-import Icon from '../components/icons/Icon.astro';
-import Screenshot from '../components/Screenshot.astro';
-import FeatureBlock from '../components/sections/FeatureBlock.astro';
 import CtaSection from '../components/sections/CtaSection.astro';
-import FaqSection from '../components/sections/FaqSection.astro';
 import { createLocalPaths } from '../paths';
-import { faqs, site } from '../site';
 
 const paths = createLocalPaths(Astro.url.pathname);
 
-const howItWorksFaqs = [faqs[0], faqs[1], faqs[4], faqs[5], faqs[8]];
+const steps = [
+  {
+    n: '01',
+    title: 'Buy the ticket like always',
+    body: 'Chancey is not a seller. Buy your ticket the same place you always do, and keep the printed slip.',
+  },
+  {
+    n: '02',
+    title: 'Scan it',
+    body: 'Take a photo of the slip. Chancey reads the numbers, the game, and the draw date. You confirm before it saves.',
+  },
+  {
+    n: '03',
+    title: 'Chancey checks the draw',
+    body: 'When the lottery posts results, Chancey checks every saved ticket against the official numbers, all on its own.',
+  },
+  {
+    n: '04',
+    title: 'You find out',
+    body: 'Each ticket gets a clear label: match, partial, or no match. If you won, claim the prize through the lottery with your slip.',
+  },
+];
 
 const howToSchema = {
   name: 'How to track lottery tickets with Chancey',
   description:
-    'Pick your numbers in Chancey, buy a lottery ticket, scan it into the app, and let Chancey check the result after the draw.',
-  steps: [
-    {
-      name: 'Pick your lottery numbers',
-      text: 'Open the Chancey number builder. Mix favorite numbers with quick picks. Save the sets you love so you can reuse them next time.',
-    },
-    {
-      name: 'Buy the ticket like always',
-      text: 'Take your saved set to your usual store, kiosk, or the lottery’s official online system. Chancey is not a retailer.',
-    },
-    {
-      name: 'Scan the ticket',
-      text: 'Open Chancey and scan the slip. For supported ticket formats, the app reads the numbers, game, and draw date when it can. You confirm before saving.',
-    },
-    {
-      name: 'See what matched after the draw',
-      text: 'When official results are available for a supported draw, Chancey checks saved tickets against the posted numbers and labels each one match, partial, or no match.',
-    },
-  ],
+    'Buy a lottery ticket as usual, scan it into Chancey, and Chancey checks every draw against the official results so you never miss a win.',
+  steps: steps.map((s) => ({ name: s.title, text: s.body })),
 };
 ---
 
 <BaseLayout
-  title="How Chancey works — Pick numbers, scan tickets, check draws"
-  description="See how Chancey helps you pick lottery numbers and track every ticket. Pick, buy, scan, check — four steps."
+  title="How Chancey works"
+  description="Buy a ticket as usual, scan it, and Chancey checks every draw against the official results. Four steps, no slips to dig through later."
   breadcrumbs={[
     { name: 'Home', href: '/' },
     { name: 'How it works', href: '/how-it-works/' },
   ]}
-  faqs={howItWorksFaqs}
   howTo={howToSchema}
 >
-  <section class="container">
-    <div class="hero">
-      <div class="hero-copy">
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
         <p class="eyebrow">How it works</p>
-        <h1 class="h-display">
-          Pick the numbers. Scan the ticket. Know the result.
+        <h1 class="h-display" style="font-size: clamp(2rem, 5.5vw, 3.6rem);">
+          Know what every ticket did, automatically.
         </h1>
-        <p class="lead lead-lg" style="margin-top: 24px;">
-          Chancey is two tools in one. Use the builder to pick numbers. Use the tracker to know
-          what each ticket did. Use either, or both.
+        <p class="lead">
+          You play the lottery the way you always have. Chancey just keeps track and tells you
+          the moment a saved ticket wins.
         </p>
-        <div class="actions">
-          <a class="button primary lg" href={site.appUrl}>
-            Build your picks
-            <Icon name="arrow-right" size={18} />
-          </a>
-          <a class="button lg" href={paths.route('/support/')}>Get help</a>
-        </div>
       </div>
-      <AppPreview variant="home" />
+      <ol class="steps">
+        {
+          steps.map((s) => (
+            <li class="step">
+              <span class="step-number">{s.n}</span>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="howto-questions">
+        That is the whole thing. The number builder is a bonus if you ever want help picking a
+        set. Questions? The <a href={paths.route('/support/')}>support page</a> has the full FAQ,
+        or <a href={paths.route('/contact/')}>send us a message</a>.
+      </p>
     </div>
   </section>
 
-  {/* ============ STEP 01 — PICK (NUMBER BUILDER) ============ */}
-  <FeatureBlock
-    eyebrow="Step 01"
-    title="Pick your lottery numbers."
-    description="Open the builder. Mix favorite numbers — birthdays, lucky digits — with quick picks across supported games. Save the sets you love so they're ready next time."
-    bullets={[
-      'Tap "Build" in the bottom nav and choose a game',
-      'Pin favorite numbers, then auto-fill the rest with a quick pick',
-      'Tap "Save set" to keep the pick in your library',
-    ]}
-    background="cream"
-  >
-    <Screenshot
-      alt="Chancey number builder mixing favorite numbers with quick picks"
-      label="Number builder"
-      variant="builder"
-      frame="phone"
-    />
-  </FeatureBlock>
-
-  {/* ============ STEP 02 — BUY ============ */}
-  <FeatureBlock
-    eyebrow="Step 02"
-    title="Buy the ticket like always."
-    description="Chancey is not a lottery retailer. Take your saved set to your usual store, kiosk, or the lottery's website and buy the ticket the way you already do."
-    bullets={[
-      'Open a saved set in Chancey to remember the numbers at the counter',
-      'Or buy any numbers you want — Chancey doesn\'t mind',
-      'Keep the printed slip — you\'ll scan it next',
-    ]}
-    reverse={true}
-  >
-    <Screenshot
-      alt="A printed lottery slip held in someone's hand at the store counter"
-      label="Buy step photo"
-      variant="generic"
-      frame="plain"
-      width={720}
-      height={540}
-    />
-  </FeatureBlock>
-
-  {/* ============ STEP 03 — SCAN ============ */}
-  <FeatureBlock
-    eyebrow="Step 03"
-    title="Scan the ticket. Confirm. Save."
-    description="Open Chancey and point your camera at the slip. For supported ticket formats, the app reads the numbers, the game, and the draw date when it can. You confirm what it caught before it saves."
-    bullets={[
-      'Tap "Scan" and center the slip in the frame',
-      'Check the captured numbers and draw date — fix any that look off',
-      'If the barcode won\'t read, the printed numbers are still enough',
-    ]}
-    background="cream"
-  >
-    <Screenshot
-      alt="Chancey scanner reading a Powerball ticket and showing the captured numbers"
-      label="Scanner"
-      variant="scan"
-      frame="phone"
-    />
-  </FeatureBlock>
-
-  {/* ============ STEP 04 — RESULT ============ */}
-  <FeatureBlock
-    eyebrow="Step 04"
-    title="See what matched after the draw."
-    description="When official results are available for a supported draw, Chancey checks saved tickets against the posted numbers. Each ticket gets a clear label: match, partial, or no match."
-    bullets={[
-      'Open the History tab to see status after official results are available',
-      'Tap any ticket to see which numbers matched, highlighted on the slip',
-      'If you won, claim the prize through the lottery, not through Chancey',
-    ]}
-    reverse={true}
-  >
-    <Screenshot
-      alt="Chancey ticket history with match, partial, and no-match labels"
-      label="Results"
-      variant="history"
-      frame="phone"
-    />
-  </FeatureBlock>
-
-  <FaqSection
-    eyebrow="How it works"
-    heading="What people ask first."
-    faqs={howItWorksFaqs}
-    background="cream"
-  />
-
   <CtaSection
-    heading="Ready to clear out the camera roll?"
-    description="Open Chancey on the web, scan one ticket, and see the rest of the routine fall into place."
+    eyebrow="One scan from now"
+    heading="Don't let the next win slip by."
+    description="Scan a ticket you already bought. 5 free scans a month, no card, runs in your browser."
   />
 </BaseLayout>
+
+<style>
+  .steps {
+    list-style: none;
+  }
+
+  .howto-questions {
+    max-width: 640px;
+    margin: clamp(36px, 5vw, 56px) auto 0;
+    text-align: center;
+    font-size: var(--text-base);
+    color: var(--ink-soft);
+    line-height: var(--leading-relaxed);
+  }
+
+  .howto-questions a {
+    color: var(--accent-deep);
+    font-weight: 700;
+    text-decoration: none;
+  }
+</style>

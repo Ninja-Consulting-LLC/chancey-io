@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/icons/Icon.astro';
+import FaqSection from '../components/sections/FaqSection.astro';
+import CtaSection from '../components/sections/CtaSection.astro';
+import { pricing, pricingFaqs, site } from '../site';
+
+const annualMonthly = (pricing.annualUsd / 12).toFixed(2);
+---
+
+<BaseLayout
+  title="Pricing, Free for 5 scans a month, Pro for unlimited"
+  description="Chancey is free for 5 ticket scans a month, including the builder, full history, and automatic draw checking. Pro is unlimited scans for $4.99/month or $39.99/year. No ads on any plan."
+  pageType="WebPage"
+  includeApplication={true}
+  faqs={pricingFaqs}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Pricing', href: '/pricing/' },
+  ]}
+>
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <p class="eyebrow">Pricing</p>
+        <h2 class="h-display" style="font-size: clamp(2.2rem, 6vw, 4rem);">
+          Only scans are metered.
+        </h2>
+        <p class="lead" style="margin-inline: auto;">
+          The number builder, your full searchable history, and automatic draw checking are
+          free on every plan. The only thing that costs money is scanning more than
+          {pricing.freeScansPerMonth} new tickets a month.
+        </p>
+      </div>
+
+      <div class="pricing-grid">
+        <article class="pricing-card">
+          <p class="pricing-name">Free</p>
+          <p class="pricing-price"><span>$0</span></p>
+          <p class="pricing-note">forever, no card</p>
+          <ul class="pricing-list">
+            <li><Icon name="check" size={16} /> {pricing.freeScansPerMonth} ticket scans / month</li>
+            <li><Icon name="check" size={16} /> Automatic draw checking</li>
+            <li><Icon name="check" size={16} /> Full searchable history</li>
+            <li><Icon name="check" size={16} /> Number builder</li>
+            <li><Icon name="check" size={16} /> No ads</li>
+          </ul>
+          <a
+            class="button lg"
+            href={site.appUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cta="pricing-page-free"
+          >
+            Start free
+            <span class="visually-hidden">(opens in a new tab)</span>
+          </a>
+        </article>
+
+        <article class="pricing-card featured">
+          <p class="pricing-name">Pro</p>
+          <p class="pricing-price">
+            <span>${pricing.monthlyUsd}</span><small>/mo</small>
+          </p>
+          <p class="pricing-note">
+            or ${pricing.annualUsd}/yr, about ${annualMonthly}/mo, save ~${pricing.annualSavingUsd} a year
+          </p>
+          <ul class="pricing-list">
+            <li><Icon name="check" size={16} /> <strong>Unlimited</strong> ticket scans</li>
+            <li><Icon name="check" size={16} /> Everything in Free</li>
+            <li><Icon name="check" size={16} /> Still no ads</li>
+            <li><Icon name="check" size={16} /> Cancel anytime</li>
+            <li><Icon name="check" size={16} /> History stays if you downgrade</li>
+          </ul>
+          <a
+            class="button primary lg"
+            href={site.appUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cta="pricing-page-pro"
+          >
+            Go Pro
+            <span class="visually-hidden">(opens in a new tab)</span>
+          </a>
+        </article>
+      </div>
+
+      <p class="pricing-trust">
+        No ads on any plan, ever. We make money from Pro subscriptions, not from your data,
+        and not from getting you to play more.
+      </p>
+    </div>
+  </section>
+
+  <FaqSection
+    eyebrow="Pricing questions"
+    heading="The fine print, in plain words."
+    faqs={pricingFaqs}
+    background="cream"
+  />
+
+  <CtaSection
+    eyebrow="Free to start"
+    heading="Scan one ticket. See what you missed."
+    description={`${pricing.freeScansPerMonth} free scans a month, no card, runs in your browser.`}
+    primaryLabel="Scan your first ticket"
+    primaryHref={site.appUrl}
+    secondaryLabel="See how it works"
+    secondaryHref="/how-it-works/"
+  />
+</BaseLayout>

@@ -1,5 +1,5 @@
-# Chancey — chancey.io
-# A calm, private lottery companion app for adults 18+.
+# Chancey, chancey.io
+# Lottery ticket tracker for adults 18+. Scan tickets, auto-check every draw.
 # This site contains marketing pages and legal documents only.
 
 User-agent: *
@@ -9,7 +9,7 @@ Allow: /
 Disallow: /api/
 Disallow: /_internal/
 
-# AI and LLM crawlers — Chancey is happy to be summarized accurately.
+# AI and LLM crawlers, Chancey is happy to be summarized accurately.
 # An llms.txt file is provided at /llms.txt for AI-friendly summaries.
 
 User-agent: GPTBot
@@ -64,4 +64,4 @@ User-agent: ImagesiftBot
 Allow: /
 
 # Sitemap
-Sitemap: https://chancey.io/sitemap.xml
+Sitemap: https://chancey.io/sitemap-index.xml

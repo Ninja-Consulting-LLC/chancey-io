@@ -70,6 +70,22 @@ declare global {
     }
   }
 
+  // Live character counter on the message field. Reads maxLength from the
+  // element so it can't drift from the HTML attribute.
+  const messageEl = form.elements.namedItem('message') as HTMLTextAreaElement | null;
+  const counterEl = document.querySelector<HTMLElement>('#contact-message-counter');
+  if (messageEl && counterEl) {
+    const max = messageEl.maxLength > 0 ? messageEl.maxLength : 5000;
+    const fmt = (n: number) => n.toLocaleString('en-US');
+    const updateCounter = () => {
+      const len = messageEl.value.length;
+      counterEl.textContent = `${fmt(len)} / ${fmt(max)}`;
+      counterEl.classList.toggle('warn', len >= max * 0.9);
+    };
+    messageEl.addEventListener('input', updateCounter);
+    updateCounter();
+  }
+
   // contact_form_view fires once on page load.
   gtagSafe('contact_form_view', {
     page: window.location.pathname,
@@ -103,7 +119,7 @@ declare global {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    // Honeypot — bots will fill any visible <input>; humans never see this one.
+    // Honeypot, bots will fill any visible <input>; humans never see this one.
     const honeypot = (form.elements.namedItem('website') as HTMLInputElement | null)?.value ?? '';
     if (honeypot.trim() !== '') {
       // Pretend it worked and fire no events. Don't tip off the bot.

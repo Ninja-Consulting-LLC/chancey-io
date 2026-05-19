@@ -1,0 +1,69 @@
+---
+import { site } from '../site';
+import { createLocalPaths } from '../paths';
+
+interface Props {
+  source?: string;
+  class?: string;
+}
+
+const { source = 'hero', class: className = '' } = Astro.props;
+const paths = createLocalPaths(Astro.url.pathname);
+
+// Render only when BOTH store URLs are configured (graceful: build is valid
+// before the owner supplies them).
+const show = Boolean(site.appStoreUrl) && Boolean(site.playStoreUrl);
+const appStoreBadge = paths.asset('/badge-app-store.svg');
+const playBadge = paths.asset('/badge-google-play.svg');
+---
+
+{
+  show && (
+    <div class={`store-badges ${className}`.trim()}>
+      <a
+        href={site.appStoreUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-store-badge="ios"
+        data-store-source={source}
+        aria-label="Download Chancey on the App Store (opens in a new tab)"
+      >
+        <img src={appStoreBadge} alt="Download on the App Store" height="40" loading="lazy" />
+      </a>
+      <a
+        href={site.playStoreUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-store-badge="android"
+        data-store-source={source}
+        aria-label="Get Chancey on Google Play (opens in a new tab)"
+      >
+        <img src={playBadge} alt="Get it on Google Play" height="40" loading="lazy" />
+      </a>
+    </div>
+  )
+}
+
+<style>
+  .store-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .store-badges a {
+    display: inline-flex;
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .store-badges a:hover {
+    transform: translateY(-1px);
+  }
+
+  .store-badges img {
+    display: block;
+    height: 40px;
+    width: auto;
+  }
+</style>

@@ -5,40 +5,50 @@ export const site = {
   url: 'https://chancey.io',
   appUrl: 'https://app.chancey.io',
   contactPath: '/contact/',
-  tagline: 'Pick your lottery numbers. Track every ticket.',
+  // Placeholder store URLs so the badge row renders. Swap for real listing
+  // URLs at launch.
+  appStoreUrl: 'https://apps.apple.com/app/chancey/id000000000',
+  playStoreUrl: 'https://play.google.com/store/apps/details?id=io.chancey.app',
+  tagline: 'Never throw away a winning ticket again.',
   shortDescription:
-    'Chancey is a lottery toolkit for adults 18+. Pick numbers in the builder, save the sets you love, and track every ticket through the next draw.',
+    'Chancey is a lottery ticket tracker for adults 18+. Scan a ticket you already bought and Chancey checks every draw against the official results, so a win never gets past you.',
   longDescription:
-    'Chancey is a lottery toolkit for adults 18+. The number builder helps you mix favorite numbers with quick picks and save sets you can reuse. The tracker scans supported printed tickets and checks saved tickets when official results are available for supported draws. Chancey does not sell tickets, predict numbers, or improve your odds.',
+    'Chancey is a lottery ticket tracker for adults 18+. Scan any printed ticket you already bought. Chancey reads it, saves it, and checks each saved ticket against the official posted results, so you never miss a win. A simple number builder is included if you want one. Chancey does not sell tickets, predict numbers, or change your odds.',
   founded: '2026',
-  category: 'Lottery toolkit app',
+  category: 'Lottery ticket tracker app',
   audience: 'Adults 18+ who play state, provincial, and national lotteries',
   primaryColor: '#ff6b3d',
   themeColor: '#fff6ec',
   ogImage: '/og-image.png',
   twitter: '@chanceyapp',
   ga4Id: 'G-04W0XTXMJ4',
-  socials: {
-    // Add when live
-  },
+  heroVariant: 'never-wonder',
+  socials: {},
 } as const;
 
-export const navItems = [
-  { href: '/how-it-works/', label: 'How it works' },
-  { href: '/support/', label: 'Support' },
-  { href: '/responsible-play/', label: 'Responsible play' },
-] as const;
+export const pricing = {
+  freeScansPerMonth: 5,
+  monthlyUsd: 4.99,
+  annualUsd: 39.99,
+  currency: 'USD',
+  annualSavingUsd: 20,
+} as const;
+
+// Nav stays minimal on purpose: brand + the one action. Everything else is a
+// footer link so the header reads like a product, not a site map.
+export const navItems: ReadonlyArray<{ href: string; label: string }> = [];
 
 export const footerLinks = {
   product: [
     { href: '/', label: 'Home' },
     { href: '/how-it-works/', label: 'How it works' },
-    { href: site.appUrl, label: 'Open web app', external: true },
+    { href: '/pricing/', label: 'Pricing' },
+    { href: site.appUrl, label: 'Open Chancey', external: true },
   ],
   company: [
     { href: '/about/', label: 'About' },
-    { href: '/responsible-play/', label: 'Responsible play' },
     { href: '/support/', label: 'Support' },
+    { href: '/responsible-play/', label: 'Responsible play' },
     { href: '/contact/', label: 'Contact' },
   ],
   legal: [
@@ -47,173 +57,134 @@ export const footerLinks = {
   ],
 } as const;
 
-export const appScreenshots = {
-  home: {
-    src: '/app-screenshots/home.png',
-    width: 1290,
-    height: 2796,
-    alt: 'Chancey simple home screen with saved Powerball tickets and draw status',
-  },
-  rules: {
-    src: '/app-screenshots/rules.png',
-    width: 1290,
-    height: 2796,
-    alt: 'Chancey simple mode number builder with guided pick controls',
-  },
-  scan: {
-    src: '/app-screenshots/scan.png',
-    width: 1290,
-    height: 2796,
-    alt: 'Chancey scanner screen ready to capture a lottery ticket',
-  },
-  stats: {
-    src: '/app-screenshots/stats.png',
-    width: 1290,
-    height: 2796,
-    alt: 'Chancey ticket and draw statistics screen with simple mode summaries',
-  },
-} as const;
-
+// Order tells the story: scan, it checks itself, (bonus) build a set.
 export const featureBlocks = [
   {
-    id: 'build',
-    eyebrow: 'Simple mode',
-    title: 'Pick your numbers without tuning every dial.',
-    description:
-      'Simple mode turns the builder into a guided flow. Choose a vibe, keep the numbers you like, and save a set without turning the app into a spreadsheet.',
-    bullets: [
-      'Guided pick styles for quick, balanced, or favorite-heavy sets',
-      'Save sets so you stop typing the same numbers',
-      'Draw stats are context, never predictions',
-    ],
-    screenshotAlt: appScreenshots.rules.alt,
-    screenshotSrc: appScreenshots.rules.src,
-    screenshotWidth: appScreenshots.rules.width,
-    screenshotHeight: appScreenshots.rules.height,
-    screenshotLabel: 'Simple builder',
-    previewVariant: 'builder',
-  },
-  {
     id: 'scan',
-    eyebrow: 'Ticket scanning',
-    title: 'Scan supported printed tickets in seconds.',
+    eyebrow: 'Scan',
+    title: 'Scan the ticket you already bought.',
     description:
-      'Once you buy a supported ticket, scan it. Chancey reads the numbers, the game, and the draw date when it can. You confirm what it caught before it saves to your history.',
+      'Take a photo of any printed slip. Chancey reads the numbers, the game, and the draw date. You confirm before it saves.',
     bullets: [
-      'Built for common U.S. lottery games, with more formats added over time',
-      'Edit any number before saving — you stay in control',
-      'On-device first, with cloud help for unclear scans',
+      'Powerball, Mega Millions, and state daily games',
+      'Fix any number before you save it',
+      'Works on the phone in your hand',
     ],
-    screenshotAlt: appScreenshots.scan.alt,
-    screenshotSrc: appScreenshots.scan.src,
-    screenshotWidth: appScreenshots.scan.width,
-    screenshotHeight: appScreenshots.scan.height,
-    screenshotLabel: 'Scanner',
+    screenshotAlt: 'Chancey scanning a printed Powerball ticket',
+    screenshotLabel: 'Scan',
     previewVariant: 'scan',
   },
   {
     id: 'check',
-    eyebrow: 'Auto-checking draws',
-    title: 'Know what your tickets did after results post.',
+    eyebrow: 'Check',
+    title: 'A win never gets past you.',
     description:
-      'When official results are available for a supported draw, Chancey checks saved tickets against the posted numbers. Each one gets a clear label: match, partial, or no match.',
+      'When the lottery posts a draw, Chancey checks every saved ticket against the official numbers. Each one gets a clear label: match, partial, or no match.',
     bullets: [
-      'Match status after official results are available',
-      'Matched numbers light up on each ticket',
-      'Stop squinting at camera-roll screenshots',
+      'You find out the moment results post',
+      'Matched numbers light up on the ticket',
+      'No more "did I win?" in the car',
     ],
-    screenshotAlt: appScreenshots.home.alt,
-    screenshotSrc: appScreenshots.home.src,
-    screenshotWidth: appScreenshots.home.width,
-    screenshotHeight: appScreenshots.home.height,
-    screenshotLabel: 'History · Results',
+    screenshotAlt: 'Chancey ticket history showing a winning match',
+    screenshotLabel: 'Results',
     previewVariant: 'history',
   },
-] as const;
-
-export const features = [
   {
-    icon: 'history',
-    title: 'Full searchable history',
-    body: 'Find every saved ticket by game, date, or outcome. No more lost slips.',
-  },
-  {
-    icon: 'remind',
-    title: 'Optional draw reminders',
-    body: 'Get a ping before draws on tickets you saved. No promo notifications, ever.',
-  },
-  {
-    icon: 'shield',
-    title: 'Private by default',
-    body: 'No ad trackers in the app. Ticket photos are never used for advertising.',
-  },
-] as const;
-
-export const howItWorks = [
-  {
-    step: '01',
-    title: 'Pick your numbers',
-    body: 'Mix favorites and quick picks in the builder. Save the sets you love so they\'re ready next time.',
-  },
-  {
-    step: '02',
-    title: 'Buy the ticket like always',
-    body: 'Take your set to your usual store, kiosk, or the lottery\'s website. Chancey is not a retailer.',
-  },
-  {
-    step: '03',
-    title: 'Scan and check after the draw',
-    body: 'Scan a supported slip into Chancey. After official results are available for a supported draw, saved tickets can be checked against the posted numbers.',
+    id: 'build',
+    eyebrow: 'Build (bonus)',
+    title: 'Need a set? Build one fast.',
+    description:
+      'Mix your favorite numbers with quick picks and save sets to reuse. For fun and order only. It does not predict numbers or change the odds.',
+    bullets: [
+      'Mix favorites and quick picks',
+      'Save sets so you stop retyping them',
+      'See real draw history, never a prediction',
+    ],
+    screenshotAlt: 'Chancey number builder mixing favorites with quick picks',
+    screenshotLabel: 'Builder',
+    previewVariant: 'builder',
   },
 ] as const;
 
 export const faqs = [
   {
     q: 'What is Chancey?',
-    a: 'Chancey is a lottery app for adults 18+. The builder helps you pick numbers and save your favorite sets. The tracker scans supported printed tickets and checks saved tickets when official results are available for supported draws. Chancey does not sell tickets, pay prizes, or predict winning numbers.',
+    a: 'Chancey is a lottery ticket tracker for adults 18+. Scan a ticket you already bought and Chancey checks it against the official posted results, so you never miss a win. A simple number builder is included. Chancey does not sell tickets, pay prizes, or predict winning numbers.',
   },
   {
     q: 'Does Chancey sell lottery tickets?',
-    a: 'No. Chancey is not a lottery retailer and is not part of any state or national lottery. Buy tickets the same way you always do. Chancey only helps you pick, save, and check what you already bought.',
+    a: 'No. Chancey is not a lottery seller and is not part of any state or national lottery. You buy tickets the way you always do. Chancey only checks and organizes what you already bought.',
   },
   {
     q: 'Can Chancey predict winning numbers?',
-    a: 'No. Lottery draws are random. No app — Chancey included — can change the odds. The builder helps you pick faster and save sets you like, but it never claims to predict outcomes.',
+    a: 'No. Lottery draws are random. No app can change the odds, and Chancey does not try. The builder helps you pick faster and save sets, but it never claims to predict anything.',
   },
   {
     q: 'Is Chancey free?',
-    a: 'The core features — the builder, scanning tickets, checking draws, and saving history — are free. If we add paid features later, we will price them clearly before you buy.',
+    a: 'Chancey is free for up to 5 ticket scans a month. That includes the builder, your full history, and automatic draw checking. Pro is unlimited scans for $4.99 a month or $39.99 a year (about $20 a year cheaper). No ads on any plan.',
   },
   {
-    q: 'How does ticket scanning work?',
-    a: 'You take a photo of a supported ticket. Chancey reads the numbers, the game, and the draw date when it can. You confirm what it caught before it saves. If it can\'t read a number on your device, it may use a cloud step to help. Ticket photos are never used for ads.',
+    q: 'How does scanning work?',
+    a: 'You take a photo of the ticket. Chancey reads the numbers, the game, and the draw date. You confirm before it saves. If your phone cannot read a number, a cloud step can help. Ticket photos are never used for ads.',
   },
   {
     q: 'Where does Chancey work?',
-    a: 'Chancey works in any modern web browser at app.chancey.io. Native iPhone and Android apps are on the roadmap. Draw data depends on what your lottery posts.',
+    a: 'Chancey works in any modern web browser at app.chancey.io, plus native iPhone and Android apps. Draw data depends on what your lottery posts.',
   },
   {
     q: 'Do I need an account?',
-    a: 'An account lets you sync saved picks and tickets across devices. It also lets you get them back if you change phones. You can use Chancey on a single device without an account, with less sync.',
+    a: 'An account syncs your tickets and saved sets across devices and brings them back if you change phones. You can use Chancey on one device without an account, with less syncing.',
   },
   {
     q: 'How is my data handled?',
-    a: 'Chancey stores your account info, saved tickets, picks, and the logs we need to run the app. We do not sell ticket photos, browsing data, or contact info to advertisers. The Privacy Policy has the full list.',
+    a: 'Chancey stores your account info, saved tickets, sets, and the logs needed to run the app. We do not sell ticket photos, browsing data, or contact info to advertisers. The Privacy page has the full list.',
   },
   {
     q: 'Does Chancey replace the official lottery?',
     a: 'No. The lottery is always the source of truth for results and prize claims. Chancey shows what it sees from posted results so you know what to check with the lottery.',
   },
   {
-    q: 'I think I have a winning ticket — what now?',
-    a: 'Always claim wins through the lottery that issued the ticket. Chancey is a checking and organizing tool. It cannot pay prizes.',
+    q: 'I think I have a winning ticket. What now?',
+    a: 'Always claim wins through the lottery that issued the ticket. Keep the printed slip safe; you need it to redeem. Chancey checks and organizes. It cannot pay prizes.',
   },
   {
     q: 'Does Chancey try to make me play more?',
-    a: 'No. Chancey has no in-app ads, no streaks, no engagement traps, and no promo notifications. Reminders are optional and tied to draws you saved.',
+    a: 'No. Chancey is about the tickets you already bought, not buying more. No in-app ads, no streaks, no nudges.',
   },
   {
     q: 'Who is Chancey for?',
-    a: 'Adults 18+ (or the local age of majority, whichever is greater) who already play the lottery and want a real way to pick and track tickets. Chancey is not a tool to bring in new players.',
+    a: 'Adults 18+ (or the local age of majority, whichever is greater) who already play and want a real way to track and check tickets. It is not a tool to bring in new players.',
+  },
+] as const;
+
+// Home shows only this short objection set. No overlap with the full
+// Support FAQ. Indexes: free, account, predict, replace lottery, data.
+export const homeFaqIndexes = [3, 6, 2, 8, 7] as const;
+export const homeFaqs = homeFaqIndexes.map((i) => faqs[i]);
+
+export const pricingFaqs = [
+  {
+    q: 'What counts as a scan?',
+    a: 'One scanned ticket is one scan, no matter how many lines it has. Re-checking a ticket you already saved against later draws does not cost another scan.',
+  },
+  {
+    q: 'What happens when I hit 5 scans in a month?',
+    a: 'Nothing breaks. Your saved tickets keep getting checked against new draws. You just cannot scan a new ticket until next month, or until you go Pro for unlimited scans.',
+  },
+  {
+    q: 'Is the number builder free?',
+    a: 'Yes. The builder, your full history, and automatic draw checking are free on every plan. Only the number of new scans per month is limited.',
+  },
+  {
+    q: 'Can I cancel anytime?',
+    a: 'Yes. Cancel whenever you want. You keep Pro until the end of the period you paid for, then drop back to the free plan. Your history stays.',
+  },
+  {
+    q: 'Monthly or yearly?',
+    a: 'Pro is $4.99 a month or $39.99 a year. The yearly plan works out to about $3.33 a month, roughly $20 a year cheaper than monthly.',
+  },
+  {
+    q: 'Are there ads?',
+    a: 'No ads on any plan, ever. We make money from Pro, not from your data and not from getting you to play more.',
   },
 ] as const;

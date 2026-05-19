@@ -29,16 +29,22 @@ function resolveHref(href: string, external: boolean | undefined): string {
         <h4>Product</h4>
         <ul>
           {
-            footerLinks.product.map((link) => (
-              <li>
-                <a
-                  href={resolveHref(link.href, 'external' in link ? link.external : false)}
-                  rel={'external' in link && link.external ? 'noopener' : undefined}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))
+            footerLinks.product.map((link) => {
+              const isExternal = 'external' in link ? link.external : false;
+              return (
+                <li>
+                  <a
+                    href={resolveHref(link.href, isExternal)}
+                    target={isExternal ? '_blank' : undefined}
+                    rel={isExternal ? 'noopener noreferrer' : undefined}
+                    data-cta={isExternal ? 'footer' : undefined}
+                  >
+                    {link.label}
+                    {isExternal && <span class="visually-hidden">(opens in a new tab)</span>}
+                  </a>
+                </li>
+              );
+            })
           }
         </ul>
       </div>

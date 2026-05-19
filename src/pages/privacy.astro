@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/icons/Icon.astro';
 
-const lastUpdated = 'May 6, 2026';
+const lastUpdated = 'April 30, 2026';
 ---
 
 <BaseLayout
@@ -18,6 +19,14 @@ const lastUpdated = 'May 6, 2026';
         <p class="eyebrow">Privacy</p>
         <h1>Privacy Policy</h1>
         <p class="muted">Last updated: {lastUpdated}</p>
+        <div class="notice">
+          <span class="notice-icon" aria-hidden="true"><Icon name="lightning" size={22} /></span>
+          <div>
+            <strong>Working draft</strong>
+            This policy is in final legal review for launch. Big changes will show up in the app
+            and at the top of this page.
+          </div>
+        </div>
       </header>
 
       <section>
@@ -47,7 +56,7 @@ const lastUpdated = 'May 6, 2026';
         </p>
         <h3>Preferences and app state</h3>
         <p>
-          We store your settings — favorites, saved sets, reminder choices — so the app works the
+          We store your settings, favorites, saved sets, reminder choices, so the app works the
           same way across your devices.
         </p>
         <h3>Operational logs</h3>
@@ -61,15 +70,6 @@ const lastUpdated = 'May 6, 2026';
           When you write to support, we keep the message and any attachments so we can reply,
           follow up, and improve the product. Don't send government IDs, payment cards, or
           passwords.
-        </p>
-        <h3>Contact form anti-abuse checks</h3>
-        <p>
-          The contact form uses Google reCAPTCHA to help detect spam and abuse. When you submit
-          the form, Google may receive information about your browser, device, IP address, page
-          interactions, and the reCAPTCHA token used to score the request. Google's
-          <a href="https://policies.google.com/privacy" rel="noopener">Privacy Policy</a> and
-          <a href="https://policies.google.com/terms" rel="noopener">Terms</a> apply to that
-          processing.
         </p>
         <h3>Analytics on this marketing site</h3>
         <p>
@@ -87,7 +87,6 @@ const lastUpdated = 'May 6, 2026';
         <ul>
           <li>To run the core service: picks, scanning, history, draw matching, and sync.</li>
           <li>To sign you in and keep accounts safe.</li>
-          <li>To prevent spam, abuse, and automated contact-form submissions.</li>
           <li>To debug issues and keep the service reliable and secure.</li>
           <li>To reply to your support and privacy requests.</li>
           <li>To meet the law where it applies.</li>
@@ -104,9 +103,8 @@ const lastUpdated = 'May 6, 2026';
         <ul>
           <li>
             <strong>Service providers</strong> who run our infrastructure (hosting, sign-in, error
-            tracking, optional ticket-recognition help, email delivery, anti-abuse checks, and web
-            analytics). These providers are bound by contract to protect data and use it only for
-            what we ask.
+            tracking, optional ticket-recognition help, email delivery, web analytics). These
+            providers are bound by contract to protect data and use it only for what we ask.
           </li>
           <li>
             <strong>Legal recipients</strong> when the law, a valid legal process, or the safety
@@ -131,10 +129,8 @@ const lastUpdated = 'May 6, 2026';
         <p>
           The marketing site uses essential cookies and a privacy-respecting Google Analytics
           cookie (see above). The Chancey web app uses essential cookies and similar storage for
-          sign-in and settings. The contact form uses Google reCAPTCHA, which may set or read
-          cookies as part of its spam-prevention checks. We do not run cross-site advertising
-          trackers. To opt out of GA4, you can use your browser's tracking-prevention setting,
-          install the
+          sign-in and settings. We do not run cross-site advertising trackers. To opt out of GA4,
+          you can use your browser's tracking-prevention setting, install the
           <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">Google Analytics
             opt-out add-on</a>, or block analytics cookies in your browser.
         </p>
@@ -153,7 +149,7 @@ const lastUpdated = 'May 6, 2026';
       <section>
         <h2>Security</h2>
         <p>
-          We use reasonable safeguards — administrative, technical, and physical — to protect your
+          We use reasonable safeguards, administrative, technical, and physical, to protect your
           data. No system is perfect. If we learn of an incident that affects your data, we will
           tell you and the right regulators in line with the law.
         </p>

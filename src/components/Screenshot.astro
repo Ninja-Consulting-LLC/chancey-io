@@ -1,6 +1,6 @@
 ---
 /**
- * Screenshot component — drops in a real product image inside a frame.
+ * Screenshot component, drops in a real product image inside a frame.
  *
  * USAGE:
  *   <Screenshot src="/screens/scanner.png" alt="..." caption="..." frame="phone" />
@@ -34,6 +34,23 @@ const {
   loading = 'lazy',
 } = Astro.props;
 
+// Prefer a real app screenshot when `npm run screenshots:pull` has produced
+// one. Map our preview variants to the app's screen ids.
+const variantToScreen: Record<string, string> = {
+  scan: 'scan',
+  history: 'stats',
+  builder: 'rules',
+  home: 'home',
+};
+let resolvedSrc = src;
+if (!resolvedSrc && variantToScreen[variant]) {
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+  const file = `${variantToScreen[variant]}.png`;
+  const abs = path.join(process.cwd(), 'public', 'app-screenshots', file);
+  if (fs.existsSync(abs)) resolvedSrc = `/app-screenshots/${file}`;
+}
+
 const mockLabel = label ?? alt;
 const builderBalls = ['03', '12', '19', '27', '44', '58'];
 const scanBalls = ['08', '17', '28', '42', '61', '14'];
@@ -58,8 +75,8 @@ const historyRows = [
     }
     <div class="shot-screen">
       {
-        src ? (
-          <img src={src} alt={alt} width={width} height={height} loading={loading} />
+        resolvedSrc ? (
+          <img src={resolvedSrc} alt={alt} width={width} height={height} loading={loading} />
         ) : (
           <div class={`shot-mock shot-mock-${variant}`} role="img" aria-label={alt}>
             {
@@ -179,9 +196,13 @@ const historyRows = [
   /* Phone frame */
   .shot-phone .shot-frame {
     margin-inline: auto;
-    width: min(100%, 360px);
-    border: 12px solid #1b1410;
-    border-radius: 44px;
+    /* Height-capped so screenshots stay a supporting visual, not the page.
+       Width follows the aspect ratio. */
+    width: auto;
+    height: clamp(380px, 52vh, 520px);
+    aspect-ratio: 9 / 19.5;
+    border: 11px solid #1b1410;
+    border-radius: 40px;
     background: #1b1410;
     box-shadow: var(--shadow-xl);
     overflow: hidden;
@@ -202,7 +223,7 @@ const historyRows = [
   }
 
   .shot-phone .shot-screen {
-    aspect-ratio: 9 / 19.5;
+    height: 100%;
     background: var(--gradient-cream);
     overflow: hidden;
   }
@@ -506,6 +527,13 @@ const historyRows = [
 
   .mock-caption {
     text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    /* Keep the screenshot a supporting visual on phones, not a full screen. */
+    .shot-phone .shot-frame {
+      height: clamp(300px, 42vh, 360px);
+    }
   }
 
   @media (max-width: 520px) {
