@@ -63,15 +63,15 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          # Deploy to the project's production branch so the custom domain
-          # (staging.chancey.io) always serves the latest PR build. Wrangler
-          # also prints a unique per-deploy *.pages.dev preview URL.
-          out=$(npx --yes wrangler@4 pages deploy dist \
+          # Stream wrangler output (don't capture in $() under set -e, which
+          # swallows the real error). pipefail makes a deploy failure fail
+          # the step with the actual message visible in the log.
+          set -o pipefail
+          npx --yes wrangler@4 pages deploy dist \
             --project-name=chancey-staging \
             --branch=staging \
-            --commit-dirty=true 2>&1)
-          echo "$out"
-          url=$(echo "$out" | grep -oE 'https://[a-z0-9-]+\.chancey-staging\.pages\.dev' | head -1)
+            --commit-dirty=true 2>&1 | tee deploy.out
+          url=$(grep -oE 'https://[a-z0-9-]+\.chancey-staging\.pages\.dev' deploy.out | head -1)
           echo "preview_url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Comment staging URL on the PR (if one is open)
