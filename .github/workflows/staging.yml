@@ -47,6 +47,7 @@ jobs:
           PUBLIC_RECAPTCHA_SITE_KEY: 6LfKYdIsAAAAAG2exCOEtxpj5PSOfAnEOUw-xJ2F
           # Reuse the deployed contact worker; override via repo variable.
           PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.ninjaconsultingllc.workers.dev' }}
+          PUBLIC_CHANCEY_APP_URL: https://stage.app.chancey.io
         run: npm run build
 
       - name: Diagnose Cloudflare auth
@@ -92,10 +93,19 @@ jobs:
           # swallows the real error). pipefail makes a deploy failure fail
           # the step with the actual message visible in the log.
           set -o pipefail
-          npx --yes wrangler@4 pages deploy dist \
-            --project-name=chancey-staging \
-            --branch=staging \
-            --commit-dirty=true 2>&1 | tee deploy.out
+          for attempt in 1 2 3; do
+            if npx --yes wrangler@4 pages deploy dist \
+              --project-name=chancey-staging \
+              --branch=staging \
+              --commit-dirty=true 2>&1 | tee deploy.out; then
+              break
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            echo "Cloudflare Pages deploy failed; retrying in $((attempt * 20))s..."
+            sleep $((attempt * 20))
+          done
           url=$(grep -oE 'https://[a-z0-9-]+\.chancey-staging\.pages\.dev' deploy.out | head -1)
           echo "preview_url=$url" >> "$GITHUB_OUTPUT"
 

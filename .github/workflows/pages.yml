@@ -41,6 +41,7 @@ jobs:
           # Set this in the repo's Variables (Settings → Secrets and variables → Actions → Variables)
           # once the Worker is deployed. Falls back to the production workers.dev URL.
           PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.ninjaconsultingllc.workers.dev' }}
+          PUBLIC_CHANCEY_APP_URL: ${{ github.event_name == 'pull_request' && 'https://stage.app.chancey.io' || 'https://app.chancey.io' }}
         run: npm run build
       - uses: actions/configure-pages@v5
         if: github.event_name == 'push'
