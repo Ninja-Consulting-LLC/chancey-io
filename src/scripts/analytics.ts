@@ -75,7 +75,7 @@ declare global {
   }
 
   function isAppLink(href: string): boolean {
-    return /^https?:\/\/app\.chancey\.io/i.test(href);
+    return /^https?:\/\/(?:stage\.)?app\.chancey\.io/i.test(href);
   }
 
   // ---------------- Click delegation ----------------
@@ -118,7 +118,7 @@ declare global {
         });
       }
 
-      // 2. External link (helplines, etc.), but not app.chancey.io
+      // 2. External link (helplines, etc.) — but not Chancey app domains
       if (rawHref && isExternalLink(rawHref) && !isAppLink(rawHref)) {
         gtagSafe('external_link_click', {
           url: rawHref,

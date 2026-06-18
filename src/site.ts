@@ -3,7 +3,7 @@ export const site = {
   legalName: 'Chancey',
   domain: 'chancey.io',
   url: 'https://chancey.io',
-  appUrl: 'https://app.chancey.io',
+  appUrl: import.meta.env.PUBLIC_CHANCEY_APP_URL ?? 'https://app.chancey.io',
   contactPath: '/contact/',
   // Placeholder store URLs so the badge row renders. Swap for real listing
   // URLs at launch.
