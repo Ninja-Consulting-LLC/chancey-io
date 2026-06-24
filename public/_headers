@@ -6,3 +6,6 @@
 # that honor X-Robots-Tag, regardless of what robots.txt allows.
 /*
   X-Robots-Tag: noindex, nofollow, noai, noimageai
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai

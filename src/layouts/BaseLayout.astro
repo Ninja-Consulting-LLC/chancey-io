@@ -179,6 +179,11 @@ const isNoindex = noindex || forceNoindex;
     )}
   </head>
   <body class={bodyClass}>
+    <script is:inline>
+      if (location.hostname === 'admin.chancey.io' && location.pathname === '/') {
+        location.replace('/admin/');
+      }
+    </script>
     <a class="skip-link visually-hidden" href="#main">Skip to main content</a>
     <SiteHeader />
     <main id="main">

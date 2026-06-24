@@ -42,6 +42,8 @@ jobs:
           # once the Worker is deployed. Falls back to the production workers.dev URL.
           PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.ninjaconsultingllc.workers.dev' }}
           PUBLIC_CHANCEY_APP_URL: ${{ github.event_name == 'pull_request' && 'https://stage.app.chancey.io' || 'https://app.chancey.io' }}
+          PUBLIC_CHANCEY_API_BASE_URL: ${{ github.event_name == 'pull_request' && 'https://chancey-api-stage.ninjaconsultingllc.workers.dev' || 'https://chancey-api.ninjaconsultingllc.workers.dev' }}
+          PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ github.event_name == 'pull_request' && vars.REACT_APP_CLERK_PUBLISHABLE_KEY_DEV || vars.REACT_APP_CLERK_PUBLISHABLE_KEY_PROD }}
         run: npm run build
       - uses: actions/configure-pages@v5
         if: github.event_name == 'push'
