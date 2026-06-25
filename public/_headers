@@ -1,9 +1,8 @@
 # Cloudflare Pages headers. GitHub Pages (production at chancey.io) ignores
-# this file, so production is unaffected. Cloudflare Pages only serves the
-# staging environment (staging.chancey.io + *.chancey-staging.pages.dev),
-# so this keeps the entire staging environment — every HTML page, llms.txt,
-# robots.txt, sitemap, and asset — out of search engines and AI crawlers
-# that honor X-Robots-Tag, regardless of what robots.txt allows.
+# this file, so production is unaffected. Cloudflare Pages serves staging
+# (staging.chancey.io + *.chancey-staging.pages.dev) and the private admin
+# project (admin.chancey.io + *.chancey-admin.pages.dev), so this keeps those
+# environments out of search engines and AI crawlers that honor X-Robots-Tag.
 /*
   X-Robots-Tag: noindex, nofollow, noai, noimageai
 
