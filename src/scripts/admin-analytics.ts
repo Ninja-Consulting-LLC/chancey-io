@@ -111,13 +111,16 @@ async function createClerk(publishableKey: string): Promise<ClerkInstance> {
 async function loadOverview(force: boolean): Promise<void> {
   if (!clerk?.session) return;
   refreshButton.disabled = true;
-  setStatus('Loading analytics…', 'idle');
+  setStatus(force ? 'Refreshing source imports…' : 'Loading analytics…', 'idle');
+  let requestUrl = '';
   try {
     const token = await clerk.session.getToken({ template: 'chancey-api' });
     if (!token) throw new Error('Clerk did not return a Chancey API token.');
+    if (force) await refreshImports(token);
     const url = new URL('/v1/admin/analytics/overview', apiBase);
     url.searchParams.set('days', '30');
     if (force) url.searchParams.set('force', '1');
+    requestUrl = url.toString();
     const res = await fetch(url, {
       headers: { authorization: `Bearer ${token}` },
     });
@@ -130,9 +133,24 @@ async function loadOverview(force: boolean): Promise<void> {
     renderOverview(overview);
     setStatus(`Loaded ${overview.env} analytics. Generated ${time(overview.generatedAt)}.`, 'ok');
   } catch (err) {
-    setStatus(err instanceof Error ? err.message : 'Failed to load analytics.', 'error');
+    const message = err instanceof Error ? err.message : 'Failed to load analytics.';
+    setStatus(message === 'Failed to fetch' && requestUrl ? `${message}: ${requestUrl}` : message, 'error');
   } finally {
     refreshButton.disabled = false;
+  }
+}
+
+async function refreshImports(token: string): Promise<void> {
+  const url = new URL('/v1/admin/analytics/import', apiBase);
+  url.searchParams.set('days', '30');
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) {
+    const body = await safeJson(res);
+    const message = body?.error?.message || body?.error?.code || `HTTP ${res.status}`;
+    throw new Error(`Import refresh failed: ${message}`);
   }
 }
 

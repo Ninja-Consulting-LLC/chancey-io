@@ -29,6 +29,8 @@ Required Worker-side access:
 
 - `https://admin.chancey.io` must be in `chancey-api` `ALLOWED_ORIGINS`.
 - Signed-in users must match `ADMIN_USER_IDS` or `ADMIN_EMAILS`.
+- The Refresh button calls `POST /v1/admin/analytics/import?days=30`, then
+  reloads `GET /v1/admin/analytics/overview`.
 
 SEO rule: admin is always `noindex,nofollow` and is blocked from public
 `robots.txt`. Do not include `admin.chancey.io` or `/admin/` in sitemap URLs.
@@ -36,8 +38,10 @@ SEO rule: admin is always `noindex,nofollow` and is blocked from public
 Source status:
 
 - Cloudflare traffic needs zone analytics credentials on the Worker.
-- App Store metrics need App Store Connect Sales/Trends or Analytics access.
-- Android installs need the Play Console `gs://pubsite_prod_rev...` report bucket.
+- App Store metrics need App Store Connect Sales/Trends access, vendor number,
+  and an API key.
+- Android installs need the Play Console `gs://pubsite_prod_rev...` report bucket,
+  package name, and service-account GCS read access.
 - RevenueCat counters start when webhook events arrive.
 
 First Google Search Console setup remains manual: verify `chancey.io` with a
