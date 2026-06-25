@@ -48,6 +48,8 @@ jobs:
           # Reuse the deployed contact worker; override via repo variable.
           PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.ninjaconsultingllc.workers.dev' }}
           PUBLIC_CHANCEY_APP_URL: https://stage.app.chancey.io
+          PUBLIC_CHANCEY_API_BASE_URL: https://chancey-api-stage.ninjaconsultingllc.workers.dev
+          PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.REACT_APP_CLERK_PUBLISHABLE_KEY_DEV }}
         run: npm run build
 
       - name: Diagnose Cloudflare auth

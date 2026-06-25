@@ -8,6 +8,7 @@ Allow: /
 # Block low-value internals (none today, but reserved for future)
 Disallow: /api/
 Disallow: /_internal/
+Disallow: /admin/
 
 # AI and LLM crawlers, Chancey is happy to be summarized accurately.
 # An llms.txt file is provided at /llms.txt for AI-friendly summaries.
