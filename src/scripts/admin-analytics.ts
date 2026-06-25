@@ -3,7 +3,7 @@ type KpiValue = number | null;
 const CLERK_ESM_URL = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5.127.0/+esm';
 
 interface ClerkSession {
-  getToken(opts: { template: string }): Promise<string | null>;
+  getToken(opts?: { template?: string }): Promise<string | null>;
 }
 
 interface ClerkInstance {
@@ -114,8 +114,7 @@ async function loadOverview(force: boolean): Promise<void> {
   setStatus(force ? 'Refreshing source imports…' : 'Loading analytics…', 'idle');
   let requestUrl = '';
   try {
-    const token = await clerk.session.getToken({ template: 'chancey-api' });
-    if (!token) throw new Error('Clerk did not return a Chancey API token.');
+    const token = await getApiToken(clerk.session);
     if (force) await refreshImports(token);
     const url = new URL('/v1/admin/analytics/overview', apiBase);
     url.searchParams.set('days', '30');
@@ -140,13 +139,40 @@ async function loadOverview(force: boolean): Promise<void> {
   }
 }
 
+async function getApiToken(session: ClerkSession): Promise<string> {
+  let templateError: unknown;
+  try {
+    const token = await session.getToken({ template: 'chancey-api' });
+    if (token) return token;
+  } catch (err) {
+    templateError = err;
+  }
+
+  try {
+    const token = await session.getToken();
+    if (token) return token;
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    throw new Error(`Clerk token fetch failed: ${detail}`);
+  }
+
+  const detail = templateError instanceof Error ? templateError.message : String(templateError ?? 'no token returned');
+  throw new Error(`Clerk did not return an API token: ${detail}`);
+}
+
 async function refreshImports(token: string): Promise<void> {
   const url = new URL('/v1/admin/analytics/import', apiBase);
   url.searchParams.set('days', '30');
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { authorization: `Bearer ${token}` },
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+    });
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : 'Failed to fetch';
+    throw new Error(`Import refresh failed: ${detail}: ${url.toString()}`);
+  }
   if (!res.ok) {
     const body = await safeJson(res);
     const message = body?.error?.message || body?.error?.code || `HTTP ${res.status}`;
