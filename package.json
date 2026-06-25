@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
+    "build:public": "npm run build && node scripts/prepare-public-dist.mjs",
+    "build:admin": "npm run build && node scripts/prepare-admin-dist.mjs",
+    "check:seo": "node scripts/check-seo.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "screenshots:pull": "node scripts/pull-app-screenshots.mjs"

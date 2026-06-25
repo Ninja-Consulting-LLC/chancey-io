@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: admin
-      url: https://admin.chancey.io/admin/
+      url: https://admin.chancey.io/
     steps:
       - uses: actions/checkout@v4
 
@@ -40,10 +40,13 @@ jobs:
           SITE_URL: https://admin.chancey.io
           PUBLIC_NOINDEX: '1'
           PUBLIC_CHANCEY_APP_URL: https://app.chancey.io
-          PUBLIC_CHANCEY_API_BASE_URL: https://chancey-api.ninjaconsultingllc.workers.dev
+          PUBLIC_CHANCEY_ADMIN_CLERK_PUBLISHABLE_KEY: ${{ vars.REACT_APP_CLERK_PUBLISHABLE_KEY_PROD }}
           PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.REACT_APP_CLERK_PUBLISHABLE_KEY_PROD }}
           PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT || 'https://chancey-contact.ninjaconsultingllc.workers.dev' }}
-        run: npm run build
+        run: npm run build:admin
+
+      - name: Check admin SEO/privacy packaging
+        run: CHECK_ADMIN_DIST=1 npm run check:seo
 
       - name: Ensure Cloudflare Pages project exists
         env:
@@ -60,7 +63,7 @@ jobs:
         run: |
           set -o pipefail
           for attempt in 1 2 3; do
-            if npx --yes wrangler@4 pages deploy dist \
+            if npx --yes wrangler@4 pages deploy .admin-dist \
               --project-name=chancey-admin \
               --branch=main \
               --commit-dirty=true 2>&1 | tee deploy.out; then

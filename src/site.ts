@@ -8,7 +8,7 @@ export const site = {
   // Placeholder store URLs so the badge row renders. Swap for real listing
   // URLs at launch.
   appStoreUrl: 'https://apps.apple.com/app/chancey/id000000000',
-  playStoreUrl: 'https://play.google.com/store/apps/details?id=io.chancey.app',
+  playStoreUrl: 'https://play.google.com/store/apps/details?id=app.chancey.io',
   tagline: 'Never throw away a winning ticket again.',
   shortDescription:
     'Chancey is a lottery ticket tracker for adults 18+. Scan a ticket you already bought and Chancey checks every draw against the official results, so a win never gets past you.',
@@ -133,7 +133,7 @@ export const faqs = [
   },
   {
     q: 'Do I need an account?',
-    a: 'An account syncs your tickets and saved sets across devices and brings them back if you change phones. You can use Chancey on one device without an account, with less syncing.',
+    a: 'Yes. Chancey uses an account to save tickets, saved sets, preferences, and subscription state across devices. You can delete your account from Settings anytime.',
   },
   {
     q: 'How is my data handled?',
