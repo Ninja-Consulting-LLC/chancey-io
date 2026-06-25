@@ -21,6 +21,7 @@ interface ClerkModule {
 interface AdminAnalyticsOverview {
   generatedAt: string;
   env: string;
+  windowDays: number;
   range: { start: string; end: string };
   kpis: {
     websiteVisitors: KpiValue;
@@ -62,21 +63,45 @@ const shell = document.querySelector<HTMLElement>('.admin-shell');
 const statusEl = byId('status');
 const signInButton = byId<HTMLButtonElement>('sign-in');
 const refreshButton = byId<HTMLButtonElement>('refresh');
+const rangeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-range-days]'));
 const apiBase = shell?.dataset.apiBase ?? '';
 const clerkKey = shell?.dataset.clerkKey ?? '';
 
 let clerk: ClerkInstance | null = null;
+let selectedDays = '30';
+
+const SOURCE_LABELS: Record<string, string> = {
+  app_store_connect: 'App Store Connect',
+  cloudflare: 'Cloudflare',
+  clerk: 'Clerk',
+  google_play: 'Google Play',
+  mega_millions: 'Mega Millions',
+  powerball: 'Powerball',
+  revenuecat: 'RevenueCat',
+};
+
+const TREND_SERIES: Array<{
+  key: 'websiteVisitors' | 'downloads' | 'users' | 'scans';
+  label: string;
+  value(row: AdminAnalyticsOverview['trend'][number]): number | null | undefined;
+}> = [
+  { key: 'websiteVisitors', label: 'Visitors', value: (row) => row.websiteVisitors },
+  { key: 'downloads', label: 'Downloads', value: (row) => row.downloads },
+  { key: 'users', label: 'Users', value: (row) => row.users },
+  { key: 'scans', label: 'Scans', value: (row) => row.scans },
+];
 
 void boot();
 
 async function boot(): Promise<void> {
   if (!shell || !statusEl || !signInButton || !refreshButton) return;
+  setActiveRangeButton();
   if (!clerkKey) {
-    setStatus('Missing PUBLIC_CLERK_PUBLISHABLE_KEY for admin dashboard.', 'error');
+    setStatus('Missing PUBLIC_CHANCEY_ADMIN_CLERK_PUBLISHABLE_KEY for admin dashboard.', 'error');
     return;
   }
   if (!apiBase) {
-    setStatus('Missing PUBLIC_CHANCEY_API_BASE_URL for admin dashboard.', 'error');
+    setStatus('Missing prod API base for admin dashboard.', 'error');
     return;
   }
 
@@ -91,6 +116,13 @@ async function boot(): Promise<void> {
     }
   });
   refreshButton.addEventListener('click', () => void loadOverview(true));
+  for (const button of rangeButtons) {
+    button.addEventListener('click', () => {
+      selectedDays = button.dataset.rangeDays ?? '30';
+      setActiveRangeButton();
+      void loadOverview(false);
+    });
+  }
 
   if (!clerk.user) {
     signInButton.textContent = 'Sign in';
@@ -117,7 +149,7 @@ async function loadOverview(force: boolean): Promise<void> {
     const token = await getApiToken(clerk.session);
     if (force) await refreshImports(token);
     const url = new URL('/v1/admin/analytics/overview', apiBase);
-    url.searchParams.set('days', '30');
+    url.searchParams.set('days', selectedDays);
     if (force) url.searchParams.set('force', '1');
     requestUrl = url.toString();
     const res = await fetch(url, {
@@ -130,7 +162,7 @@ async function loadOverview(force: boolean): Promise<void> {
     }
     const overview = (await res.json()) as AdminAnalyticsOverview;
     renderOverview(overview);
-    setStatus(`Loaded ${overview.env} analytics. Generated ${time(overview.generatedAt)}.`, 'ok');
+    setLoadedStatus(overview);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Failed to load analytics.';
     setStatus(message === 'Failed to fetch' && requestUrl ? `${message}: ${requestUrl}` : message, 'error');
@@ -162,7 +194,7 @@ async function getApiToken(session: ClerkSession): Promise<string> {
 
 async function refreshImports(token: string): Promise<void> {
   const url = new URL('/v1/admin/analytics/import', apiBase);
-  url.searchParams.set('days', '30');
+  url.searchParams.set('days', selectedDays);
   let res: Response;
   try {
     res = await fetch(url, {
@@ -190,9 +222,10 @@ function renderOverview(data: AdminAnalyticsOverview): void {
   setKpi('scans', whole(kpis.scans));
   setKpi('proEvents', whole(kpis.proEvents));
   setKpi('ocrCostUsd', money(kpis.ocrCostUsd));
+  setKpiNotes(data);
 
   const range = byId('range');
-  if (range) range.textContent = `${data.range.start} to ${data.range.end}`;
+  if (range) range.textContent = `${rangeLabel(data.windowDays)} · ${displayRange(data)}`;
 
   renderTrend(data);
   renderRows(
@@ -226,19 +259,96 @@ function renderOverview(data: AdminAnalyticsOverview): void {
   );
 }
 
+function setLoadedStatus(data: AdminAnalyticsOverview): void {
+  const needsAttention = data.sourceHealth.filter((source) => source.status !== 'ok');
+  const prefix = `Loaded ${data.env} analytics from ${apiBaseLabel(apiBase)}. Generated ${time(data.generatedAt)}.`;
+  if (needsAttention.length === 0) {
+    setStatus(prefix, 'ok');
+    return;
+  }
+  const sources = needsAttention.map((source) => label(source.source)).join(', ');
+  setStatus(`${prefix} Sources need attention: ${sources}.`, needsAttention.some((source) => source.status === 'error') ? 'error' : 'idle');
+}
+
+function apiBaseLabel(value: string): string {
+  try {
+    const host = new URL(value).hostname;
+    if (host === 'chancey-api.ninjaconsultingllc.workers.dev') return 'prod API';
+    return host;
+  } catch {
+    return value;
+  }
+}
+
+function setKpiNotes(data: AdminAnalyticsOverview): void {
+  const sourceStatus = new Map(data.sourceHealth.map((source) => [source.source, source.status]));
+  const notes: Partial<Record<keyof AdminAnalyticsOverview['kpis'], string>> = {
+    websiteVisitors: noteFor(data.kpis.websiteVisitors, sourceStatus.get('cloudflare'), 'Waiting for Cloudflare import.'),
+    iosDownloads: noteFor(data.kpis.iosDownloads, sourceStatus.get('app_store_connect'), 'Waiting for App Store import.'),
+    androidInstalls: androidInstallNote(data, sourceStatus.get('google_play')),
+    newUsers: noteFor(data.kpis.newUsers, null, 'No signup activity yet.'),
+    dau: noteFor(data.kpis.dau, null, 'No active users today yet.'),
+    proEvents: noteFor(data.kpis.proEvents, sourceStatus.get('revenuecat'), 'Waiting for subscription events.'),
+  };
+  for (const key of Object.keys(data.kpis) as Array<keyof AdminAnalyticsOverview['kpis']>) {
+    const el = document.querySelector(`[data-kpi-note="${key}"]`);
+    if (el) el.textContent = notes[key] ?? '';
+  }
+}
+
+function androidInstallNote(
+  data: AdminAnalyticsOverview,
+  status: AdminAnalyticsOverview['sourceHealth'][number]['status'] | undefined
+): string {
+  if (data.kpis.androidInstalls === 0 && status === 'ok') return 'No Android installs in selected range.';
+  return noteFor(data.kpis.androidInstalls, status, 'Waiting for Play import.');
+}
+
+function noteFor(
+  value: number | null | undefined,
+  status: AdminAnalyticsOverview['sourceHealth'][number]['status'] | null | undefined,
+  fallback: string
+): string {
+  if (value !== null && value !== undefined) return '';
+  if (status === 'error') return 'Import error.';
+  if (status === 'stale') return 'Import stale.';
+  if (status === 'unconfigured') return 'Not configured.';
+  return fallback;
+}
+
 function renderTrend(data: AdminAnalyticsOverview): void {
   const el = byId('trend');
   if (!el) return;
-  const values = data.trend.map((row) => row.websiteVisitors ?? row.downloads ?? row.users ?? row.scans);
-  const max = Math.max(1, ...values);
-  el.innerHTML = data.trend
-    .map((row, index) => {
-      const value = values[index] ?? 0;
-      const height = Math.max(2, Math.round((value / max) * 160));
-      const title = `${row.date}: ${whole(value)} signal, ${whole(row.scans)} scans`;
-      return `<div class="bar" style="height:${height}px" title="${escapeHtml(title)}"></div>`;
+  const rows = trimEmptyTrendStart(data.trend);
+  const series = TREND_SERIES.map((entry) => ({
+    ...entry,
+    values: rows.map((row) => entry.value(row) ?? 0),
+  }));
+  if (series.every((entry) => entry.values.every((value) => !value))) {
+    el.innerHTML = '<div class="empty-state">No trend data imported yet.</div>';
+    return;
+  }
+  el.innerHTML = series
+    .map((entry) => {
+      const max = Math.max(1, ...entry.values);
+      const latest = entry.values.at(-1) ?? 0;
+      const bars = entry.values
+        .map((value, index) => {
+          const height = value > 0 ? Math.max(2, Math.round((value / max) * 32)) : 2;
+          const date = rows[index]?.date ?? '';
+          const title = `${date}: ${whole(value)} ${entry.label.toLowerCase()}`;
+          return `<div class="bar" style="height:${height}px" title="${escapeHtml(title)}" aria-label="${escapeHtml(title)}"></div>`;
+        })
+        .join('');
+      return `<div class="trend-row" aria-label="${escapeHtml(`${rangeLabel(data.windowDays)} ${entry.label.toLowerCase()} trend`)}"><div class="trend-label"><span>${escapeHtml(entry.label)}</span><strong>${whole(latest)}</strong></div><div class="trend-bars">${bars}</div></div>`;
     })
     .join('');
+}
+
+function trimEmptyTrendStart(rows: AdminAnalyticsOverview['trend']): AdminAnalyticsOverview['trend'] {
+  const firstSignal = rows.findIndex((row) => TREND_SERIES.some((entry) => (entry.value(row) ?? 0) > 0));
+  if (firstSignal < 0) return rows;
+  return rows.slice(firstSignal);
 }
 
 function renderRows(
@@ -249,13 +359,13 @@ function renderRows(
   const el = byId(id);
   if (!el) return;
   if (rows.length === 0) {
-    el.innerHTML = `<div class="row"><span>${escapeHtml(empty)}</span><strong>—</strong></div>`;
+    el.innerHTML = `<div class="row empty"><span>${escapeHtml(empty)}</span></div>`;
     return;
   }
   el.innerHTML = rows
     .map(
       (row) =>
-        `<div class="row"><span>${escapeHtml(row.left)}${row.sub ? `<br /><small>${escapeHtml(row.sub)}</small>` : ''}</span><strong>${row.right}</strong></div>`
+        `<div class="row"><span class="row-copy"><span>${escapeHtml(row.left)}</span>${row.sub ? `<small>${escapeHtml(row.sub)}</small>` : ''}</span><strong>${row.right}</strong></div>`
     )
     .join('');
 }
@@ -263,6 +373,13 @@ function renderRows(
 function setKpi(name: keyof AdminAnalyticsOverview['kpis'], value: string): void {
   const el = document.querySelector(`[data-kpi="${name}"]`);
   if (el) el.textContent = value;
+}
+
+function setActiveRangeButton(): void {
+  for (const button of rangeButtons) {
+    button.classList.toggle('active', button.dataset.rangeDays === selectedDays);
+    button.setAttribute('aria-pressed', button.dataset.rangeDays === selectedDays ? 'true' : 'false');
+  }
 }
 
 function setStatus(message: string, tone: 'idle' | 'ok' | 'error'): void {
@@ -289,7 +406,25 @@ function whole(value: number | null | undefined): string {
 }
 
 function money(value: number): string {
-  return value.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
+  if (!Number.isFinite(value) || value === 0) return '$0';
+  const significantDigits = 3;
+  const decimals = Math.max(0, Math.min(6, significantDigits - Math.floor(Math.log10(Math.abs(value))) - 1));
+  return value.toLocaleString(undefined, {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+}
+
+function rangeLabel(days: number): string {
+  if (days >= 3650) return 'All days';
+  return `Last ${days} days`;
+}
+
+function displayRange(data: AdminAnalyticsOverview): string {
+  const start = data.windowDays >= 3650 ? trimEmptyTrendStart(data.trend)[0]?.date ?? data.range.start : data.range.start;
+  return `${start} to ${data.range.end}`;
 }
 
 function time(value: string): string {
@@ -299,6 +434,8 @@ function time(value: string): string {
 }
 
 function label(value: string): string {
+  const exact = SOURCE_LABELS[value];
+  if (exact) return exact;
   return value
     .replace(/[_-]/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
