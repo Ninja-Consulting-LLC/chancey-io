@@ -78,6 +78,23 @@ interface AdminAnalyticsOverview {
       apiErrors: number;
     };
   };
+  logging?: {
+    events: number;
+    warnings: number;
+    errors: number;
+    apiOk: number;
+    apiErrors: number;
+    apiErrorRate: number | null;
+    logEventsFresh: boolean;
+    lastLogAt: string | null;
+    topErrors: Array<{
+      evt: string;
+      routePattern: string;
+      status: number;
+      errCode: string;
+      count: number;
+    }>;
+  };
   scanErrors: Array<{ code: string; count: number }>;
 }
 
@@ -240,6 +257,7 @@ async function refreshImports(token: string): Promise<void> {
 function renderOverview(data: AdminAnalyticsOverview): void {
   const kpis = data.kpis;
   const appAnalytics = normalizeAppAnalytics(data);
+  const logging = normalizeLogging(data);
   setKpi('websiteVisitors', whole(kpis.websiteVisitors));
   setKpi('iosDownloads', whole(kpis.iosDownloads));
   setKpi('androidInstalls', whole(kpis.androidInstalls));
@@ -289,6 +307,21 @@ function renderOverview(data: AdminAnalyticsOverview): void {
       right: whole(appAnalytics.health.apiErrors),
       sub: 'Client-observed API failures in selected range.',
     },
+    {
+      left: 'Worker log sink',
+      right: `<span class="pill ${logging.logEventsFresh ? 'ok' : 'stale'}">${logging.logEventsFresh ? 'fresh' : 'stale'}</span>`,
+      sub: logging.lastLogAt ? `Last backend log ${time(logging.lastLogAt)}` : 'No backend logs recorded yet.',
+    },
+    {
+      left: 'Backend errors',
+      right: whole(logging.apiErrors),
+      sub: 'Worker request errors in selected range.',
+    },
+    {
+      left: 'Sampled API error rate',
+      right: percent(logging.apiErrorRate),
+      sub: 'Uses sampled successful requests plus all request errors.',
+    },
   ]);
   renderRows('tickets', [
     { left: 'Saved tickets', right: whole(data.tickets.total) },
@@ -307,6 +340,11 @@ function renderOverview(data: AdminAnalyticsOverview): void {
       left: row.screen,
       right: whole(row.count),
       sub: 'Screen views',
+    })),
+    ...logging.topErrors.slice(0, 4).map((row) => ({
+      left: row.errCode || row.evt,
+      right: whole(row.count),
+      sub: [row.routePattern, row.status ? `HTTP ${row.status}` : ''].filter(Boolean).join(' · '),
     })),
   ]);
   renderRows(
@@ -387,6 +425,22 @@ function normalizeAppAnalytics(data: AdminAnalyticsOverview): Required<AdminAnal
         clientErrors: 0,
         apiErrors: 0,
       },
+    }
+  );
+}
+
+function normalizeLogging(data: AdminAnalyticsOverview): Required<AdminAnalyticsOverview>['logging'] {
+  return (
+    data.logging ?? {
+      events: 0,
+      warnings: 0,
+      errors: 0,
+      apiOk: 0,
+      apiErrors: 0,
+      apiErrorRate: null,
+      logEventsFresh: false,
+      lastLogAt: null,
+      topErrors: [],
     }
   );
 }
