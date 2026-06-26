@@ -248,11 +248,6 @@ function renderOverview(data: AdminAnalyticsOverview): void {
     })),
   ]);
   renderRows(
-    'top-pages',
-    data.topPages.map((row) => ({ left: row.path, right: whole(row.views) })),
-    'No imported page data yet.'
-  );
-  renderRows(
     'scan-errors',
     data.scanErrors.map((row) => ({ left: row.code, right: whole(row.count) })),
     'No scan errors recorded.'
