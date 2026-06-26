@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/icons/Icon.astro';
 
-const lastUpdated = 'April 30, 2026';
+const lastUpdated = 'June 26, 2026';
 ---
 
 <BaseLayout
@@ -62,8 +62,17 @@ const lastUpdated = 'April 30, 2026';
         <h3>Operational logs</h3>
         <p>
           We collect the logs we need to run, debug, and protect the service: timestamps, IP
-          addresses, device and browser type, error reports, and request data. We keep these for a
-          limited time. They are used for operations and security, not for ads.
+          addresses, device and browser type, error reports, request IDs, and request data. We keep
+          these for a limited time. They are used for operations and security, not for ads.
+        </p>
+        <h3>Product analytics and diagnostics</h3>
+        <p>
+          The app collects first-party product analytics and diagnostics so we can understand
+          whether core features are working: app opens, screen views, onboarding completion, smart
+          picks, scan outcomes, saved tickets, paywall views, purchase outcomes, notification
+          preference changes, API errors, and client errors. These events use anonymous install or
+          hashed account identifiers. We do not include ticket numbers, ticket photos, OCR text,
+          emails, names, push tokens, subscription IDs, or full URLs in analytics events.
         </p>
         <h3>Support messages</h3>
         <p>
@@ -103,8 +112,9 @@ const lastUpdated = 'April 30, 2026';
         <ul>
           <li>
             <strong>Service providers</strong> who run our infrastructure (hosting, sign-in, error
-            tracking, optional ticket-recognition help, email delivery, web analytics). These
-            providers are bound by contract to protect data and use it only for what we ask.
+            tracking, optional ticket-recognition help, email delivery, diagnostics, and web
+            analytics). These providers are bound by contract to protect data and use it only for
+            what we ask.
           </li>
           <li>
             <strong>Legal recipients</strong> when the law, a valid legal process, or the safety

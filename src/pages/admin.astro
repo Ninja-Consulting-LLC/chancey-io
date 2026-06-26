@@ -45,9 +45,18 @@ const clerkKey =
         <article tabindex="0" data-tooltip="First-time iOS downloads from App Store Connect sales and trends reports."><span>iOS downloads</span><strong data-kpi="iosDownloads">—</strong><small data-kpi-note="iosDownloads"></small></article>
         <article tabindex="0" data-tooltip="Android install counts imported from Google Play bulk install reports."><span>Android installs</span><strong data-kpi="androidInstalls">—</strong><small data-kpi-note="androidInstalls"></small></article>
         <article tabindex="0" data-tooltip="New Clerk users created during the selected period."><span>New users</span><strong data-kpi="newUsers">—</strong><small data-kpi-note="newUsers"></small></article>
+        <article tabindex="0" data-tooltip="App sessions captured by first-party analytics over the selected period."><span>Sessions</span><strong data-kpi="sessions">—</strong><small data-kpi-note="sessions"></small></article>
         <article tabindex="0" data-tooltip="Daily active users counted from first-party app activity dedupe."><span>DAU</span><strong data-kpi="dau">—</strong><small data-kpi-note="dau"></small></article>
+        <article tabindex="0" data-tooltip="Screen views sent by the web and native apps."><span>Screen views</span><strong data-kpi="screenViews">—</strong><small data-kpi-note="screenViews"></small></article>
+        <article tabindex="0" data-tooltip="Smart pick generations completed by users."><span>Smart picks</span><strong data-kpi="smartPicks">—</strong><small data-kpi-note="smartPicks"></small></article>
         <article tabindex="0" data-tooltip="Ticket scan attempts recorded by the Chancey API."><span>Scans</span><strong data-kpi="scans">—</strong><small data-kpi-note="scans"></small></article>
+        <article tabindex="0" data-tooltip="Share of scans that completed successfully in first-party analytics."><span>Scan success</span><strong data-kpi="scanSuccessRate">—</strong><small data-kpi-note="scanSuccessRate"></small></article>
+        <article tabindex="0" data-tooltip="Tickets saved from scans or manual entry."><span>Ticket saves</span><strong data-kpi="ticketSaves">—</strong><small data-kpi-note="ticketSaves"></small></article>
+        <article tabindex="0" data-tooltip="Paywall views captured by the app."><span>Paywall views</span><strong data-kpi="paywallViews">—</strong><small data-kpi-note="paywallViews"></small></article>
         <article tabindex="0" data-tooltip="RevenueCat subscription lifecycle events: purchases, renewals, cancellations, and expirations."><span>Subscription events</span><strong data-kpi="proEvents">—</strong><small data-kpi-note="proEvents"></small></article>
+        <article tabindex="0" data-tooltip="Purchase starts, successes, and failures from first-party app analytics."><span>Purchase events</span><strong data-kpi="purchaseEvents">—</strong><small data-kpi-note="purchaseEvents"></small></article>
+        <article tabindex="0" data-tooltip="Client-side JavaScript, native, and unhandled rejection errors sent by the app."><span>Client errors</span><strong data-kpi="clientErrors">—</strong><small data-kpi-note="clientErrors"></small></article>
+        <article tabindex="0" data-tooltip="API errors seen by clients, grouped without raw request paths or user identifiers."><span>API errors</span><strong data-kpi="apiErrors">—</strong><small data-kpi-note="apiErrors"></small></article>
         <article tabindex="0" data-tooltip="Estimated OCR spend from first-party scan accounting, shown to three significant digits."><span>OCR cost</span><strong data-kpi="ocrCostUsd">—</strong><small data-kpi-note="ocrCostUsd"></small></article>
       </section>
 
@@ -65,8 +74,19 @@ const clerkKey =
           <div id="sources" class="rows"></div>
         </article>
         <article class="panel">
+          <h2>App health</h2>
+          <div id="app-health" class="rows"></div>
+        </article>
+      </section>
+
+      <section class="split">
+        <article class="panel">
           <h2>Tickets</h2>
           <div id="tickets" class="rows"></div>
+        </article>
+        <article class="panel">
+          <h2>App analytics</h2>
+          <div id="app-analytics" class="rows"></div>
         </article>
       </section>
 
