@@ -77,6 +77,15 @@ interface AdminAnalyticsOverview {
       clientErrors: number;
       apiErrors: number;
     };
+    errorBuckets: Array<{
+      event: string;
+      platform: string;
+      screen: string;
+      outcome: string;
+      source: string;
+      count: number;
+      lastSeen: string | null;
+    }>;
   };
   logging?: {
     events: number;
@@ -84,6 +93,7 @@ interface AdminAnalyticsOverview {
     errors: number;
     apiOk: number;
     apiErrors: number;
+    notFounds: number;
     apiErrorRate: number | null;
     logEventsFresh: boolean;
     lastLogAt: string | null;
@@ -92,7 +102,9 @@ interface AdminAnalyticsOverview {
       routePattern: string;
       status: number;
       errCode: string;
+      severity: string;
       count: number;
+      lastSeen: string | null;
     }>;
   };
   scanErrors: Array<{ code: string; count: number }>;
@@ -300,13 +312,18 @@ function renderOverview(data: AdminAnalyticsOverview): void {
     {
       left: 'Client errors',
       right: whole(appAnalytics.health.clientErrors),
-      sub: 'Browser/native errors in selected range.',
+      sub: 'Browser/native errors in selected range. Smoke tests excluded.',
     },
     {
       left: 'API errors',
       right: whole(appAnalytics.health.apiErrors),
-      sub: 'Client-observed API failures in selected range.',
+      sub: 'Client-observed API failures in selected range. Smoke tests excluded.',
     },
+    ...appAnalytics.errorBuckets.slice(0, 4).map((row) => ({
+      left: errorBucketLabel(row.event, row.source),
+      right: whole(row.count),
+      sub: [row.screen, row.outcome, row.lastSeen ? `Last ${time(row.lastSeen)}` : ''].filter(Boolean).join(' · '),
+    })),
     {
       left: 'Worker log sink',
       right: `<span class="pill ${logging.logEventsFresh ? 'ok' : 'stale'}">${logging.logEventsFresh ? 'fresh' : 'stale'}</span>`,
@@ -315,7 +332,12 @@ function renderOverview(data: AdminAnalyticsOverview): void {
     {
       left: 'Backend errors',
       right: whole(logging.apiErrors),
-      sub: 'Worker request errors in selected range.',
+      sub: 'Worker request errors in selected range. 404 probes excluded.',
+    },
+    {
+      left: '404 / not found',
+      right: whole(logging.notFounds),
+      sub: 'Unknown-route probes and missing resources, tracked separately from backend failures.',
     },
     {
       left: 'Sampled API error rate',
@@ -344,7 +366,14 @@ function renderOverview(data: AdminAnalyticsOverview): void {
     ...logging.topErrors.slice(0, 4).map((row) => ({
       left: row.errCode || row.evt,
       right: whole(row.count),
-      sub: [row.routePattern, row.status ? `HTTP ${row.status}` : ''].filter(Boolean).join(' · '),
+      sub: [
+        row.routePattern,
+        row.status ? `HTTP ${row.status}` : '',
+        row.severity,
+        row.lastSeen ? `Last ${time(row.lastSeen)}` : '',
+      ]
+        .filter(Boolean)
+        .join(' · '),
     })),
   ]);
   renderRows(
@@ -415,34 +444,32 @@ function appAnalyticsNote(data: AdminAnalyticsOverview): string {
 }
 
 function normalizeAppAnalytics(data: AdminAnalyticsOverview): Required<AdminAnalyticsOverview>['appAnalytics'] {
-  return (
-    data.appAnalytics ?? {
-      events: 0,
-      byScreen: [],
-      health: {
-        analyticsEventsFresh: false,
-        lastEventAt: null,
-        clientErrors: 0,
-        apiErrors: 0,
-      },
-    }
-  );
+  return {
+    events: data.appAnalytics?.events ?? 0,
+    byScreen: data.appAnalytics?.byScreen ?? [],
+    health: {
+      analyticsEventsFresh: data.appAnalytics?.health.analyticsEventsFresh ?? false,
+      lastEventAt: data.appAnalytics?.health.lastEventAt ?? null,
+      clientErrors: data.appAnalytics?.health.clientErrors ?? 0,
+      apiErrors: data.appAnalytics?.health.apiErrors ?? 0,
+    },
+    errorBuckets: data.appAnalytics?.errorBuckets ?? [],
+  };
 }
 
 function normalizeLogging(data: AdminAnalyticsOverview): Required<AdminAnalyticsOverview>['logging'] {
-  return (
-    data.logging ?? {
-      events: 0,
-      warnings: 0,
-      errors: 0,
-      apiOk: 0,
-      apiErrors: 0,
-      apiErrorRate: null,
-      logEventsFresh: false,
-      lastLogAt: null,
-      topErrors: [],
-    }
-  );
+  return {
+    events: data.logging?.events ?? 0,
+    warnings: data.logging?.warnings ?? 0,
+    errors: data.logging?.errors ?? 0,
+    apiOk: data.logging?.apiOk ?? 0,
+    apiErrors: data.logging?.apiErrors ?? 0,
+    notFounds: data.logging?.notFounds ?? 0,
+    apiErrorRate: data.logging?.apiErrorRate ?? null,
+    logEventsFresh: data.logging?.logEventsFresh ?? false,
+    lastLogAt: data.logging?.lastLogAt ?? null,
+    topErrors: data.logging?.topErrors ?? [],
+  };
 }
 
 function noteFor(
@@ -585,6 +612,12 @@ function label(value: string): string {
   return value
     .replace(/[_-]/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function errorBucketLabel(event: string, source: string): string {
+  const eventLabel = label(event);
+  if (!source || source === 'unknown') return eventLabel;
+  return `${eventLabel}: ${source}`;
 }
 
 function escapeHtml(value: string): string {
