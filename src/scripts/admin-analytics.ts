@@ -30,8 +30,17 @@ interface AdminAnalyticsOverview {
     androidInstalls: KpiValue;
     newUsers: KpiValue;
     dau: KpiValue;
+    sessions: number;
+    screenViews: number;
+    smartPicks: number;
     scans: number;
+    scanSuccessRate: KpiValue;
+    ticketSaves: number;
+    paywallViews: number;
     proEvents: KpiValue;
+    purchaseEvents: number;
+    clientErrors: number;
+    apiErrors: number;
     ocrCostUsd: number;
     savedTickets: number;
   };
@@ -40,7 +49,11 @@ interface AdminAnalyticsOverview {
     websiteVisitors: KpiValue;
     downloads: KpiValue;
     users: KpiValue;
+    sessions: number;
+    smartPicks: number;
     scans: number;
+    ticketSaves: number;
+    clientErrors: number;
     proEvents: KpiValue;
     ocrCostUsd: number;
   }>;
@@ -55,7 +68,45 @@ interface AdminAnalyticsOverview {
     updatedAt: string | null;
     detail: string;
   }>;
-  topPages: Array<{ path: string; views: number }>;
+  appAnalytics?: {
+    events: number;
+    byScreen: Array<{ screen: string; count: number }>;
+    health: {
+      analyticsEventsFresh: boolean;
+      lastEventAt: string | null;
+      clientErrors: number;
+      apiErrors: number;
+    };
+    errorBuckets: Array<{
+      event: string;
+      platform: string;
+      screen: string;
+      outcome: string;
+      source: string;
+      count: number;
+      lastSeen: string | null;
+    }>;
+  };
+  logging?: {
+    events: number;
+    warnings: number;
+    errors: number;
+    apiOk: number;
+    apiErrors: number;
+    notFounds: number;
+    apiErrorRate: number | null;
+    logEventsFresh: boolean;
+    lastLogAt: string | null;
+    topErrors: Array<{
+      evt: string;
+      routePattern: string;
+      status: number;
+      errCode: string;
+      severity: string;
+      count: number;
+      lastSeen: string | null;
+    }>;
+  };
   scanErrors: Array<{ code: string; count: number }>;
 }
 
@@ -81,14 +132,17 @@ const SOURCE_LABELS: Record<string, string> = {
 };
 
 const TREND_SERIES: Array<{
-  key: 'websiteVisitors' | 'downloads' | 'users' | 'scans';
+  key: 'websiteVisitors' | 'downloads' | 'users' | 'sessions' | 'smartPicks' | 'scans' | 'clientErrors';
   label: string;
   value(row: AdminAnalyticsOverview['trend'][number]): number | null | undefined;
 }> = [
   { key: 'websiteVisitors', label: 'Visitors', value: (row) => row.websiteVisitors },
   { key: 'downloads', label: 'Downloads', value: (row) => row.downloads },
   { key: 'users', label: 'Users', value: (row) => row.users },
+  { key: 'sessions', label: 'Sessions', value: (row) => row.sessions },
+  { key: 'smartPicks', label: 'Smart picks', value: (row) => row.smartPicks },
   { key: 'scans', label: 'Scans', value: (row) => row.scans },
+  { key: 'clientErrors', label: 'Client errors', value: (row) => row.clientErrors },
 ];
 
 void boot();
@@ -214,13 +268,24 @@ async function refreshImports(token: string): Promise<void> {
 
 function renderOverview(data: AdminAnalyticsOverview): void {
   const kpis = data.kpis;
+  const appAnalytics = normalizeAppAnalytics(data);
+  const logging = normalizeLogging(data);
   setKpi('websiteVisitors', whole(kpis.websiteVisitors));
   setKpi('iosDownloads', whole(kpis.iosDownloads));
   setKpi('androidInstalls', whole(kpis.androidInstalls));
   setKpi('newUsers', whole(kpis.newUsers));
+  setKpi('sessions', whole(kpis.sessions));
   setKpi('dau', whole(kpis.dau));
+  setKpi('screenViews', whole(kpis.screenViews));
+  setKpi('smartPicks', whole(kpis.smartPicks));
   setKpi('scans', whole(kpis.scans));
+  setKpi('scanSuccessRate', percent(kpis.scanSuccessRate));
+  setKpi('ticketSaves', whole(kpis.ticketSaves));
+  setKpi('paywallViews', whole(kpis.paywallViews));
   setKpi('proEvents', whole(kpis.proEvents));
+  setKpi('purchaseEvents', whole(kpis.purchaseEvents));
+  setKpi('clientErrors', whole(kpis.clientErrors));
+  setKpi('apiErrors', whole(kpis.apiErrors));
   setKpi('ocrCostUsd', money(kpis.ocrCostUsd));
   setKpiNotes(data);
 
@@ -236,6 +301,50 @@ function renderOverview(data: AdminAnalyticsOverview): void {
       sub: source.updatedAt ? `${source.detail} ${time(source.updatedAt)}` : source.detail,
     }))
   );
+  renderRows('app-health', [
+    {
+      left: 'Analytics queue',
+      right: `<span class="pill ${appAnalytics.health.analyticsEventsFresh ? 'ok' : 'stale'}">${appAnalytics.health.analyticsEventsFresh ? 'fresh' : 'stale'}</span>`,
+      sub: appAnalytics.health.lastEventAt
+        ? `Last event ${time(appAnalytics.health.lastEventAt)}`
+        : 'No app analytics event imported yet.',
+    },
+    {
+      left: 'Client errors',
+      right: whole(appAnalytics.health.clientErrors),
+      sub: 'Browser/native errors in selected range. Smoke tests excluded.',
+    },
+    {
+      left: 'API errors',
+      right: whole(appAnalytics.health.apiErrors),
+      sub: 'Client-observed API failures in selected range. Smoke tests excluded.',
+    },
+    ...appAnalytics.errorBuckets.slice(0, 4).map((row) => ({
+      left: errorBucketLabel(row.event, row.source),
+      right: whole(row.count),
+      sub: [row.screen, row.outcome, row.lastSeen ? `Last ${time(row.lastSeen)}` : ''].filter(Boolean).join(' · '),
+    })),
+    {
+      left: 'Worker log sink',
+      right: `<span class="pill ${logging.logEventsFresh ? 'ok' : 'stale'}">${logging.logEventsFresh ? 'fresh' : 'stale'}</span>`,
+      sub: logging.lastLogAt ? `Last backend log ${time(logging.lastLogAt)}` : 'No backend logs recorded yet.',
+    },
+    {
+      left: 'Backend errors',
+      right: whole(logging.apiErrors),
+      sub: 'Worker request errors in selected range. 404 probes excluded.',
+    },
+    {
+      left: '404 / not found',
+      right: whole(logging.notFounds),
+      sub: 'Unknown-route probes and missing resources, tracked separately from backend failures.',
+    },
+    {
+      left: 'Sampled API error rate',
+      right: percent(logging.apiErrorRate),
+      sub: 'Uses sampled successful requests plus all request errors.',
+    },
+  ]);
   renderRows('tickets', [
     { left: 'Saved tickets', right: whole(data.tickets.total) },
     ...data.tickets.byGame.map((row) => ({
@@ -245,6 +354,26 @@ function renderOverview(data: AdminAnalyticsOverview): void {
     ...data.tickets.byStatus.map((row) => ({
       left: label(row.status),
       right: whole(row.count),
+    })),
+  ]);
+  renderRows('app-analytics', [
+    { left: 'Accepted app events', right: whole(appAnalytics.events) },
+    ...appAnalytics.byScreen.slice(0, 6).map((row) => ({
+      left: row.screen,
+      right: whole(row.count),
+      sub: 'Screen views',
+    })),
+    ...logging.topErrors.slice(0, 4).map((row) => ({
+      left: row.errCode || row.evt,
+      right: whole(row.count),
+      sub: [
+        row.routePattern,
+        row.status ? `HTTP ${row.status}` : '',
+        row.severity,
+        row.lastSeen ? `Last ${time(row.lastSeen)}` : '',
+      ]
+        .filter(Boolean)
+        .join(' · '),
     })),
   ]);
   renderRows(
@@ -283,7 +412,16 @@ function setKpiNotes(data: AdminAnalyticsOverview): void {
     androidInstalls: androidInstallNote(data, sourceStatus.get('google_play')),
     newUsers: noteFor(data.kpis.newUsers, null, 'No signup activity yet.'),
     dau: noteFor(data.kpis.dau, null, 'No active users today yet.'),
+    sessions: appAnalyticsNote(data),
+    screenViews: appAnalyticsNote(data),
+    smartPicks: appAnalyticsNote(data),
+    scanSuccessRate: data.kpis.scanSuccessRate === null ? 'No scan outcomes yet.' : '',
+    ticketSaves: appAnalyticsNote(data),
+    paywallViews: appAnalyticsNote(data),
     proEvents: noteFor(data.kpis.proEvents, sourceStatus.get('revenuecat'), 'Waiting for subscription events.'),
+    purchaseEvents: appAnalyticsNote(data),
+    clientErrors: appAnalyticsNote(data),
+    apiErrors: appAnalyticsNote(data),
   };
   for (const key of Object.keys(data.kpis) as Array<keyof AdminAnalyticsOverview['kpis']>) {
     const el = document.querySelector(`[data-kpi-note="${key}"]`);
@@ -297,6 +435,41 @@ function androidInstallNote(
 ): string {
   if (data.kpis.androidInstalls === 0 && status === 'ok') return 'No Android installs in selected range.';
   return noteFor(data.kpis.androidInstalls, status, 'Waiting for Play import.');
+}
+
+function appAnalyticsNote(data: AdminAnalyticsOverview): string {
+  const appAnalytics = normalizeAppAnalytics(data);
+  if (appAnalytics.health.analyticsEventsFresh || appAnalytics.events > 0) return '';
+  return 'No app analytics events yet.';
+}
+
+function normalizeAppAnalytics(data: AdminAnalyticsOverview): Required<AdminAnalyticsOverview>['appAnalytics'] {
+  return {
+    events: data.appAnalytics?.events ?? 0,
+    byScreen: data.appAnalytics?.byScreen ?? [],
+    health: {
+      analyticsEventsFresh: data.appAnalytics?.health.analyticsEventsFresh ?? false,
+      lastEventAt: data.appAnalytics?.health.lastEventAt ?? null,
+      clientErrors: data.appAnalytics?.health.clientErrors ?? 0,
+      apiErrors: data.appAnalytics?.health.apiErrors ?? 0,
+    },
+    errorBuckets: data.appAnalytics?.errorBuckets ?? [],
+  };
+}
+
+function normalizeLogging(data: AdminAnalyticsOverview): Required<AdminAnalyticsOverview>['logging'] {
+  return {
+    events: data.logging?.events ?? 0,
+    warnings: data.logging?.warnings ?? 0,
+    errors: data.logging?.errors ?? 0,
+    apiOk: data.logging?.apiOk ?? 0,
+    apiErrors: data.logging?.apiErrors ?? 0,
+    notFounds: data.logging?.notFounds ?? 0,
+    apiErrorRate: data.logging?.apiErrorRate ?? null,
+    logEventsFresh: data.logging?.logEventsFresh ?? false,
+    lastLogAt: data.logging?.lastLogAt ?? null,
+    topErrors: data.logging?.topErrors ?? [],
+  };
 }
 
 function noteFor(
@@ -401,7 +574,7 @@ function whole(value: number | null | undefined): string {
 }
 
 function money(value: number): string {
-  if (!Number.isFinite(value) || value === 0) return '$0';
+  if (!Number.isFinite(value) || value === 0) return '$0.00';
   const significantDigits = 3;
   const decimals = Math.max(0, Math.min(6, significantDigits - Math.floor(Math.log10(Math.abs(value))) - 1));
   return value.toLocaleString(undefined, {
@@ -410,6 +583,11 @@ function money(value: number): string {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
+}
+
+function percent(value: number | null | undefined): string {
+  if (value === null || value === undefined) return '—';
+  return `${Math.round(value * 100)}%`;
 }
 
 function rangeLabel(days: number): string {
@@ -434,6 +612,12 @@ function label(value: string): string {
   return value
     .replace(/[_-]/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function errorBucketLabel(event: string, source: string): string {
+  const eventLabel = label(event);
+  if (!source || source === 'unknown') return eventLabel;
+  return `${eventLabel}: ${source}`;
 }
 
 function escapeHtml(value: string): string {
