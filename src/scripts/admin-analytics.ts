@@ -286,7 +286,7 @@ function renderOverview(data: AdminAnalyticsOverview): void {
   setKpi('purchaseEvents', whole(kpis.purchaseEvents));
   setKpi('clientErrors', whole(kpis.clientErrors));
   setKpi('apiErrors', whole(kpis.apiErrors));
-  setKpi('ocrCostUsd', money(kpis.ocrCostUsd));
+  setKpi('ocrCostUsd', ocrCost(kpis.ocrCostUsd));
   setKpiNotes(data);
 
   const range = byId('range');
@@ -330,9 +330,9 @@ function renderOverview(data: AdminAnalyticsOverview): void {
       sub: logging.lastLogAt ? `Last backend log ${time(logging.lastLogAt)}` : 'No backend logs recorded yet.',
     },
     {
-      left: 'Backend errors',
+      left: 'Server failures',
       right: whole(logging.apiErrors),
-      sub: 'Worker request errors in selected range. 404 probes excluded.',
+      sub: 'Worker 5xx request failures in selected range. User-flow 4xx and 404 probes excluded.',
     },
     {
       left: '404 / not found',
@@ -340,9 +340,9 @@ function renderOverview(data: AdminAnalyticsOverview): void {
       sub: 'Unknown-route probes and missing resources, tracked separately from backend failures.',
     },
     {
-      left: 'Sampled API error rate',
+      left: 'Sampled server failure rate',
       right: percent(logging.apiErrorRate),
-      sub: 'Uses sampled successful requests plus all request errors.',
+      sub: 'Uses sampled successful requests plus unsampled 5xx request failures.',
     },
   ]);
   renderRows('tickets', [
@@ -422,6 +422,7 @@ function setKpiNotes(data: AdminAnalyticsOverview): void {
     purchaseEvents: appAnalyticsNote(data),
     clientErrors: appAnalyticsNote(data),
     apiErrors: appAnalyticsNote(data),
+    ocrCostUsd: ocrCostNote(data),
   };
   for (const key of Object.keys(data.kpis) as Array<keyof AdminAnalyticsOverview['kpis']>) {
     const el = document.querySelector(`[data-kpi-note="${key}"]`);
@@ -583,6 +584,29 @@ function money(value: number): string {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
+}
+
+function ocrCost(value: number): string {
+  if (!Number.isFinite(value) || value === 0) return '$0.00';
+  if (Math.abs(value) < 1) return `${trimDecimal(value * 100, 3)} cents`;
+  return money(value);
+}
+
+function ocrCostNote(data: AdminAnalyticsOverview): string {
+  const scans = data.kpis.scans;
+  if (!scans || !Number.isFinite(data.kpis.ocrCostUsd) || data.kpis.ocrCostUsd === 0) {
+    return scans ? 'No paid OCR usage recorded for these scans.' : 'No OCR scans in selected range.';
+  }
+  return `${ocrCost(data.kpis.ocrCostUsd / scans)} / scan across ${whole(scans)} scans.`;
+}
+
+function trimDecimal(value: number, maxDecimals: number): string {
+  return value
+    .toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: maxDecimals,
+    })
+    .replace(/\.0+$/, '');
 }
 
 function percent(value: number | null | undefined): string {
