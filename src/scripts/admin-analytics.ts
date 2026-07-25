@@ -18,6 +18,13 @@ interface ClerkModule {
   Clerk: new (publishableKey: string) => ClerkInstance;
 }
 
+interface OnboardingFunnel {
+  steps: Array<{ step: string; views: number; dropOff: number }>;
+  completions: { enabled: number; skipped: number; total: number };
+  completionRate: number | null;
+  replays: number;
+}
+
 interface AdminAnalyticsOverview {
   generatedAt: string;
   env: string;
@@ -86,6 +93,7 @@ interface AdminAnalyticsOverview {
       count: number;
       lastSeen: string | null;
     }>;
+    onboardingFunnel?: OnboardingFunnel;
   };
   logging?: {
     events: number;
@@ -381,6 +389,61 @@ function renderOverview(data: AdminAnalyticsOverview): void {
     data.scanErrors.map((row) => ({ left: row.code, right: whole(row.count) })),
     'No scan errors recorded.'
   );
+  renderOnboardingFunnel(appAnalytics.onboardingFunnel);
+}
+
+const FUNNEL_STEP_LABELS: Record<string, string> = {
+  welcome: 'Welcome',
+  how_it_works: 'How it works',
+  reminders: 'Reminders',
+};
+
+function renderOnboardingFunnel(funnel: OnboardingFunnel): void {
+  const el = byId('onboarding-funnel');
+  if (!el) return;
+  const hasData = funnel.steps.some((step) => step.views > 0);
+  if (!hasData) {
+    el.innerHTML = '<div class="empty-state">No onboarding step data yet.</div>';
+    return;
+  }
+
+  // One row per step plus a final Completed row; bars are sized against the
+  // welcome view count so widths read as survival through the funnel.
+  const rows = funnel.steps.map((step, index) => ({
+    label: FUNNEL_STEP_LABELS[step.step] ?? label(step.step),
+    count: step.views,
+    prev: index > 0 ? funnel.steps[index - 1].views : null,
+    completed: false,
+  }));
+  rows.push({
+    label: 'Completed',
+    count: funnel.completions.total,
+    prev: funnel.steps.at(-1)?.views ?? null,
+    completed: true,
+  });
+  const max = Math.max(1, ...rows.map((row) => row.count));
+
+  const bars = rows
+    .map((row) => {
+      const width = Math.max(1, Math.round((row.count / max) * 100));
+      const drop =
+        row.prev && row.prev > 0 && row.count < row.prev
+          ? `-${Math.round(((row.prev - row.count) / row.prev) * 100)}%`
+          : '';
+      return `<div class="funnel-row"><span class="funnel-label">${escapeHtml(row.label)}</span><div class="funnel-track"><div class="funnel-fill${row.completed ? ' completed' : ''}" style="width:${width}%"></div></div><strong>${whole(row.count)}</strong><span class="funnel-drop">${drop}</span></div>`;
+    })
+    .join('');
+
+  const summary = [
+    `${whole(funnel.completions.enabled)} enabled`,
+    `${whole(funnel.completions.skipped)} skipped`,
+    funnel.completionRate !== null ? `${percent(funnel.completionRate)} completion` : '',
+    funnel.replays > 0 ? `${whole(funnel.replays)} replays from Settings` : '',
+  ]
+    .filter(Boolean)
+    .join(' · ');
+
+  el.innerHTML = `${bars}<div class="funnel-summary">${escapeHtml(summary)}</div>`;
 }
 
 function setLoadedStatus(data: AdminAnalyticsOverview): void {
@@ -444,7 +507,9 @@ function appAnalyticsNote(data: AdminAnalyticsOverview): string {
   return 'No app analytics events yet.';
 }
 
-function normalizeAppAnalytics(data: AdminAnalyticsOverview): Required<AdminAnalyticsOverview>['appAnalytics'] {
+function normalizeAppAnalytics(
+  data: AdminAnalyticsOverview
+): Required<AdminAnalyticsOverview>['appAnalytics'] & { onboardingFunnel: OnboardingFunnel } {
   return {
     events: data.appAnalytics?.events ?? 0,
     byScreen: data.appAnalytics?.byScreen ?? [],
@@ -455,6 +520,13 @@ function normalizeAppAnalytics(data: AdminAnalyticsOverview): Required<AdminAnal
       apiErrors: data.appAnalytics?.health.apiErrors ?? 0,
     },
     errorBuckets: data.appAnalytics?.errorBuckets ?? [],
+    // Older API deploys omit the funnel; render the empty state instead of failing.
+    onboardingFunnel: data.appAnalytics?.onboardingFunnel ?? {
+      steps: [],
+      completions: { enabled: 0, skipped: 0, total: 0 },
+      completionRate: null,
+      replays: 0,
+    },
   };
 }
 

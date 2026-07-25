@@ -91,6 +91,14 @@ const clerkKey =
       </section>
 
       <section class="panel">
+        <div class="panel-head">
+          <h2>Onboarding funnel</h2>
+          <span>First-run reach per step · replays excluded</span>
+        </div>
+        <div id="onboarding-funnel" class="funnel" aria-label="Onboarding abandonment funnel"></div>
+      </section>
+
+      <section class="panel">
         <h2>Scan errors</h2>
         <div id="scan-errors" class="rows"></div>
       </section>
@@ -374,6 +382,70 @@ const clerkKey =
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+  }
+
+  .funnel {
+    display: grid;
+    gap: 10px;
+    padding-top: 14px;
+  }
+
+  .funnel :global(.funnel-row) {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) 64px 48px;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .funnel :global(.funnel-label) {
+    color: var(--muted);
+    font-weight: 800;
+  }
+
+  .funnel :global(.funnel-track) {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--panel-alt);
+    overflow: hidden;
+  }
+
+  .funnel :global(.funnel-fill) {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff6b3d, #f5b82e);
+  }
+
+  .funnel :global(.funnel-fill.completed) {
+    background: var(--good);
+  }
+
+  .funnel :global(.funnel-row strong) {
+    color: var(--ink);
+    text-align: right;
+  }
+
+  .funnel :global(.funnel-drop) {
+    color: var(--bad);
+    font-size: 12px;
+    font-weight: 800;
+    text-align: right;
+  }
+
+  .funnel :global(.funnel-summary) {
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .funnel :global(.empty-state) {
+    display: grid;
+    place-items: center;
+    min-height: 96px;
+    color: var(--muted);
+    font-size: 14px;
   }
 
   .rows {
