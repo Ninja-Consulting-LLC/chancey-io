@@ -5,9 +5,7 @@ export const site = {
   url: 'https://chancey.io',
   appUrl: import.meta.env.PUBLIC_CHANCEY_APP_URL ?? 'https://app.chancey.io',
   contactPath: '/contact/',
-  // Placeholder store URLs so the badge row renders. Swap for real listing
-  // URLs at launch.
-  appStoreUrl: 'https://apps.apple.com/app/chancey/id000000000',
+  appStoreUrl: 'https://apps.apple.com/us/app/chancey-get-lucky/id6764758519',
   playStoreUrl: 'https://play.google.com/store/apps/details?id=app.chancey.io',
   tagline: 'Never throw away a winning ticket again.',
   shortDescription:
