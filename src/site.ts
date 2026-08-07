@@ -5,10 +5,8 @@ export const site = {
   url: 'https://chancey.io',
   appUrl: 'https://app.chancey.io',
   contactPath: '/contact/',
-  // Placeholder store URLs so the badge row renders. Swap for real listing
-  // URLs at launch.
-  appStoreUrl: 'https://apps.apple.com/app/chancey/id000000000',
-  playStoreUrl: 'https://play.google.com/store/apps/details?id=io.chancey.app',
+  appStoreUrl: 'https://apps.apple.com/us/app/chancey-get-lucky/id6764758519',
+  playStoreUrl: 'https://play.google.com/store/apps/details?id=app.chancey.io',
   tagline: 'Never throw away a winning ticket again.',
   shortDescription:
     'Chancey is a lottery ticket tracker for adults 18+. Scan a ticket you already bought and Chancey checks every draw against the official results, so a win never gets past you.',
